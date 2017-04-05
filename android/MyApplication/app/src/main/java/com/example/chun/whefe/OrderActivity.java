@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,13 +24,30 @@ public class OrderActivity extends AppCompatActivity {
     String[] menunames = {"아메리카노", "카페라떼"};
 
     List<Coffee> coffees;
-
+    List<Coffee> smoothies;
+    TabHost tabHost;
+    ListView listView;
+    MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order);
 
+        /*------------------------ Tab Host Setting ---------------------------*/
+
+        tabHost = (TabHost)findViewById(R.id.tabhost);
+        tabHost.setup();
+
+        TabHost.TabSpec spec = tabHost.newTabSpec("buttonTab");
+        //spec.setContent(R.id.buttonTab);
+        spec.setIndicator("Coffee");
+        spec.setContent(R.id.TabListView);
+        tabHost.addTab(spec);
+        tabHost.setCurrentTab(0);
+
+
+        /*------------------------ List View Setting --------------------------*/
         coffees = new ArrayList<Coffee>();
 
         Coffee c1 = new Coffee();
@@ -44,11 +62,49 @@ public class OrderActivity extends AppCompatActivity {
         coffees.add(c2);
 
 
-
-        MyAdapter myAdapter = new MyAdapter(this,R.layout.cafemenu,coffees);
-        ListView listView = (ListView)findViewById(R.id.TabListView);
+        myAdapter = new MyAdapter(this,R.layout.cafemenu,coffees);
+        listView = (ListView)findViewById(R.id.TabListView);
         listView.setAdapter(myAdapter);
+        
+        /*--------------------- Tab 추가 ----------------------------------*/
+        TabHost.TabSpec spec2 = tabHost.newTabSpec("tag2");
+        spec2.setContent(new MyListViewSetting());
+        spec2.setIndicator("Smoothie");
+        tabHost.addTab(spec2);
+        tabHost.setCurrentTab(0);
 
+
+        /*---------------------List 2 ---------------------------------*/
+
+
+
+    }
+
+    public class MyListViewSetting implements TabHost.TabContentFactory{
+        @Override
+        public View createTabContent(String tag) {
+            smoothies = new ArrayList<Coffee>();
+
+            Coffee c3 = new Coffee();
+            c3.setImage(R.drawable.grazie1);
+            c3.setMenuname("플레인스무디");
+
+            Coffee c4 = new Coffee();
+            c4.setImage(R.drawable.grazie2);
+            c4.setMenuname("망고스무디");
+
+            smoothies.add(c3);
+            smoothies.add(c4);
+
+            myAdapter = new MyAdapter(getApplicationContext(),R.layout.cafemenu,smoothies);
+
+            // MyAdapter myAdapter2 = new MyAdapter(getApplicationContext(),R.layout.cafemenu,smoothies);
+           // listView = (ListView)findViewById(R.id.TabListView);
+            ListView listview2 = (ListView)findViewById(R.id.TabListView);
+            listview2.setAdapter(myAdapter);
+
+            return listview2;
+        }
     }
 
     public class Coffee{
@@ -70,18 +126,8 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public class MyAdapter extends ArrayAdapter<Coffee> {
-        /*Context context;
-        int[] images;
-        String[] menunames;*/
 
         List<Coffee> coffees;
-
-        /*public MyAdapter(Context context,int[] images, String[] menunames){
-            this.context = context;
-            this.images = images;
-            this.menunames = menunames;
-        }*/
-
         Context context;
 
         public MyAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Coffee> coffees) {
