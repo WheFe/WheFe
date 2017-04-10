@@ -80,7 +80,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="<c:url value="/management"/>">메뉴관리</a></li>
 					<li><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
-					<li><a href="<c:url value="/management/order"/>">주문확인</a></li>
+					<li class="active"><a href="<c:url value="/management/order"/>">주문확인</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">

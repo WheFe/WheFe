@@ -1,6 +1,8 @@
 package kr.ac.hansung.whefe.controller;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,13 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.ac.hansung.whefe.model.Cafe_info;
+import kr.ac.hansung.whefe.model.Category;
 import kr.ac.hansung.whefe.service.Cafe_infoService;
+import kr.ac.hansung.whefe.service.CategoryService;
 
 @Controller
 public class LogController {
 	@Autowired
 	private Cafe_infoService cafe_infoService;
-	
+	@Autowired
+	private CategoryService categoryService;
 	
 	/*public void setCafe_infoService(Cafe_infoService cafe_infoService) {
 		this.cafe_infoService = cafe_infoService;
@@ -59,7 +64,7 @@ public class LogController {
 	@RequestMapping("/login/signup") // 회원가입 창 띄울 때
 	public String signup(Model model, HttpServletRequest request) {
 		
-		return "signup";
+		return "02.Sign_Up";
 	}
 	
 	@RequestMapping(value="/login/signup", method=RequestMethod.POST) // 회원가입 요청 할 때
@@ -76,8 +81,12 @@ public class LogController {
 		return "denied";
 	}
 	@RequestMapping(value="/management")
-	public String loginSuccess() {
-		return "management";
+	public String loginSuccess(Model model) {
+		System.out.println("Controller!!!!!!!!!!!!");
+		List<Category> categories = categoryService.getCategories();
+		model.addAttribute("categories",categories);
+		model.addAttribute("Test", "test");
+		return "web-front-end/03.Menu-Management";
 	}
 	/*@RequestMapping("/login/duplicationCheck")
 	public @ResponseBody Object duplicationCheck(@ModelAttribute("cafe_info") Cafe_info cafe_info) throws Exception {
