@@ -19,7 +19,18 @@ public class CategoryService {
 	}
 	
 	public List<Category> getCategories() {
-		System.out.println("Service!!!!!!!!!!!!!!");
 		return categoryDao.getCategories();
+	}
+	
+	public boolean addCategory(Category category) {
+		return categoryDao.addCategory(category);
+	}
+	
+	public boolean deleteCategory(String category_name) {
+		return categoryDao.deleteCategory(category_name);
+	}
+	
+	public boolean editCategory(String category_name, String newName) {
+		return categoryDao.editCategory(category_name, newName);
 	}
 }

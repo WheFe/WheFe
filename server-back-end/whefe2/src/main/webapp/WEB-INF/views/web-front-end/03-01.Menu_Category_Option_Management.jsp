@@ -1,4 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -81,7 +85,7 @@
 <div class="container">
   <div class="row">
     <div class="panel-body">
-      <button type="button" class="btn btn-default btn-round-lg btn-lg" style="text-align:left; width:260px; float:right; margin-right:40px;">
+      <button type="button" onclick="location.href='<c:url value="/management"/>'" class="btn btn-default btn-round-lg btn-lg" style="text-align:left; width:260px; float:right; margin-right:40px;">
         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;카테고리 메뉴로 돌아가기
       </button>
     </div>

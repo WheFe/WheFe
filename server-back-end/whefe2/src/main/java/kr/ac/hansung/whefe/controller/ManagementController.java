@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -21,7 +22,7 @@ public class ManagementController {
 	
 	@RequestMapping(value="/management/coupon")
 	public String couponManagement() {
-		return "web-front-end/05.Coupon_Menagement";
+		return "web-front-end/05.Coupon_Management";
 	}
 	
 	@RequestMapping(value="/management/order")
@@ -34,7 +35,32 @@ public class ManagementController {
 		
 		String name =request.getParameter("category_name");
 		System.out.println(name+"!!!!!!!!!!!!!!!");
-		//categoryService.addCategory();
-		return "";
+		if(!categoryService.addCategory(category)) {
+			System.out.println("Adding Category cannot be done");
+		}
+		return "redirect:/management";
 	}
+	
+	@RequestMapping(value="/management/deletecategory/{category_name}")
+	public String deleteCategory(@PathVariable String category_name, HttpServletRequest request) {
+		if(!categoryService.deleteCategory(category_name)) {
+			System.out.println("Deleting Category cannot be done");
+		}
+		return "redirect:/management";
+	}
+	
+	@RequestMapping(value="/management/editcategory/{category_name}")
+	public String editCategory(@PathVariable String category_name, HttpServletRequest request) {
+		String newName = request.getParameter("category_name");
+		if(!categoryService.editCategory(category_name, newName)) {
+			System.out.println("editting Category cannot be done");
+		}
+		return "redirect:/management";
+	}
+	
+	@RequestMapping(value="/management/option")
+	public String option() {
+		return "web-front-end/03-01.Menu_Category_Option_Management";
+	}
+	
 }

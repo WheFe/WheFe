@@ -83,7 +83,8 @@
 						<button type="button" class="btn btn-default btn-round-lg btn-lg"
 							data-toggle="modal" data-target="#addCategory"
 							style="border: 0; text-align: left">
-							<b><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;카테고리 추가하기</b>
+							<b><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;카테고리
+								추가하기</b>
 						</button>
 						<!--카테고리 추가하기 팝업-->
 						<div class="modal fade" id="addCategory" role="dialog">
@@ -94,37 +95,39 @@
 										<button type="button" class="close" data-dismiss="modal">&times;</button>
 										<h4 class="modal-title">카테고리 추가하기</h4>
 									</div>
-									<div class="modal-body">
-										<div class="container">
-											<div class="row">
-												<input class="form-control" style="max-width: 270px" id="category_name"
-													name="category_name" placeholder="카테고리 이름" type="text"
-													required autofocus />
-											</div>
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default btn-md" onclick="location.href='/whefe/management/addcategory' "
-											data-toggle="modal" data-target="#addCategory_complete">카테고리
-											추가</button>
-										<!--카테고리 추가 완료-->
-										<div class="modal" id="addCategory_complete" role="dialog">
-											<div class="modal-dialog modal-sm">
-												<div class="modal-content">
-													<div class="modal-body">
-														<div class="row" style="text-align: center">
-															<b>카테고리 추가 완료!</b>
-														</div>
-													</div>
-													<div class="modal-footer" data-dismiss="modal">
-														<button type="button" class="btn btn-default btn-md">확인</button>
-													</div>
+									<form action="<c:url value="/management/addcategory"/>">
+										<div class="modal-body">
+											<div class="container">
+												<div class="row">
+													<input class="form-control" style="max-width: 270px"
+														id="category_name" name="category_name"
+														placeholder="카테고리 이름" type="text" required autofocus />
 												</div>
 											</div>
 										</div>
-										<button type="button" class="btn btn-danger btn-md"
-											data-dismiss="modal">취소</button>
-									</div>
+										<div class="modal-footer">
+											<button type="submit" class="btn btn-default btn-md"
+												data-toggle="modal" data-target="#addCategory_complete">카테고리
+												추가</button>
+											<!--카테고리 추가 완료-->
+											<div class="modal" id="addCategory_complete" role="dialog">
+												<div class="modal-dialog modal-sm">
+													<div class="modal-content">
+														<div class="modal-body">
+															<div class="row" style="text-align: center">
+																<b>카테고리 추가 완료!</b>
+															</div>
+														</div>
+														<div class="modal-footer" data-dismiss="modal">
+															<button type="button" class="btn btn-default btn-md">확인</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<button type="button" class="btn btn-danger btn-md"
+												data-dismiss="modal">취소</button>
+										</div>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -143,7 +146,7 @@
 									</button>
 								</div>
 								<div class="col-lg-2">
-									<button type="button" class="btn btn-default btn-lg">옵션관리</button>
+									<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/option"/>'">옵션관리</button>
 								</div>
 								<div class="col-lg-2">
 									<button type="button" class="btn btn-warning btn-lg"
@@ -162,39 +165,41 @@
 													<button type="button" class="close" data-dismiss="modal">&times;</button>
 													<h4 class="modal-title">카테고리 이름 수정하기</h4>
 												</div>
-												<div class="modal-body">
-													<div class="container">
-														<div class="row">
-															<input class="form-control" style="max-width: 270px"
-																name="category-name" placeholder="카테고리 이름" type="text"
-																required autofocus />
-														</div>
-													</div>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default btn-md"
-														data-toggle="modal"
-														data-target="#category-name-edit-complete">카테고리
-														이름 수정</button>
-													<!--카테고리 추가 완료-->
-													<div class="modal" id="category-name-edit-complete"
-														role="dialog">
-														<div class="modal-dialog modal-sm">
-															<div class="modal-content">
-																<div class="modal-body">
-																	<div class="row" style="text-align: center">
-																		<b>카테고리 이름 수정 완료!</b>
-																	</div>
-																</div>
-																<div class="modal-footer" data-dismiss="modal">
-																	<button type="button" class="btn btn-default btn-md">확인</button>
-																</div>
+												<form action="<c:url value="/management/editcategory/${category.category_name}"/>">
+													<div class="modal-body">
+														<div class="container">
+															<div class="row">
+																<input class="form-control" style="max-width: 270px"
+																	name="category_name" placeholder="카테고리 이름" type="text"
+																	required autofocus value="${category.category_name}"/>
 															</div>
 														</div>
 													</div>
-													<button type="button" class="btn btn-danger btn-md"
-														data-dismiss="modal">취소</button>
-												</div>
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-default btn-md"
+															data-toggle="modal"
+															data-target="#category-name-edit-complete">카테고리
+															이름 수정</button>
+														<!--카테고리 추가 완료-->
+														<div class="modal" id="category-name-edit-complete"
+															role="dialog">
+															<div class="modal-dialog modal-sm">
+																<div class="modal-content">
+																	<div class="modal-body">
+																		<div class="row" style="text-align: center">
+																			<b>카테고리 이름 수정 완료!</b>
+																		</div>
+																	</div>
+																	<div class="modal-footer" data-dismiss="modal">
+																		<button type="button" class="btn btn-default btn-md">확인</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<button type="button" class="btn btn-danger btn-md"
+															data-dismiss="modal">취소</button>
+													</div>
+												</form>
 											</div>
 										</div>
 									</div>
@@ -211,37 +216,39 @@
 											<!-- Modal content-->
 											<div class="modal-content">
 												<div class="modal-header">
-													<button type="button" class="close" data-dismiss="modal">&times;</button>
 													<h4 class="modal-title">카테고리 삭제하기</h4>
 												</div>
-												<div class="modal-body">
-													<div class="container">
-														<div class="row">카테고리를 삭제하시겠습니까?</div>
+												<form
+													action="<c:url value="/management/deletecategory/${category.category_name}"/>">
+													<div class="modal-body">
+														<div class="container">
+															<div class="row">카테고리를 삭제하시겠습니까?</div>
+														</div>
 													</div>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default btn-md"
-														data-toggle="modal"
-														data-target="#category-delete-complete">삭제하기</button>
-													<!--카테고리 삭제 완료-->
-													<div class="modal" id="category-delete-complete"
-														role="dialog">
-														<div class="modal-dialog modal-sm">
-															<div class="modal-content">
-																<div class="modal-body">
-																	<div class="row" style="text-align: center">
-																		<b>카테고리 삭제 완료!</b>
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-default btn-md"
+															data-toggle="modal"
+															data-target="#category-delete-complete">삭제하기</button>
+														<!--카테고리 삭제 완료-->
+														<div class="modal" id="category-delete-complete"
+															role="dialog">
+															<div class="modal-dialog modal-sm">
+																<div class="modal-content">
+																	<div class="modal-body">
+																		<div class="row" style="text-align: center">
+																			<b>카테고리 삭제 완료!</b>
+																		</div>
 																	</div>
-																</div>
-																<div class="modal-footer" data-dismiss="modal">
-																	<button type="button" class="btn btn-default btn-md">확인</button>
+																	<div class="modal-footer" data-dismiss="modal">
+																		<button type="button" class="btn btn-default btn-md">확인</button>
+																	</div>
 																</div>
 															</div>
 														</div>
+														<button type="button" class="btn btn-danger btn-md"
+															data-dismiss="modal">취소</button>
 													</div>
-													<button type="button" class="btn btn-danger btn-md"
-														data-dismiss="modal">취소</button>
-												</div>
+												</form>
 											</div>
 										</div>
 									</div>

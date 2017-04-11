@@ -38,4 +38,21 @@ public class CategoryDao {
 
 		});
 	}
+	
+	public boolean addCategory(Category category) {
+		String category_name = category.getCategory_name();
+		String sql = "insert into category (category_name) values (?)";
+		return ((jdbcTemplateObject.update(sql, category_name))==1);
+	}
+	
+	public boolean deleteCategory(String category_name) {
+		System.out.println("DAO!!!!!!!!!!" + category_name);
+		String sql = "delete from category where category_name = ?";
+		return (jdbcTemplateObject.update(sql, (String)category_name)==1);
+	}
+	
+	public boolean editCategory(String category_name, String newName) {
+		String sql = "update category set category_name = ? where category_name = ?";
+		return ((jdbcTemplateObject.update(sql, newName, category_name))==1);
+	}
 }
