@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 
@@ -138,7 +139,7 @@
 						<c:forEach var="category" items="${categories}">
 							<div class="row">
 								<div class="col-lg-5">
-									<button type="button"
+									<button type="button" onclick="location.href='<c:url value="/management/menu/${category.category_name}"/>'"
 										class="btn btn-default btn-round-lg btn-lg">
 										<h4>
 											<b>${category.category_name}</b>
@@ -146,7 +147,7 @@
 									</button>
 								</div>
 								<div class="col-lg-2">
-									<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/option"/>'">옵션관리</button>
+									<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/option/${category.category_name}"/>'">옵션관리</button>
 								</div>
 								<div class="col-lg-2">
 									<button type="button" class="btn btn-warning btn-lg"
@@ -205,7 +206,7 @@
 									</div>
 								</div>
 								<div class="col-lg-2">
-									<button type="button" class="btn btn-danger btn-lg"
+									<button type="button" class="btn btn-danger btn-lg" 
 										data-toggle="modal" data-target="#category-delete">
 										<span style="margin-right: 5px"
 											class="glyphicon glyphicon-trash"></span>삭제
@@ -219,7 +220,7 @@
 													<h4 class="modal-title">카테고리 삭제하기</h4>
 												</div>
 												<form
-													action="<c:url value="/management/deletecategory/${category.category_name}"/>">
+													action="<spring:url value="/management/deletecategory/${category.category_name}"/>">
 													<div class="modal-body">
 														<div class="container">
 															<div class="row">카테고리를 삭제하시겠습니까?</div>
@@ -228,7 +229,7 @@
 													<div class="modal-footer">
 														<button type="submit" class="btn btn-default btn-md"
 															data-toggle="modal"
-															data-target="#category-delete-complete">삭제하기</button>
+															data-target="#category-delete-complete" >삭제하기</button>
 														<!--카테고리 삭제 완료-->
 														<div class="modal" id="category-delete-complete"
 															role="dialog">

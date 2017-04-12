@@ -1,9 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-
 <head>
  <title>쿠폰 관리</title>
  <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,50 +13,41 @@
  .btn-round {
   border-radius: 17px;
  }
-
  .btn-lg {
   border-radius: 10px;
   width: 190px;
   height: 50px;
  }
-
  .btn-round-lg {
   border-radius: 10px;
   width: 400px;
  }
-
  .btn-round-sm {
   border-radius: 15px;
  }
-
  .coupon-active-custom {
   background: #D9EDF7;
   border-radius: 17px;
   max-width: 1000px;
  }
-
  .coupon-expired-custom {
   background: #F5F5F5;
   border-radius: 17px;
   max-width: 1000px;
  }
-
- .coupon-expired-button{
-   min-width: 220px;
-   min-height: 70px;
-   margin-top: 20px;
+ .coupon-expired-button {
+  min-width: 220px;
+  min-height: 70px;
+  margin-top: 20px;
  }
-
  .btn-huge {
   padding-top: 20px;
   padding-bottom: 20px;
  }
-
  .coupon {
   margin-left: 55px;
  }
 </style>
-
 <body>
  <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -69,35 +59,77 @@
        </button>
     <a class="navbar-brand" href="#">WheFe</a>
    </div>
-
    <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
      <li><a href="<c:url value="/management"/>">메뉴관리</a></li>
-     <li class="active"><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
+     <li class="active"><a href="#">쿠폰관리</a></li>
      <li><a href="<c:url value="/management/order"/>">주문확인</a></li>
     </ul>
-
     <ul class="nav navbar-nav navbar-right">
      <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
     </ul>
    </div>
   </div>
  </nav>
-
  <div class="container" style="margin-top:80px">
   <div class="panel panel-default">
    <div class="panel-heading">
-    <h4><b>쿠폰 관리</b></h4>
+    <h4><b>메뉴 관리</b></h4>
    </div>
-
    <div class="container">
     <!-- body 부분 -->
     <div class="row">
-     <div class="panel-body"><button type="button" class="btn btn-default btn-round-lg btn-lg" style="border:0; text-align:left"><h4><span class="glyphicon glyphicon-plus-sign"></span><b>&nbsp;쿠폰 추가하기</b></h4></button>
+     <div class="panel-body"><button type="button" class="btn btn-default btn-round-lg btn-lg" data-toggle="modal" data-target="#addCoupon" style="border:0; text-align:left"><h4><span class="glyphicon glyphicon-plus-sign"></span><b>&nbsp;쿠폰 추가하기</b></h4></button>
+      <!--쿠폰 추가하기 팝업-->
+      <div class="modal fade" id="addCoupon" role="dialog">
+       <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+         <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">쿠폰 추가하기</h4>
+         </div>
+         <div class="modal-body">
+          <div class="container">
+           <div class="row">
+            <input class="form-control" style="max-width: 870px; margin-top:10px" name="category-name" placeholder="쿠폰 이름" type="text" required autofocus />
+           </div>
+           <div class="row">
+            <input class="form-control" style="max-width: 870px; margin-top:10px" name="category-name" placeholder="쿠폰 시작기간" type="text">
+           </div>
+           <div class="row">
+            <input class="form-control" style="max-width: 870px; margin-top:10px" name="category-name" placeholder="쿠폰 종료기간" type="text">
+           </div>
+           <div class="row">
+            <input class="form-control" style="max-width: 870px; margin-top:10px" name="category-name" placeholder="할인금액" type="text">
+           </div>
+          </div>
+         </div>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-md" data-toggle="modal" data-target="#addCoupon_complete">쿠폰 추가</button>
+          <!--쿠폰 추가 완료-->
+          <div class="modal" id="addCoupon_complete" role="dialog">
+           <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+             <div class="modal-body">
+              <div class="row" style="text-align:center">
+               <b>쿠폰 추가 완료!</b>
+              </div>
+             </div>
+             <div class="modal-footer" data-dismiss="modal">
+              <button type="button" class="btn btn-default btn-md">확인</button>
+             </div>
+            </div>
+           </div>
+          </div>
+          <button type="button" class="btn btn-danger btn-md" data-dismiss="modal">취소</button>
+         </div>
+        </div>
+       </div>
+      </div>
      </div>
     </div>
     <br /><br />
-
     <div class="row coupon">
      <div class="panel panel-default coupon-expired-custom">
       <div class="panel-body">
@@ -119,7 +151,6 @@
       </div>
      </div>
     </div>
-
     <div class="row coupon">
      <div class="panel panel-default coupon-active-custom">
       <div class="panel-body">
@@ -141,17 +172,11 @@
       </div>
      </div>
     </div>
-
-
-
-
    </div>
    <!--body 종료-->
   </div>
  </div>
-
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
-
 </html>
