@@ -23,7 +23,13 @@
         <activity
             android:name=".NavDrawerActivity"
             android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".OrderActivity" />
+        <activity android:name=".CafemenuActivity" />
+        <activity android:name=".order_list_footer" />
+        <activity android:name=".OrderListActivity" />
+        <activity android:name=".OrderList2Activity" />
+        <activity android:name=".ShoppingListActivity"></activity>
     </application>
 
 </manifest>

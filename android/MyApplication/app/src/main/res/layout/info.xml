@@ -51,6 +51,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/holo_green_light"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingTop="3dp"
                     android:text="TextView"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
@@ -83,6 +87,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="26dp"
             android:layout_marginStart="26dp"
+            android:onClick="onOrderButtonClicked"
             android:text="메뉴 확인 및 주문" />
 
         <Button

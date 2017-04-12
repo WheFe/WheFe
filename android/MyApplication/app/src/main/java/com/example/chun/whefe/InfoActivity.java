@@ -1,8 +1,10 @@
 package com.example.chun.whefe;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 public class InfoActivity extends AppCompatActivity {
@@ -23,6 +25,11 @@ public class InfoActivity extends AppCompatActivity {
                 " Nam ornare nunc at condimentum scelerisque. Maecenas finibus urna in sapien sagittis, et accumsan ex blandit." +
                 " Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent et leo vitae" +
                 " sapien sollicitudin bibendum. ");
+    }
+
+    public void onOrderButtonClicked(View v){
+        Intent intent =  new Intent(InfoActivity.this,OrderActivity.class);
+        startActivity(intent);
     }
 
     public void onStart(){
