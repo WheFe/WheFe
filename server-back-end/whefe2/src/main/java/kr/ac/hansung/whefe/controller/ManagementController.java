@@ -115,7 +115,25 @@ public class ManagementController {
 	public String optionManagement(Model model,@PathVariable String category_name) {
 		List<Opt> opt = optService.getOpt(category_name);
 		model.addAttribute("opt", opt);
+		model.addAttribute("category_name", category_name);
+		System.out.println(category_name+ "!!!!!!!category_name!!!!!!!");
 		return "web-front-end/03-01.Menu_Category_Option_Management";
+	}
+	
+	@RequestMapping(value = "/management/option/addoption")
+	public String addOption(Opt opt, HttpServletRequest request, HttpServletResponse response) {
+		String option_price = request.getParameter("option_price");
+		int opt_price = opt.getOption_price();
+		String option_name = request.getParameter("option_name");
+		String opt_name = opt.getOption_name();
+		String category_name = request.getParameter("category_name");
+		
+		System.out.println(option_name + "!!!!!!!!!!!!!!!!!!!!!" + opt_price + "!!!!!!!!!!!!!!!!!!!!" + category_name + "!!!!!");
+
+		if (!optService.addOption(opt)) {
+			System.out.println("addOption failed......");
+		}
+		return "redirect:/management/option/"+ category_name;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////

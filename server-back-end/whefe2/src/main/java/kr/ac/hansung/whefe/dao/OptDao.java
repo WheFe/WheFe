@@ -39,4 +39,13 @@ public class OptDao {
 
 		});
 	}
+	
+	public boolean addOption(Opt opt) {
+		String sql = "insert into opt(option_name, option_price, category_name) values (?,?,?)";
+		
+		String option_name = opt.getOption_name();
+		int option_price = opt.getOption_price();
+		String category_name = opt.getCategory_name();
+		return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, category_name})==1;
+	}
 }

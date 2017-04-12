@@ -21,4 +21,8 @@ public class OptService {
 		public List<Opt> getOpt(String category_name) {
 			return optDao.getOpt(category_name);
 		}
+		
+		public boolean addOption(Opt opt) {
+			return optDao.addOption(opt);
+		}
 }
