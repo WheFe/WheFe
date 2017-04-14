@@ -48,4 +48,12 @@ public class OptDao {
 		String category_name = opt.getCategory_name();
 		return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, category_name})==1;
 	}
+	
+	public boolean editOption(String original, String option_name, String option_price, String category_name) {
+		//String sql = "update opt set option_name=?, option_price=? where option_name=?";
+		//String sql = "update opt set option_name='ddddddddddddd' where option_price='500'";
+		String sql = "update opt "+ "set option_name = " + "'" + option_name+ "', " +" option_price = " + "'"+ option_price + "' where option_name=" + "'"+ original +"'"  ;
+		//return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, original})==1;
+		return jdbcTemplateObject.update(sql)==1;
+	}
 }

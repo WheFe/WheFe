@@ -24,7 +24,7 @@ public class CouponDao {
 
 	public List<Coupon> getCoupons() {
 		String sqlStatement = "select * from cafe_coupon";
-
+		
 		return jdbcTemplateObject.query(sqlStatement, new RowMapper<Coupon>() {
 
 			@Override

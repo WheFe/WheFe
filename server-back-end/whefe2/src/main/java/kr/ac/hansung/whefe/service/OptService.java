@@ -25,4 +25,8 @@ public class OptService {
 		public boolean addOption(Opt opt) {
 			return optDao.addOption(opt);
 		}
+		
+		public boolean editOption(String original, String option_name, String option_price, String category_name) {
+			return optDao.editOption(original, option_name, option_price, category_name);
+		}
 }

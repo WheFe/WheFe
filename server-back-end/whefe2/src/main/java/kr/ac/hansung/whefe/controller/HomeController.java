@@ -20,7 +20,12 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		
-		return "home";
+		return "web-front-end/home";
+	}
+	
+	@RequestMapping(value="/pop")
+	public String test() {
+		return "web-front-end/pop";
 	}
 	
 }

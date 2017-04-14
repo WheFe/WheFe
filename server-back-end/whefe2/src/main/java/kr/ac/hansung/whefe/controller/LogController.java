@@ -86,6 +86,7 @@ public class LogController {
 		List<Category> categories = categoryService.getCategories();
 		model.addAttribute("categories",categories);
 		model.addAttribute("Test", "test");
+		categories.get(1).getCategory_name();
 		return "web-front-end/03.Menu-Management";
 	}
 	/*@RequestMapping("/login/duplicationCheck")
