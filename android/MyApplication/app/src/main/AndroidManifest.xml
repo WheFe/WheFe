@@ -29,7 +29,8 @@
         <activity android:name=".order_list_footer" />
         <activity android:name=".OrderListActivity" />
         <activity android:name=".OrderList2Activity" />
-        <activity android:name=".ShoppingListActivity"></activity>
+        <activity android:name=".ShoppingListActivity" />
+        <activity android:name=".PaymentActivity"></activity>
     </application>
 
 </manifest>

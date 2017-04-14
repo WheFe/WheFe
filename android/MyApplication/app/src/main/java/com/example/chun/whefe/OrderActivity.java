@@ -1,6 +1,7 @@
 package com.example.chun.whefe;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -10,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -92,6 +95,8 @@ public class OrderActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.TabListView1);
         listView.setAdapter(myMenuListAdapter);
 
+
+
         shoppingLists = new ArrayList<ShoppingList>();
 
         ShoppingList s1 = new ShoppingList("아메리카노","Iced","medium","샷추가+500","No Coupon","2300");
@@ -147,8 +152,10 @@ public class OrderActivity extends AppCompatActivity {
         Log.i("CGY","tabcount : " +tabHost.getTabWidget().getTabCount());
         /*---------------------List 2 ---------------------------------*/
 
-
-
+    }
+    public void onOrderSuccessButtonClicked(View v){
+        Intent intent =  new Intent(OrderActivity.this,PaymentActivity.class);
+        startActivity(intent);
     }
 
 
@@ -174,7 +181,7 @@ public class OrderActivity extends AppCompatActivity {
           // listView.notify();
             // listView = (ListView)findViewById(R.id.TabListView2);
             ListView listView2 = (ListView)findViewById(R.id.TabListView2);
-           // listview2.notifyAll();
+
             listView2.setAdapter(myMenuListAdapter2);
 
             return findViewById(R.id.layout_2);
@@ -259,7 +266,8 @@ public class OrderActivity extends AppCompatActivity {
 
         //List<Coffee> coffees;
         //Context context;
-
+        CoffeeViewHolder holder;
+        String orderInfo;
         LayoutInflater lnf;
 
         public MyMenuListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Coffee> coffees) {
@@ -287,23 +295,50 @@ public class OrderActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+
+
             if(convertView==null){
               //  LayoutInflater inflater = getLayoutInflater();
                 convertView = lnf.inflate(R.layout.cafemenu,parent,false);
+
+                holder = new CoffeeViewHolder();
+                holder.addButton = (Button)convertView.findViewById(R.id.menuAddButton);
+                holder.couponSpinner = (Spinner)convertView.findViewById(R.id.CouponSpinner);
+                holder.optionSpinner = (Spinner)convertView.findViewById(R.id.OptionSpinner);
+                holder.sizeSpinner = (Spinner)convertView.findViewById(R.id.SizeSpinner);
+                holder.radioGroup = (RadioGroup)convertView.findViewById(R.id.HotRadioGroup);
+                holder.menuImageView = (ImageView) convertView.findViewById(R.id.MenuImage);
+                holder.menuNameTextView = (TextView)convertView.findViewById(R.id.MenuNameView);
+
+
+
+               /* holder.addButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+
+                        orderInfo = "menu : " + coffees.get(position).getMenuname().toString();
+                        orderInfo += ", hotIce : " + holder.radioGroup.getCheckedRadioButtonId();
+                        orderInfo += ", coupon : " + holder.couponSpinner.getSelectedItem().toString();
+                        Toast.makeText(getApplicationContext(),orderInfo,Toast.LENGTH_SHORT).show();
+                    }
+                });*/
+
+
+
+            }else{
+                holder = (CoffeeViewHolder) convertView.getTag();
             }
 
             Coffee coffee = new Coffee();
             coffee.setImage(coffees.get(position).getImage());
             coffee.setMenuname(coffees.get(position).getMenuname());
 
-            ImageView menuImage = (ImageView)convertView.findViewById(R.id.MenuImage);
-            TextView menuName = (TextView)convertView.findViewById(R.id.MenuNameView);
-
-            menuImage.setImageResource(coffee.getImage());
-            menuName.setText(coffee.getMenuname());
+            holder.menuImageView.setImageResource(coffee.getImage());
+            holder.menuNameTextView.setText(coffee.getMenuname());
 
             /*----------------- 스피너 --------------------------*/
-            Spinner sizeSpinner = (Spinner) convertView.findViewById(R.id.SizeSpinner);
             ArrayList<String> sizeSpinnerlist = new ArrayList<String>();
 
             sizeSpinnerlist.add("Size");
@@ -312,30 +347,41 @@ public class OrderActivity extends AppCompatActivity {
             sizeSpinnerlist.add("Large");
 
             ArrayAdapter<String>   sizeadapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,sizeSpinnerlist);
-            sizeSpinner.setAdapter(sizeadapter);
+            holder.sizeSpinner.setAdapter(sizeadapter);
 
-            Spinner optionSpinner = (Spinner) convertView.findViewById(R.id.OptionSpinner);
-            ArrayList<String> optionSpinnerlist = new ArrayList<String>();
+             ArrayList<String> optionSpinnerlist = new ArrayList<String>();
 
             optionSpinnerlist.add("Option");
             optionSpinnerlist.add("샷 추가(+500)");
             optionSpinnerlist.add("휘핑 추가(+500)");
 
             ArrayAdapter<String>   optionadapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,optionSpinnerlist);
-            optionSpinner.setAdapter(optionadapter);
+            holder.optionSpinner.setAdapter(optionadapter);
 
-            Spinner couponSpinner = (Spinner) convertView.findViewById(R.id.CouponSpinner);
-            ArrayList<String> couponSpinnerlist = new ArrayList<String>();
+             ArrayList<String> couponSpinnerlist = new ArrayList<String>();
 
             couponSpinnerlist.add("Coupon");
             couponSpinnerlist.add("-500");
             couponSpinnerlist.add("-1000");
 
             ArrayAdapter<String>   couponAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,couponSpinnerlist);
-            couponSpinner.setAdapter(couponAdapter);
+            holder.couponSpinner.setAdapter(couponAdapter);
+
 
             return convertView;
         }
+
+    }
+
+    public static class CoffeeViewHolder{
+        public RadioGroup radioGroup;
+        public Spinner couponSpinner;
+        public Spinner optionSpinner;
+        public Spinner sizeSpinner;
+        public ImageView menuImageView;
+        public TextView menuNameTextView;
+        public Button addButton;
+
     }
 
     public class MyShoppingListAdapter extends ArrayAdapter<ShoppingList> {
