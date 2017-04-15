@@ -35,7 +35,7 @@ public class ManagementController {
 	@Autowired
 	private CouponService couponService;
 	///////////////////////////////////////////////////////////////////////////////////////////
-
+	// 쿠폰 컨트롤러
 	@RequestMapping(value = "/management/coupon")
 	public String couponManagement(Model model) {
 		System.out.println("Controller!!!!!!!!!!!!");
@@ -49,14 +49,14 @@ public class ManagementController {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-
+	// 주문 컨트롤러
 	@RequestMapping(value = "/management/order")
 	public String orderManagement() {
 		return "web-front-end/06.Order_Check";
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-
+	// 카테고리 컨트롤러
 	@RequestMapping(value = "/management/addcategory")
 	public String addCategory(Category category, HttpServletRequest request) {
 
@@ -88,6 +88,8 @@ public class ManagementController {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 메뉴 컨트롤러
+	
 	@RequestMapping(value = "/management/menu/{category_name}")
 	public String menuManagement(@PathVariable String category_name, Model model) {
 		List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(category_name);
@@ -124,6 +126,8 @@ public class ManagementController {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 옵션 컨트롤러
+	
 	@RequestMapping(value = "/management/option/{category_name}")
 	public String optionManagement(Model model, @PathVariable String category_name) {
 		List<Opt> opt = optService.getOpt(category_name);
@@ -157,7 +161,17 @@ public class ManagementController {
 		if (!optService.editOption(original, option_name, option_price, category_name)) {
 			System.out.println("editOption failed.....");
 		}
-		return "redirect:/management/option/coffee";
+		return "redirect:/management/option/"+ category_name;
+	}
+	
+	@RequestMapping(value="/management/option/deleteoption/{original}")
+	public String deleteOption(@PathVariable String original, HttpServletRequest request) {
+		System.out.println(original+"!!!!!!!!!!!!!!!!!!!");
+		String category_name = request.getParameter("category_name");
+		if(!optService.deleteOption(original)) {
+			System.out.println("deleting option failed.....");
+		}
+		return "redirect:/management/option/" + category_name;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////

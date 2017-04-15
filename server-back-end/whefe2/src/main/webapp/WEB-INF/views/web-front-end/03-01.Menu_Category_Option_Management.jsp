@@ -266,36 +266,40 @@
 													<button type="button" class="close" data-dismiss="modal">&times;</button>
 													<h4 class="modal-title">옵션 삭제하기</h4>
 												</div>
-												<div class="modal-body">
+												<form
+													action="<c:url value="/management/option/deleteoption/${opt.option_name}"/>">
+													<input type="hidden" name="category_name"
+														value="${category_name}" />
+													<div class="modal-body">
+														<div class="container">
+															<div class="row">옵션을 삭제하시겠습니까?</div>
+														</div>
 
-													<div class="container">
-														<div class="row">옵션을 삭제하시겠습니까?</div>
 													</div>
-
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-default btn-md"
-														data-toggle="modal" data-target="#delete_option_complete">옵션
-														삭제</button>
-													<!--이름 추가 완료-->
-													<div class="modal" id="delete_option_complete"
-														role="dialog">
-														<div class="modal-dialog modal-sm">
-															<div class="modal-content">
-																<div class="modal-body">
-																	<div class="row" style="text-align: center">
-																		<b>옵션 삭제 완료!</b>
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-default btn-md"
+															data-toggle="modal" data-target="#delete_option_complete">옵션
+															삭제</button>
+														<!--이름 추가 완료-->
+														<div class="modal" id="delete_option_complete"
+															role="dialog">
+															<div class="modal-dialog modal-sm">
+																<div class="modal-content">
+																	<div class="modal-body">
+																		<div class="row" style="text-align: center">
+																			<b>옵션 삭제 완료!</b>
+																		</div>
 																	</div>
-																</div>
-																<div class="modal-footer" data-dismiss="modal">
-																	<button type="button" class="btn btn-default btn-md">확인</button>
+																	<div class="modal-footer" data-dismiss="modal">
+																		<button type="button" class="btn btn-default btn-md">확인</button>
+																	</div>
 																</div>
 															</div>
 														</div>
+														<button type="button" class="btn btn-danger btn-md"
+															data-dismiss="modal">취소</button>
 													</div>
-													<button type="button" class="btn btn-danger btn-md"
-														data-dismiss="modal">취소</button>
-												</div>
+												</form>
 											</div>
 										</div>
 									</div>

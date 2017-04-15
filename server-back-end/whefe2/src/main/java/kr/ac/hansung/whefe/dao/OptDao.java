@@ -56,4 +56,11 @@ public class OptDao {
 		//return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, original})==1;
 		return jdbcTemplateObject.update(sql)==1;
 	}
+	
+	public boolean deleteOption(String original) {
+		String sql = "delete from opt where option_name = ?";
+		return (jdbcTemplateObject.update(sql, (String)original)==1);
+	}
+	
+	
 }

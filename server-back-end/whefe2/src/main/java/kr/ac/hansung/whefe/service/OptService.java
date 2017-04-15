@@ -29,4 +29,8 @@ public class OptService {
 		public boolean editOption(String original, String option_name, String option_price, String category_name) {
 			return optDao.editOption(original, option_name, option_price, category_name);
 		}
+		
+		public boolean deleteOption(String original) {
+			return optDao.deleteOption(original);
+		}
 }

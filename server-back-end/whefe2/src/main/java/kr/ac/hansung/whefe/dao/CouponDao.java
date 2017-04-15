@@ -39,7 +39,7 @@ public class CouponDao {
 				coupon.setCoupon_start(rs.getDate("coupon_start"));
 				coupon.setCoupon_end(rs.getDate("coupon_end"));
 				coupon.setUse_ox(rs.getBoolean("use_ox"));
-
+				
 				return coupon;
 			}
 
