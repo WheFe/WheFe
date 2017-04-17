@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chun.whefe">
 
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,20 +19,25 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".ListActivity" />
-        <activity android:name=".InfoActivity" />
         <activity
-            android:name=".NavDrawerActivity"
-            android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".MapActivity"
+            android:label="MapActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ListActivity"
+           />
+        <activity android:name=".InfoActivity" />
         <activity android:name=".OrderActivity" />
         <activity android:name=".CafemenuActivity" />
-        <activity android:name=".order_list_footer" />
         <activity android:name=".OrderListActivity" />
         <activity android:name=".OrderList2Activity" />
         <activity android:name=".ShoppingListActivity" />
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".CouponActivity" />
+        <activity android:name=".CoupListActivity" />
+        <activity
+            android:name=".NavActivity"
+            android:label="@string/title_activity_nav"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

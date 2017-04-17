@@ -1,13 +1,18 @@
 package com.example.chun.whefe;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,6 +23,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +47,15 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order);
 
+        /*------------------------Tool bar-----------------------*/
+        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+
+        toolbar.setTitle("Title");
+        toolbar.setTitleTextColor(Color.parseColor("#ffff33"));
+        toolbar.setSubtitle("id");
+        toolbar.setNavigationIcon(R.drawable.ic_menu_send);
+        setSupportActionBar(toolbar);
+        /*-------------------------------------------------------*/
 
         /*------------------------ Tab Host Setting ---------------------------*/
 
@@ -443,5 +458,32 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int curId = item.getItemId();
+        switch(curId){
+            case R.id.menu_setting:
+                Toast.makeText(this,"setting selected",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_logout:
+                Toast.makeText(this,"logout selected",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_exit:
+                Toast.makeText(this,"exit selected",Toast.LENGTH_SHORT).show();
+                moveTaskToBack(true);
+                finish();
+                ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+                am.restartPackage(getPackageName());
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

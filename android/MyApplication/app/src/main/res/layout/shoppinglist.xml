@@ -7,8 +7,8 @@
     tools:context="com.example.chun.whefe.ShoppingListActivity">
 
     <RelativeLayout
-        android:layout_width="368dp"
-        android:layout_height="70dp"
+        android:layout_width="350dp"
+        android:layout_height="66dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -18,16 +18,15 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.501">
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:id="@+id/R2"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/R1"
-            android:layout_toEndOf="@+id/R1">
+            android:layout_toEndOf="@+id/R1"
+            android:layout_toRightOf="@+id/R1">
 
             <TextView
                 android:id="@+id/sh_list_hotView"
@@ -79,11 +78,10 @@
 
         <RelativeLayout
             android:id="@+id/R3"
-            android:layout_width="100dp"
+            android:layout_width="95dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="10dp"
-            android:layout_toEndOf="@+id/R2"
             android:layout_toRightOf="@+id/R2">
 
             <TextView
@@ -110,6 +108,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
         </RelativeLayout>
+
         <Button
             android:id="@+id/sh_list_deleteButton"
             android:layout_width="50dp"
@@ -117,8 +116,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginRight="10dp"
             android:text="삭제"
             android:textColor="@android:color/black"
             android:textSize="12sp" />
@@ -127,16 +125,13 @@
             android:id="@+id/sh_list_priceView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="price"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
             android:layout_alignBaseline="@+id/sh_list_deleteButton"
             android:layout_alignBottom="@+id/sh_list_deleteButton"
-            android:layout_toRightOf="@+id/R3"
             android:layout_toEndOf="@+id/R3"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp" />
-
+            android:layout_toRightOf="@+id/R3"
+            android:text="price"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
 
     </RelativeLayout>

@@ -34,7 +34,9 @@
                 <ListView
                     android:id="@+id/TabListView1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/layout_border" />
 
                 <ListView
                     android:id="@+id/ShoppingListView"
@@ -43,6 +45,8 @@
                     android:layout_above="@+id/button2"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/layout_border"
                     android:headerDividersEnabled="true" />
 
             </LinearLayout>

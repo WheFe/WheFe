@@ -1,11 +1,17 @@
 package com.example.chun.whefe;
 
+import android.app.ActivityManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -13,6 +19,16 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info);
+
+        /*------------------------Tool bar-----------------------*/
+        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+
+        toolbar.setTitle("Title");
+        toolbar.setTitleTextColor(Color.parseColor("#ffff33"));
+        toolbar.setSubtitle("id");
+        toolbar.setNavigationIcon(R.drawable.ic_menu_send);
+        setSupportActionBar(toolbar);
+        /*-------------------------------------------------------*/
 
         TextView infoView = (TextView)findViewById(R.id.infoView);
         TextView introduceView = (TextView)findViewById(R.id.IntroducevIew);
@@ -32,6 +48,12 @@ public class InfoActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onCouponButtonClicked(View v){
+        Intent intent = new Intent(InfoActivity.this,CouponActivity.class);
+        startActivity(intent);
+    }
+
+
     public void onStart(){
         super.onStart();
         Log.i("CGY","Info Activity start");
@@ -39,5 +61,33 @@ public class InfoActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         Log.i("CGY","Info Activity Destroy");
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int curId = item.getItemId();
+        switch(curId){
+            case R.id.menu_setting:
+                Toast.makeText(this,"setting selected",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_logout:
+                Toast.makeText(this,"logout selected",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_exit:
+                Toast.makeText(this,"exit selected",Toast.LENGTH_SHORT).show();
+                moveTaskToBack(true);
+                finish();
+                ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+                am.restartPackage(getPackageName());
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
