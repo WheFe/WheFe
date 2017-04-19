@@ -62,8 +62,8 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>
-							로그아웃</a></li>
+					<li><a href="<c:url value="/logout"/>"><span
+							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
 				</ul>
 			</div>
 
@@ -111,14 +111,16 @@
 											<h4 class="modal-title">메뉴 추가하기</h4>
 										</div>
 										<form action="<c:url value="/management/menu/addmenu"/>">
-										<input type="hidden" name="category_name" value="${category_name}"/>
-										<input type="hidden" name="cafe_id" value="${pageContext.request.userPrincipal.name}"/>
+											<input type="hidden" name="category_name" value="${category_name}" /> 
+											<input type="hidden"
+												name="cafe_id"
+												value="${pageContext.request.userPrincipal.name}" />
 											<div class="modal-body">
 												<div class="container-fluid">
 													<div class="row">
 														<div class="input-group">
-															<span class="input-group-addon"> </span> 
-															<input id="menu_name" type="text" class="form-control"
+															<span class="input-group-addon"> </span> <input
+																id="menu_name" type="text" class="form-control"
 																name="menu_name" placeholder="추가할 메뉴 이름 입력">
 														</div>
 													</div>
@@ -135,7 +137,7 @@
 																		<th>Large</th>
 																		<th>사이즈 없음</th>
 																	</tr>
-																</thead> 
+																</thead>
 																<tbody>
 																	<tr>
 																		<th scope="row">HOT</th>

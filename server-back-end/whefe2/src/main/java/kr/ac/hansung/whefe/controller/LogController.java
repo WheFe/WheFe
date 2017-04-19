@@ -1,7 +1,8 @@
 package kr.ac.hansung.whefe.controller;
 
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,80 +30,117 @@ public class LogController {
 	private Cafe_infoService cafe_infoService;
 	@Autowired
 	private CategoryService categoryService;
-	
-	/*public void setCafe_infoService(Cafe_infoService cafe_infoService) {
-		this.cafe_infoService = cafe_infoService;
-	}*/
-	
-	@RequestMapping("/login") // 
-	public String login(@RequestParam(value="error", required=false) String error,
-			@RequestParam(value="logout", required=false) String logout, Model model) {
-		
-		if(error != null) {
+
+	/*
+	 * public void setCafe_infoService(Cafe_infoService cafe_infoService) {
+	 * this.cafe_infoService = cafe_infoService; }
+	 */
+
+	@RequestMapping("/login") //
+	public String login(@RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout, Model model) {
+
+		if (error != null) {
 			model.addAttribute("error", "Invalid ID and PASSWORD");
 		}
-		if(logout != null) {
+		if (logout != null) {
 			model.addAttribute("logout", "You have been logged out successfully");
 		}
-		
+
 		return "web-front-end/01.First_Page";
 	}
-	@RequestMapping(value="/login", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String loginPost() {
 		return "/management";
 	}
-	
-	@RequestMapping(value="/logout", method = RequestMethod.GET) // 로그아웃 할 때
-	public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    if (auth != null){    
-	        new SecurityContextLogoutHandler().logout(request, response, auth);
-	    }
-	    return "redirect:/login?logout";
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET) // 로그아웃 할 때
+	public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/login?logout";
 	}
-	
+
 	@RequestMapping("/login/signup") // 회원가입 창 띄울 때
 	public String signup(Model model, HttpServletRequest request) {
-		
-		return "02.Sign_Up";
+
+		return "web-front-end/02.Sign_Up";
 	}
-	
-	@RequestMapping(value="/login/signup", method=RequestMethod.POST) // 회원가입 요청 할 때
+
+	@RequestMapping(value = "/login/signup", method = RequestMethod.POST) // 회원가입
+																			// 요청
+																			// 할
+																			// 때
 	public String signupPost(Cafe_info cafe_info) {
 		System.out.println(cafe_info.toString());
-		if(!cafe_infoService.addCafe_info(cafe_info)) {
+		if (!cafe_infoService.addCafe_info(cafe_info)) {
 			System.out.println("Adding info cannot be done");
 		}
 		return "redirect:/login";
 	}
-	
+
 	@RequestMapping("/login/denied") // 권한 없을 때
 	public String denied() {
 		return "denied";
 	}
-	@RequestMapping(value="/management")
+
+	@RequestMapping(value = "/management")
 	public String loginSuccess(Model model) {
-		System.out.println("Controller!!!!!!!!!!!!");
 		List<Category> categories = categoryService.getCategories();
-		model.addAttribute("categories",categories);
+		model.addAttribute("categories", categories);
 		model.addAttribute("Test", "test");
-		categories.get(1).getCategory_name();
 		return "web-front-end/03.Menu-Management";
 	}
-	/*@RequestMapping("/login/duplicationCheck")
-	public @ResponseBody Object duplicationCheck(@ModelAttribute("cafe_info") Cafe_info cafe_info) throws Exception {
 
-		Cafe_info resultVO = cafe_infoService.selectAdmin(cafe_info);
-
-		return resultVO;
-	}*/
-	@RequestMapping("/android")
-	public void androidTest() {
-		System.out.println("안드로이드");
+	/*
+	 * @RequestMapping("/login/duplicationCheck") public @ResponseBody Object
+	 * duplicationCheck(@ModelAttribute("cafe_info") Cafe_info cafe_info) throws
+	 * Exception {
+	 * 
+	 * Cafe_info resultVO = cafe_infoService.selectAdmin(cafe_info);
+	 * 
+	 * return resultVO; }
+	 */
+	@RequestMapping(value="/android")
+	public String androidTest2(HttpServletRequest request) {
+		System.out.println(request.toString());
+		System.out.println("안드로이드!!");
+		return "androidTest";
 	}
 	
+	@RequestMapping(value="/android")
+	public String androidTest3(HttpServletRequest request) {
+		System.out.println("안드로이드!!");
+		return "androidTest";
+	}
+
 	@RequestMapping("/android2")
 	public void androidTest(HttpServletRequest request) {
-		System.out.println(request.getParameter("test"));
+		System.out.println(request.getParameter("title")+ request.getParameter("memo"));
 	}
+
+	@RequestMapping("/android3")
+	public void androidTestWithRequest(HttpServletRequest request) {
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		System.out.println(id+"!!!!!!!!!!!!!!"+pwd);
+	}
+	@RequestMapping("/android4")
+	@ResponseBody
+    public Map<String, String> androidTestWithRequestAndResponse(HttpServletRequest request){
+        System.out.println(request.getParameter("title"));
+        System.out.println(request.getParameter("memo"));
+        
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("data1", "메모에요");
+        result.put("data2", "두번째 메모입니다.");
+        
+        return result;
+    }
+
+
+
 }

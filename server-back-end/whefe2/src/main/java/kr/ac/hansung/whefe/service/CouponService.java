@@ -23,6 +23,10 @@ public class CouponService {
 		System.out.println("Service!!!!!!!!!!!!!!");
 		return couponDao.getCoupons();
 	}
+	
+	public boolean addCoupon(Coupon coupon) {
+		return couponDao.addCoupon(coupon);
+	}
 
 	/*public boolean addCoupon(Coupon coupon) {
 		return couponDao.addCoupon(coupon);

@@ -27,11 +27,6 @@ body {
 }
 </style>
 <body>
-	<c:if test="${not empty logout}">
-		<div style="color: #0000ff">
-			<h3>${logout}</h3>
-		</div>
-	</c:if>
 
 
 	<div class="container">
@@ -51,7 +46,11 @@ body {
 						<h3>${error}</h3>
 					</div>
 				</c:if>
-
+				<c:if test="${not empty logout}">
+					<div style="color: #0000ff">
+						<h3>${logout}</h3>
+					</div>
+				</c:if>
 				<div style="padding-top: 30px" class="panel-body">
 
 					<div style="display: none" id="login-alert"
@@ -64,7 +63,8 @@ body {
 						<div style="margin-bottom: 5px" class="input-group">
 							<span class="input-group-addon"><i
 								class="glyphicon glyphicon-user"></i></span> <input type="text"
-								class="form-control" id ="cafe_id" name="cafe_id" placeholder="아이디">
+								class="form-control" id="cafe_id" name="cafe_id"
+								placeholder="아이디">
 						</div>
 
 						<div style="margin-bottom: 10px" class="input-group">

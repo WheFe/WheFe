@@ -52,7 +52,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">WheFe</a>
+				<a class="navbar-brand" href="#">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
@@ -63,8 +63,12 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>
-							로그아웃</a></li>
+					<li><div class="user-info"
+							style="margin-top: 15px; color: #636363">
+							<span class="glyphicon glyphicon-user"></span>&nbsp; ${pageContext.request.userPrincipal.name}
+						</div></li>
+					<li><a href="<c:url value="/logout"/>"><span
+							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
 				</ul>
 			</div>
 		</div>
@@ -86,6 +90,7 @@
 							<b><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;카테고리
 								추가하기</b>
 						</button>
+
 						<!--카테고리 추가하기 팝업-->
 						<div class="modal fade" id="addCategory" role="dialog">
 							<div class="modal-dialog modal-sm">
@@ -131,12 +136,12 @@
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 				<div class="row" id="menu">
 					<div class="panel-body">
-						<c:forEach var="category" items="${categories}" varStatus="status">
-						
+						<c:forEach var="category" items="${categories}" varStatus="status">	
 							categories[status.index].category_name :   ${categories[status.index].category_name}
 							<%-- ${status.count}
 							${status.index }
@@ -151,72 +156,79 @@
 										</h4>
 									</button>
 								</div>
+
+
 								<div class="col-lg-2">
 									<button type="button" class="btn btn-default btn-lg"
 										onclick="location.href='<c:url value="/management/option/${category.category_name}"/>'">옵션관리</button>
 								</div>
+
+
 								<div class="col-lg-2">
 									<button type="button" class="btn btn-warning btn-lg"
-										onclick='onclick();' data-toggle="modal"
-										data-target="#category-name-edit">
+										data-toggle="modal" data-target="#category-name-edit">
 										<span style="margin-right: 5px"
 											class="glyphicon glyphicon-pencil"></span>이름 수정
 									</button>
-									<c:forEach var="category1" items="${categories}"
-										varStatus="status">
-										<!--카테고리 이름수정하기 팝업-->
-										<div class="modal fade" id="category-name-edit" role="dialog">
-											<div class="modal-dialog modal-sm">
 
-												<!-- Modal content-->
-												<div class="modal-content">
 
-													<div class="modal-header">
-														<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4 class="modal-title">카테고리 이름 수정하기</h4>
-													</div>
-													<form
-														action="<c:url value="/management/editcategory/${category.category_name}"/>">
-														<div class="modal-body">
-															<div class="container">
-																<div class="row">
+									<!--카테고리 이름수정하기 팝업-->
+									<div class="modal fade" id="category-name-edit" role="dialog">
+										<div class="modal-dialog modal-sm">
 
-																	<input class="form-control" style="max-width: 270px"
-																		id="category_name" name="category_name"
-																		placeholder="카테고리 이름" type="text"
-																		value="${category1.category_name}" required autofocus />
-																</div>
+											<!-- Modal content-->
+											<div class="modal-content">
+
+
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+													<h4 class="modal-title">카테고리 이름 수정하기</h4>
+												</div>
+												<form
+													action="<c:url value="/management/editcategory/${category.category_name}"/>">
+													<div class="modal-body">
+														<div class="container">
+															<div class="row">
+
+																<input class="form-control" style="max-width: 270px"
+																	id="category_name" name="category_name"
+																	placeholder="카테고리 이름" type="text"
+																	value="${category.category_name}" required autofocus />
 															</div>
 														</div>
-														<div class="modal-footer">
-															<button type="submit" class="btn btn-default btn-md"
-																data-toggle="modal"
-																data-target="#category-name-edit-complete">카테고리
-																이름 수정</button>
-															<!--카테고리 추가 완료-->
-															<div class="modal" id="category-name-edit-complete"
-																role="dialog">
-																<div class="modal-dialog modal-sm">
-																	<div class="modal-content">
-																		<div class="modal-body">
-																			<div class="row" style="text-align: center">
-																				<b>카테고리 이름 수정 완료!</b>
-																			</div>
+													</div>
+
+
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-default btn-md"
+															data-toggle="modal"
+															data-target="#category-name-edit-complete">카테고리
+															이름 수정</button>
+
+
+														<!--카테고리 추가 완료-->
+														<div class="modal" id="category-name-edit-complete"
+															role="dialog">
+															<div class="modal-dialog modal-sm">
+																<div class="modal-content">
+																	<div class="modal-body">
+																		<div class="row" style="text-align: center">
+																			<b>카테고리 이름 수정 완료!</b>
 																		</div>
-																		<div class="modal-footer" data-dismiss="modal">
-																			<button type="button" class="btn btn-default btn-md">확인</button>
-																		</div>
+																	</div>
+																	<div class="modal-footer" data-dismiss="modal">
+																		<button type="button" class="btn btn-default btn-md">확인</button>
 																	</div>
 																</div>
 															</div>
-															<button type="button" class="btn btn-danger btn-md"
-																data-dismiss="modal">취소</button>
 														</div>
-													</form>
-												</div>
+														<button type="button" class="btn btn-danger btn-md"
+															data-dismiss="modal">취소</button>
+													</div>
+												</form>
 											</div>
 										</div>
-									</c:forEach>
+									</div>
 								</div>
 								<div class="col-lg-2">
 									<button type="button" class="btn btn-danger btn-lg"

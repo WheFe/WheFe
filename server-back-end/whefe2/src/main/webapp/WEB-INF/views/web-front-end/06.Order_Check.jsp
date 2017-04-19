@@ -84,7 +84,7 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>
+					<li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
 							로그아웃</a></li>
 				</ul>
 			</div>

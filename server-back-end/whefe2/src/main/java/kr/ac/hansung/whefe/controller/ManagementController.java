@@ -1,5 +1,9 @@
 package kr.ac.hansung.whefe.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,15 +41,23 @@ public class ManagementController {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 쿠폰 컨트롤러
 	@RequestMapping(value = "/management/coupon")
-	public String couponManagement(Model model) {
+	public String couponManagement(Model model) throws ParseException {
 		System.out.println("Controller!!!!!!!!!!!!");
 		List<Coupon> coupons = couponService.getCoupons();
-
+		/*Date today = new Date();
+		DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+		Date coupon_end2 = sdFormat.parse("20100222");*/
 		model.addAttribute("coupons", coupons);
-
-		System.out.println("Do Controller!!!!!!!!!!!!");
-
 		return "web-front-end/05.Coupon_Management";
+	}
+	
+	@RequestMapping(value = "/management/coupon/addcoupon")
+	public String addCoupon(Coupon coupon, HttpServletRequest request) {
+		System.out.println(coupon.toString());
+		if(!couponService.addCoupon(coupon)) {
+			System.out.println("Adding coupon failed......");
+		}
+		return "redirect:/management/coupon";
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

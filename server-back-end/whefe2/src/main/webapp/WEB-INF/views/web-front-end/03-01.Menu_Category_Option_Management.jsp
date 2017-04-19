@@ -64,12 +64,12 @@
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="#">메뉴관리</a></li>
-					<li><a href="#">쿠폰관리</a></li>
-					<li><a href="#">주문확인</a></li>
+					<li><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
+					<li><a href="<c:url value="/management/order"/>">주문확인</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>
+					<li><a href=""<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
 							로그아웃</a></li>
 				</ul>
 			</div>
