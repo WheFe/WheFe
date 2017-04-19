@@ -104,19 +104,25 @@ public class LogController {
 	 * 
 	 * return resultVO; }
 	 */
-	@RequestMapping(value="/android")
+	/*@RequestMapping(value="/android")
 	public String androidTest2(HttpServletRequest request) {
 		System.out.println(request.toString());
 		System.out.println("안드로이드!!");
 		return "androidTest";
-	}
+	}*/
 	
-	@RequestMapping(value="/android")
+	/*@RequestMapping(value="/android")
 	public String androidTest3(HttpServletRequest request) {
 		System.out.println("안드로이드!!");
 		return "androidTest";
+	}*/
+	
+	@RequestMapping("/android")
+	public String androidTest_HttpURLConnection() {
+		System.out.println("HttpURLConnection!!!");
+		return "androidTest";
 	}
-
+	
 	@RequestMapping("/android2")
 	public void androidTest(HttpServletRequest request) {
 		System.out.println(request.getParameter("title")+ request.getParameter("memo"));
@@ -128,18 +134,6 @@ public class LogController {
 		String pwd = request.getParameter("pwd");
 		System.out.println(id+"!!!!!!!!!!!!!!"+pwd);
 	}
-	@RequestMapping("/android4")
-	@ResponseBody
-    public Map<String, String> androidTestWithRequestAndResponse(HttpServletRequest request){
-        System.out.println(request.getParameter("title"));
-        System.out.println(request.getParameter("memo"));
-        
-        Map<String, String> result = new HashMap<String, String>();
-        result.put("data1", "메모에요");
-        result.put("data2", "두번째 메모입니다.");
-        
-        return result;
-    }
 
 
 
