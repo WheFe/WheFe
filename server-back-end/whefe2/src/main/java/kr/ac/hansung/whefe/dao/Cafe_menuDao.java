@@ -25,19 +25,19 @@ public class Cafe_menuDao {
 		}
 		
 		public List<Cafe_menu> getCafe_menu(String category_name) {
-			String sql = "select * from cafe_menu where category_name = " + "\""+category_name +"\"";
+			String sql = "select distinct menu_name from cafe_menu where category_name = " + "\""+category_name +"\"";
 			return jdbcTemplateObject.query(sql, new RowMapper<Cafe_menu>() {
 
 				@Override
 				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 					Cafe_menu cafe_menu = new Cafe_menu();
-					cafe_menu.setCategory_name(rs.getString("category_name"));
+					/*cafe_menu.setCategory_name(rs.getString("category_name"));
 					cafe_menu.setCafe_id(rs.getString("cafe_id"));
-					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));*/
 					cafe_menu.setMenu_name(rs.getString("menu_name"));
-					cafe_menu.setMenu_price(rs.getInt("menu_price"));
-					cafe_menu.setMenu_size(rs.getString("menu_size"));
+					/*cafe_menu.setMenu_price(rs.getInt("menu_price"));
+					cafe_menu.setMenu_size(rs.getString("menu_size"));*/
 					return cafe_menu;
 				}
 

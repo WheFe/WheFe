@@ -28,7 +28,7 @@ public class CouponService {
 		return couponDao.addCoupon(coupon);
 	}
 
-	/*public boolean addCoupon(Coupon coupon) {
-		return couponDao.addCoupon(coupon);
-	}*/
+	public boolean deleteCoupon(String coupon_name, String cafe_id) {
+		return couponDao.deleteCoupon(coupon_name, cafe_id);
+	}
 }

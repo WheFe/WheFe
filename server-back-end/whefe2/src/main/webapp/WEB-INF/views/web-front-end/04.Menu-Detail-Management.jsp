@@ -51,7 +51,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">WheFe</a>
+				<a class="navbar-brand" href="#">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
@@ -62,6 +62,11 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
+					<li><div class="user-info"
+							style="margin-top: 15px; color: #636363">
+							<span class="glyphicon glyphicon-user"></span>&nbsp;
+							${pageContext.request.userPrincipal.name}
+						</div></li>
 					<li><a href="<c:url value="/logout"/>"><span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
 				</ul>
@@ -83,6 +88,7 @@
 				<div class="row">
 					<div class="panel-body">
 						<button type="button" class="btn btn-default btn-round-lg btn-lg"
+							onclick="location.href='<c:url value="/management"/>'"
 							style="text-align: left; width: 260px; float: right; margin-right: 40px;">
 							<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;카테고리
 							메뉴로 돌아가기
@@ -111,8 +117,8 @@
 											<h4 class="modal-title">메뉴 추가하기</h4>
 										</div>
 										<form action="<c:url value="/management/menu/addmenu"/>">
-											<input type="hidden" name="category_name" value="${category_name}" /> 
-											<input type="hidden"
+											<input type="hidden" name="category_name"
+												value="${category_name}" /> <input type="hidden"
 												name="cafe_id"
 												value="${pageContext.request.userPrincipal.name}" />
 											<div class="modal-body">

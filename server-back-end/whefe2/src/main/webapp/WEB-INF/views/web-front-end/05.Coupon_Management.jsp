@@ -69,7 +69,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">WheFe</a>
+				<a class="navbar-brand" href="#">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
@@ -80,8 +80,12 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
-							로그아웃</a></li>
+				<li><div class="user-info"
+							style="margin-top: 15px; color: #636363">
+							<span class="glyphicon glyphicon-user"></span>&nbsp; ${pageContext.request.userPrincipal.name}
+						</div></li>
+					<li><a href="<c:url value="/logout"/>"><span
+							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
 				</ul>
 			</div>
 		</div>
@@ -120,8 +124,9 @@
 										<h4 class="modal-title">쿠폰 추가하기</h4>
 									</div>
 									<form action="<c:url value="/management/coupon/addcoupon"/>">
-										<input type="hidden" name="cafe_id" value="${pageContext.request.userPrincipal.name}"/> 
-										<input type="hidden" name="use_ox" value="1"/>
+										<input type="hidden" name="cafe_id"
+											value="${pageContext.request.userPrincipal.name}" /> <input
+											type="hidden" name="use_ox" value="1" />
 										<div class="modal-body">
 											<div class="container">
 												<div class="row">
@@ -186,29 +191,34 @@
 				<c:forEach var="coupon" items="${coupons}" varStatus="status">
 					<div class="row coupon">
 						<div class="panel panel-default coupon-expired-custom">
-							<div class="panel-body">
-								<div class="row">
-									<div class="col-md-9">
-										<div class="text-left">
-											<h3>
-												<ul>
-													<li>쿠폰명 : ${coupon.coupon_name}
-													<li>기간 : ${coupon.coupon_start} ~ ${coupon.coupon_end}
-													
-													<li>할인금액 : ${coupon.coupon_price}
-												</ul>
-											</h3>
+							<form
+								action="<c:url value="/management/coupon/deletecoupon/${coupon.coupon_name}"/>">
+								<input type="hidden" name="cafe_id"
+									value="${pageContext.request.userPrincipal.name}" />
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-9">
+											<div class="text-left">
+												<h3>
+													<ul>
+														<li>쿠폰명 : ${coupon.coupon_name}
+														<li>기간 : ${coupon.coupon_start} ~
+															${coupon.coupon_end}
+														<li>할인금액 : ${coupon.coupon_price}
+													</ul>
+												</h3>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<button type="submit"
+												class="btn btn-danger btn-lg btn-huge btn-block coupon-expired-button">
+												<span style="margin-bottom: 20px margin-top:20px"
+													class="glyphicon glyphicon-trash"></span>&nbsp;기간만료 쿠폰 삭제
+											</button>
 										</div>
 									</div>
-									<div class="col-md-3">
-										<button type="button"
-											class="btn btn-danger btn-lg btn-huge btn-block coupon-expired-button">
-											<span style="margin-bottom: 20px margin-top:20px"
-												class="glyphicon glyphicon-trash"></span>&nbsp;기간만료 쿠폰 삭제
-										</button>
-									</div>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 				</c:forEach>

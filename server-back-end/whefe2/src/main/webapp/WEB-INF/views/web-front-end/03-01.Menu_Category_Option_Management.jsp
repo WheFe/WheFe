@@ -58,7 +58,7 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">WheFe</a>
+				<a class="navbar-brand" href="#">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
@@ -69,6 +69,10 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
+				<li><div class="user-info"
+							style="margin-top: 15px; color: #636363">
+							<span class="glyphicon glyphicon-user"></span>&nbsp; ${pageContext.request.userPrincipal.name}
+						</div></li>
 					<li><a href=""<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
 							로그아웃</a></li>
 				</ul>

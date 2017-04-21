@@ -49,4 +49,10 @@ public class CouponDao {
 		Object[] object = {coupon.getCoupon_name(), coupon.getCafe_id(), coupon.getCoupon_price(), coupon.getCoupon_start(), coupon.getCoupon_end(),coupon.isUse_ox()};
 		return (jdbcTemplateObject.update(sql, object))==1;
 	}
+	
+	public boolean deleteCoupon(String coupon_name, String cafe_id) {
+		String sql = "delete from cafe_coupon where coupon_name=? and cafe_id=?";
+		Object[] object = {coupon_name, cafe_id};
+		return (jdbcTemplateObject.update(sql, object))==1;
+	}
 }

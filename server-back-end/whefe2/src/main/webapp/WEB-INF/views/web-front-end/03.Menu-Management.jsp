@@ -142,7 +142,7 @@
 				<div class="row" id="menu">
 					<div class="panel-body">
 						<c:forEach var="category" items="${categories}" varStatus="status">	
-							categories[status.index].category_name :   ${categories[status.index].category_name}
+							<%-- categories[status.index].category_name :   ${categories[status.index].category_name} --%>
 							<%-- ${status.count}
 							${status.index }
 							${category.category_name} --%>

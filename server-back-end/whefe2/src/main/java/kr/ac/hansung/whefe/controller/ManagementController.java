@@ -59,6 +59,16 @@ public class ManagementController {
 		}
 		return "redirect:/management/coupon";
 	}
+	
+	@RequestMapping(value="/management/coupon/deletecoupon/{coupon_name}")
+	public String deleteCoupon(@PathVariable String coupon_name, HttpServletRequest request) {
+		String cafe_id = request.getParameter("cafe_id");
+		if(!couponService.deleteCoupon(coupon_name, cafe_id)) {
+			System.out.println("Deleting coupon Failed.........");
+			
+		}
+		return "redirect:/management/coupon";
+	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 주문 컨트롤러
@@ -105,7 +115,9 @@ public class ManagementController {
 	@RequestMapping(value = "/management/menu/{category_name}")
 	public String menuManagement(@PathVariable String category_name, Model model) {
 		List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(category_name);
-		System.out.println(cafe_menu.get(0));
+		if(cafe_menu==null) {
+			System.out.println("cafe_menu NULL!!!!!!!!!!!!!!!!!!!!!!!");
+		}
 		model.addAttribute("cafe_menu", cafe_menu);
 		model.addAttribute("category_name", category_name);
 		return "web-front-end/04.Menu-Detail-Management";
