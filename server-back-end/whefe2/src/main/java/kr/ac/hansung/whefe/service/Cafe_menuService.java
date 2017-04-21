@@ -1,5 +1,6 @@
 package kr.ac.hansung.whefe.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,9 @@ public class Cafe_menuService {
 	
 	public boolean addMenu(String[] param) {
 		return cafe_menuDao.addMenu(param);
+	}
+	
+	public boolean addMenu(ArrayList<String> pkArray, ArrayList<String> menu_nameArray, ArrayList<String> menu_sizeArray, ArrayList<String> hot_ice_noneArray, ArrayList<String> menu_priceArray) {
+		return cafe_menuDao.addMenu(pkArray, menu_nameArray, menu_sizeArray, hot_ice_noneArray, menu_priceArray);
 	}
 }

@@ -151,18 +151,18 @@
 																				<label><input type="checkbox" value=""><input
 																					name="hot_small" type="text" class="form-control"></input></label>
 																			</div></td>
-																		<!-- <td><div class="checkbox price">
+																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="hot_medium" type="text" class="form-control"></input></label>
 																			</div></td>
 																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="hot_large" type="text" class="form-control"></input></label>
-																			</div></td> -->
-																		<!-- <td><div class="checkbox price">
+																			</div></td>
+																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="hot_none" type="text" class="form-control"></input></label>
-																			</div></td> -->
+																			</div></td>
 																	</tr>
 																	<tr>
 																		<th scope="row">ICE</th>
@@ -170,7 +170,7 @@
 																				<label><input type="checkbox" value=""><input
 																					name="ice_small" type="text" class="form-control"></input></label>
 																			</div></td>
-																		<!-- <td><div class="checkbox price">
+																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="ice_medium" type="text" class="form-control"></input></label>
 																			</div></td>
@@ -181,7 +181,7 @@
 																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="ice_none" type="text" class="form-control"></input></label>
-																			</div></td> -->
+																			</div></td>
 																	</tr>
 																	<tr>
 																		<th scope="row">단일 메뉴</th>
@@ -189,7 +189,7 @@
 																				<label><input type="checkbox" value=""><input
 																					name="none_small" type="text" class="form-control"></input></label>
 																			</div></td>
-																		<!-- <td><div class="checkbox price">
+																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="none_medium" type="text" class="form-control"></input></label>
 																			</div></td>
@@ -200,7 +200,7 @@
 																		<td><div class="checkbox price">
 																				<label><input type="checkbox" value=""><input
 																					name="none_none" type="text" class="form-control"></input></label>
-																			</div></td> -->
+																			</div></td>
 																	</tr>
 																</tbody>
 															</table>

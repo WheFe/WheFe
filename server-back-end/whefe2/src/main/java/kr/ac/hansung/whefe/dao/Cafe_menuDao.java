@@ -2,9 +2,9 @@ package kr.ac.hansung.whefe.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.Size2DSyntax;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +56,24 @@ public class Cafe_menuDao {
 			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, "hot", "S", hot_small});
 			return true;
 			
+		}
+		
+		public boolean addMenu(ArrayList<String> pkArray, ArrayList<String> menu_nameArray, ArrayList<String> menu_sizeArray, ArrayList<String> hot_ice_noneArray, ArrayList<String> menu_priceArray) {
+			int size = menu_nameArray.size();
+			String cafe_id = pkArray.get(0);
+			String category_name = pkArray.get(1);
+			String menu_name = pkArray.get(2);
+			Object[] menu_nameObject = menu_nameArray.toArray();
+			Object[] menu_sizeObject = menu_sizeArray.toArray();
+			Object[] hot_ice_noneObject = hot_ice_noneArray.toArray();
+			Object[] menu_priceObject = menu_priceArray.toArray();
+			String sql="";
+			
+			for(int i=0;i<size;i++) {
+			sql = "insert into cafe_menu(cafe_id, category_name, menu_name, hot_ice_none, menu_size, menu_price)"
+					+ "values (?,?,?,?,?,?)";
+			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i]});
+			}
+			return false;
 		}
 }

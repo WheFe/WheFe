@@ -1,10 +1,16 @@
 package kr.ac.hansung.whefe.controller;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -122,29 +128,117 @@ public class ManagementController {
 		model.addAttribute("category_name", category_name);
 		return "web-front-end/04.Menu-Detail-Management";
 	}
-
-	/*
-	 * @RequestMapping(value = "/management/menu/{category_name}") public String
-	 * menuManagement2(@PathVariable String category_name, Model model) {
-	 * List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(category_name);
-	 * System.out.println(cafe_menu.get(0)); model.addAttribute("cafe_menu",
-	 * cafe_menu); model.addAttribute("category_name", category_name); return
-	 * "web-front-end/04.Menu-Detail-Management"; }
-	 */
-
+	
 	@RequestMapping(value = "/management/menu/addmenu")
 	public String addMenu(HttpServletRequest request, HttpServletResponse response) {
+		
+		ArrayList<String> menu_priceArray = new ArrayList<String>();
+		ArrayList<String> menu_nameArray = new ArrayList<String>();
+		ArrayList<String> hot_ice_noneArray = new ArrayList<String>();
+		ArrayList<String> menu_sizeArray = new ArrayList<String>();
+		ArrayList<String> pkArray = new ArrayList<String>();
+		
 		String cafe_id = request.getParameter("cafe_id");
+		pkArray.add(cafe_id);
+		
 		String category_name = request.getParameter("category_name");
+		pkArray.add(category_name);
+		
 		String menu_name = request.getParameter("menu_name");
+		pkArray.add(menu_name);
+		
+		//hot_size
 		String hot_small = request.getParameter("hot_small");
+		if(hot_small!="") {
+			menu_priceArray.add(hot_small);
+			menu_nameArray.add("hot_small");
+			hot_ice_noneArray.add("hot");
+			menu_sizeArray.add("S");
+		}
+		String hot_medium = request.getParameter("hot_medium");
+		if(hot_medium!="") {
+			menu_priceArray.add(hot_medium);
+			menu_nameArray.add("hot_medium");
+			hot_ice_noneArray.add("hot");
+			menu_sizeArray.add("M");
+			
+		}
+		String hot_large = request.getParameter("hot_large");
+		if(hot_large!="") {
+			menu_priceArray.add(hot_large);
+			menu_nameArray.add("hot_large");
+			hot_ice_noneArray.add("hot");
+			menu_sizeArray.add("L");
+			
+		}
+		String hot_none = request.getParameter("hot_none");
+		if(hot_none!="") {
+			menu_priceArray.add(hot_none);
+			menu_nameArray.add("hot_none");
+			hot_ice_noneArray.add("hot");
+			menu_sizeArray.add("only");
+		}
 		String ice_small = request.getParameter("ice_small");
-		System.out.println(cafe_id + "!!!!!!!!!!!!!!!!!!!!!" + category_name + "!!!!!!!!!!!!!!!!!!!!");
-
-		String[] param = { cafe_id, category_name, menu_name, hot_small, ice_small };
-
-		if (!cafe_menuService.addMenu(param)) {
-			System.out.println("addMenu failed......");
+		if(ice_small!="") {
+			menu_priceArray.add(ice_small);
+			menu_nameArray.add("ice_small");
+			hot_ice_noneArray.add("ice");
+			menu_sizeArray.add("S");
+		}
+		String ice_medium = request.getParameter("ice_medium");
+		if(ice_medium!="") {
+			menu_priceArray.add(ice_medium);
+			menu_nameArray.add("ice_medium");
+			hot_ice_noneArray.add("ice");
+			menu_sizeArray.add("M");
+		}
+		String ice_large = request.getParameter("ice_large");
+		if(ice_large!="") {
+			menu_priceArray.add(ice_large);
+			menu_nameArray.add("ice_large");
+			hot_ice_noneArray.add("ice");
+			menu_sizeArray.add("L");
+		}
+		String ice_none = request.getParameter("ice_none");
+		if(ice_none!="") {
+			menu_priceArray.add(ice_none);
+			menu_nameArray.add("ice_none");
+			hot_ice_noneArray.add("ice");
+			menu_sizeArray.add("only");
+		}
+		String none_small = request.getParameter("none_small");
+		if(none_small!="") {
+			menu_priceArray.add(none_small);
+			menu_nameArray.add("none_small");
+			hot_ice_noneArray.add("none");
+			menu_sizeArray.add("S");
+		}
+		String none_medium = request.getParameter("none_medium");
+		if(none_medium!="") {
+			menu_priceArray.add(none_medium);
+			menu_nameArray.add("none_medium");
+			hot_ice_noneArray.add("none");
+			menu_sizeArray.add("M");
+		}
+		String none_large = request.getParameter("none_large");
+		if(none_large!="") {
+			menu_priceArray.add(none_large);
+			menu_nameArray.add("none_large");
+			hot_ice_noneArray.add("none");
+			menu_sizeArray.add("L");
+			
+		}
+		String none_none = request.getParameter("none_none");
+		if(none_none!="") {
+			menu_priceArray.add(none_none);
+			menu_nameArray.add("none_none");
+			hot_ice_noneArray.add("none");
+			menu_sizeArray.add("only");
+		}
+		
+		
+		if(!cafe_menuService.addMenu(pkArray, menu_nameArray, menu_sizeArray, hot_ice_noneArray, menu_priceArray)) {
+			
 		}
 		return "redirect:/management";
 	}
