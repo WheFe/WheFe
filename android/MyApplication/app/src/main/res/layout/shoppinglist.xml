@@ -7,7 +7,7 @@
     tools:context="com.example.chun.whefe.ShoppingListActivity">
 
     <RelativeLayout
-        android:layout_width="350dp"
+        android:layout_width="340dp"
         android:layout_height="66dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
@@ -113,13 +113,12 @@
             android:id="@+id/sh_list_deleteButton"
             android:layout_width="50dp"
             android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
             android:text="삭제"
             android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/sh_list_priceView"

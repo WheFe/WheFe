@@ -57,7 +57,7 @@ public class Utility {
         // setting listview item in adapter
         ViewGroup.LayoutParams params = myListView.getLayoutParams();
 // divider 도 크기가 있기 때문에 따로 더해줘야 한다.
-        params.height = totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1)) + 300;
+        params.height = totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1)) + 500;
         myListView.setLayoutParams(params);
         // layout view 모양이 바꼇다고 알려준다. onlayout 이 호출 된다.
         myListView.requestLayout();

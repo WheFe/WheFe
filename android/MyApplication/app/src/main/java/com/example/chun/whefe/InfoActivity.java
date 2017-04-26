@@ -26,7 +26,7 @@ public class InfoActivity extends AppCompatActivity {
         toolbar.setTitle("Title");
         toolbar.setTitleTextColor(Color.parseColor("#ffff33"));
         toolbar.setSubtitle("id");
-        toolbar.setNavigationIcon(R.drawable.ic_menu_send);
+        toolbar.setNavigationIcon(R.drawable.listing_option);
         setSupportActionBar(toolbar);
         /*-------------------------------------------------------*/
 

@@ -34,12 +34,12 @@ public class CouponActivity extends AppCompatActivity {
         setContentView(R.layout.coupon);
 
     /*------------------------Tool bar-----------------------*/
-        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         toolbar.setTitle("Title");
         toolbar.setTitleTextColor(Color.parseColor("#ffff33"));
         toolbar.setSubtitle("id");
-        toolbar.setNavigationIcon(R.drawable.ic_menu_send);
+        toolbar.setNavigationIcon(R.drawable.listing_option);
         setSupportActionBar(toolbar);
         /*-------------------------------------------------------*/
 

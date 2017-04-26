@@ -1,9 +1,15 @@
 package com.example.chun.whefe;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,30 +18,51 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.chun.whefe.R.layout.map;
+
 public class MapActivity extends AppCompatActivity {
         //implements NavigationView.OnNavigationItemSelectedListener{
+    private static final int REQ_PERMISSION = 2000;
 
+    private List<Fragment> mapFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.map);
+        setContentView(map);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("ID_TEXT");
         String pass = intent.getStringExtra("Pass_TEXT");
         Toast.makeText(getApplicationContext(),"result : " + id + pass,Toast.LENGTH_SHORT).show();
 
-  /*------------------------Tool bar-----------------------*/
+        /*------------------------Tool bar-----------------------*/
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         toolbar.setTitle("Title");
         toolbar.setTitleTextColor(Color.parseColor("#ffff33"));
         toolbar.setSubtitle("id");
-        toolbar.setNavigationIcon(R.drawable.ic_menu_send);
+        toolbar.setNavigationIcon(R.drawable.listing_option);
         setSupportActionBar(toolbar);
         /*-------------------------------------------------------*/
+
+        //Permission Check
+        int permissionChk = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        // if Permission DENIED
+        if(permissionChk == PackageManager.PERMISSION_DENIED){
+
+            // Request Permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQ_PERMISSION);
+        }
+        else{
+            // if Permission GRANTED
+            initViewPager();
+        }
 
         /*------------------navigation-------------------------*/
        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,6 +77,25 @@ public class MapActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);*/
     }
+
+    private void initViewPager() {
+        mapFragments = new ArrayList<>();
+        mapFragments.add(new NaverMapFragment());
+
+        MapFragmetsPagerAdapter pagerAdapter = new MapFragmentsPageAdapter();
+
+        NonSwipeViewPager viewPager = (NonSwipeViewPager) findViewById(R.id.vp_maps);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQ_PERMISSION & grantResults.length > 0) {
+            initViewPager();
+        }
+    }
+
 
    /* @Override
     public void onBackPressed() {
