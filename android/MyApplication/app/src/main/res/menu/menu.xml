@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/menu_setting"
-        android:title="setting"
-        android:showAsAction="always"/>
-    <item
-        android:id="@+id/menu_logout"
-        android:title="logout"
-        android:showAsAction="always"/>
-    <item
-        android:id="@+id/menu_exit"
-        android:title="Exit"
-        android:showAsAction="always"/>
-    <!--<item android:id="@+id/action_revert"
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_revert"
         android:icon="@android:drawable/ic_menu_revert"
         android:title="초기화"
         android:alphabeticShortcut="c"
-        android:showAsAction="ifRoom"/>-->
-    <!--<item android:id="@+id/action_map"
+        android:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_map"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="지도보기"
         android:showAsAction="ifRoom"
@@ -97,5 +83,5 @@
     <item android:id="@+id/action_navermap"
         android:title="네이버 지도앱 실행"
         android:alphabeticShortcut="m"
-        android:showAsAction="ifRoom"/>-->
+        android:showAsAction="ifRoom"/>
 </menu>

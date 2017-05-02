@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout000"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.chun.whefe.MapActivity">
@@ -18,16 +19,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent" />-->
+
     <android.support.design.widget.AppBarLayout
-        android:layout_width="0dp"
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
         android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="parent">
+        android:layout_marginTop="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -39,44 +42,13 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <RelativeLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:id="@+id/relativeLayout2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.857">
+    <com.example.chun.whefe.NonSwipeViewPager
+        android:id="@+id/vp_maps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appBarLayout">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/paint1" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="71dp"
-            android:layout_marginEnd="17dp"
-            android:layout_marginRight="17dp"
-            android:onClick="onListButtonClicked"
-            android:text="목록" />
-
-    </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+    </com.example.chun.whefe.NonSwipeViewPager>
+</RelativeLayout>

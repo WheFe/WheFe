@@ -33,6 +33,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="Theme.NoShadow" parent="android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowContentOverlay">@android:color/transparent</item>
+    </style>
+
+    <style name="App.Theme" parent="android:style/Theme.Light.NoTitleBar"/>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

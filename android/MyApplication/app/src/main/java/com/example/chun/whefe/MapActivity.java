@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,8 +23,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.chun.whefe.R.layout.map;
-
 public class MapActivity extends AppCompatActivity {
         //implements NavigationView.OnNavigationItemSelectedListener{
     private static final int REQ_PERMISSION = 2000;
@@ -33,12 +33,12 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(map);
+        setContentView(R.layout.map);
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("ID_TEXT");
         String pass = intent.getStringExtra("Pass_TEXT");
-        Toast.makeText(getApplicationContext(),"result : " + id + pass,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(),"result : " + id + pass,Toast.LENGTH_SHORT).show();
 
         /*------------------------Tool bar-----------------------*/
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -82,20 +82,42 @@ public class MapActivity extends AppCompatActivity {
         mapFragments = new ArrayList<>();
         mapFragments.add(new NaverMapFragment());
 
-        MapFragmetsPagerAdapter pagerAdapter = new MapFragmentsPageAdapter();
+        MapFragmentsPagerAdapter pagerAdapter = new MapFragmentsPagerAdapter(getSupportFragmentManager());
 
         NonSwipeViewPager viewPager = (NonSwipeViewPager) findViewById(R.id.vp_maps);
+
         viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQ_PERMISSION & grantResults.length > 0) {
             initViewPager();
         }
     }
 
+    class MapFragmentsPagerAdapter extends FragmentPagerAdapter {
+        public MapFragmentsPagerAdapter(FragmentManager fm) { super(fm);}
+
+        @Override
+        public Fragment getItem(int position) {
+            return mapFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mapFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch(position) {
+                case 0: return "Naver";
+                default: return "";
+            }
+        }
+    }
 
    /* @Override
     public void onBackPressed() {
@@ -178,6 +200,8 @@ public class MapActivity extends AppCompatActivity {
         switch(curId){
             case R.id.menu_setting:
                 Toast.makeText(this,"setting selected",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MapActivity.this,ListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_logout:
                 Toast.makeText(this,"logout selected",Toast.LENGTH_SHORT).show();
