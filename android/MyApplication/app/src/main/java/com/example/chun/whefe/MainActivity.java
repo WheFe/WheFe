@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onTestButtonClicked(View v){
+        Intent intent =  new Intent(MainActivity.this,OrderActivity.class);
+        startActivity(intent);
+    }
+
     public void onSignupClicked(View v){
         Toast.makeText(getApplicationContext(),"Signup 눌림",Toast.LENGTH_SHORT).show();
 

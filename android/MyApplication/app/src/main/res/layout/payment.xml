@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,30 +8,30 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <RelativeLayout
         android:layout_width="368dp"
         android:layout_height="495dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.857"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.0">
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/my_toolbar">
 
         <Button
             android:id="@+id/paymentButton"
@@ -55,7 +55,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/layout_border"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_above="@+id/paymentButton">
 
             <ListView
                 android:id="@+id/payment_orderListView"
@@ -81,7 +82,7 @@
         <FrameLayout
             android:id="@+id/payment_explainVIew"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="160dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -93,7 +94,7 @@
             <TextView
                 android:id="@+id/payment_warningVIew"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="142dp"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="결제 주의"
@@ -114,4 +115,4 @@
             android:layout_alignEnd="@+id/paymentLinearLayout" />
 
     </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
