@@ -1,19 +1,12 @@
 package com.example.chun.whefe;
 
 import android.app.ActivityManager;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +17,7 @@ import java.util.List;
 public class PaymentActivity extends AppCompatActivity {
     List<ShoppingList> shoppingLists;
     ShoppingList shoppingList;
-    MyShoppingListAdapter myShoppingListAdapter;
+   // MyShoppingListAdapter myShoppingListAdapter;
     ListView sh_listView;
 
     @Override
@@ -56,16 +49,16 @@ public class PaymentActivity extends AppCompatActivity {
         shoppingLists.add(s2);
         shoppingLists.add(s3);
 
-        myShoppingListAdapter = new MyShoppingListAdapter(this,R.layout.shoppinglist,shoppingLists);
+       /* myShoppingListAdapter = new MyShoppingListAdapter(this,R.layout.sh_list_group,shoppingLists);
 
         sh_listView = (ListView)findViewById(R.id.payment_orderListView);
-        sh_listView.setAdapter(myShoppingListAdapter);
+        sh_listView.setAdapter(myShoppingListAdapter);*/
 
         TextView textView = (TextView)findViewById(R.id.pay_priceView);
         textView.setText("가격 : 7600 원");
     }
 
-    public class MyShoppingListAdapter extends ArrayAdapter<ShoppingList> {
+    /*public class MyShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
         LayoutInflater lnf;
 
@@ -123,61 +116,7 @@ public class PaymentActivity extends AppCompatActivity {
             return convertView;
         }
     }
-    public class ShoppingList{
-        private String name;
-        private String hot;
-        private String size;
-        private String option;
-        private String coupon;
-        private String price;
-
-        public ShoppingList(){};
-        public ShoppingList(String name, String hot, String size, String option, String coupon, String price) {
-            this.name = name;
-            this.hot = hot;
-            this.size = size;
-            this.option = option;
-            this.coupon = coupon;
-            this.price = price;
-        }
-
-        public String getName() {
-            return name;
-        }
-        public void setName(String name) {
-            this.name = name;
-        }
-        public String getHot() {
-            return hot;
-        }
-        public void setHot(String hot) {
-            this.hot = hot;
-        }
-        public String getSize() {
-            return size;
-        }
-        public void setSize(String size) {
-            this.size = size;
-        }
-        public String getOption() {
-            return option;
-        }
-        public void setOption(String option) {
-            this.option = option;
-        }
-        public String getCoupon() {
-            return coupon;
-        }
-        public void setCoupon(String coupon) {
-            this.coupon = coupon;
-        }
-        public String getPrice() {
-            return price;
-        }
-        public void setPrice(String price) {
-            this.price = price;
-        }
-    }
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

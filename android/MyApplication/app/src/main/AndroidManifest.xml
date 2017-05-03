@@ -31,7 +31,6 @@
         <activity android:name=".InfoActivity" />
         <activity android:name=".OrderActivity" />
         <activity android:name=".OrderList2Activity" />
-        <activity android:name=".ShoppingListActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".CouponActivity" />
         <activity android:name=".CoupListActivity" />
@@ -40,7 +39,10 @@
             android:label="@string/title_activity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MenugroupActivity" />
-        <activity android:name=".MenuchildActivity"></activity>
+        <activity android:name=".MenuchildActivity" />
+        <activity android:name=".ShoppinglistdialogActivity" />
+        <activity android:name=".ShListGroupActivity" />
+        <activity android:name=".ShListChildActivity"></activity>
     </application>
 
 </manifest>

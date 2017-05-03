@@ -1,12 +1,14 @@
 package com.example.chun.whefe;
 
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,30 +20,17 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.StringTokenizer;
 
 public class OrderActivity extends AppCompatActivity {
-
-    int[] images = {R.drawable.grazie1,R.drawable.grazie2};
-    String[] menunames = {"아메리카노", "카페라떼"};
-
-    List<Coffee> coffees;
-    List<Coffee> smoothies;
-    List<ShoppingList> shoppingLists;
-    TabHost tabHost;
-    ListView sh_listView;
-   // MyMenuListAdapter myMenuListAdapter;
-   // MyShoppingListAdapter myShoppingListAdapter;
 
     private CafeMenuAdapter cafeMenuAdapter;
 
@@ -50,7 +39,16 @@ public class OrderActivity extends AppCompatActivity {
     private HashMap<String, ArrayList<String>> arrayChild = new HashMap<String,ArrayList<String>>();
     private HashMap<String, ArrayList<String>> arrayChild2 = new HashMap<String,ArrayList<String>>();
     ExpandableListView listView;
+    CoffeeViewHolder holder;
+
     LinearLayout categoryLayout;
+
+
+    private ArrayList<ShoppingList> sh_arrayList = new ArrayList<ShoppingList>();
+    private HashMap<String, ArrayList<String>> sh_arrayChild = new HashMap<String, ArrayList<String>>();
+    ExpandableListView sh_listView;
+    ShoppingListAdapter sh_adapter;
+    ShoppingListViewHolder sh_holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +65,7 @@ public class OrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         /*-------------------------------------------------------*/
 
-
+        setShoppingListData();
 
         listView = (ExpandableListView)findViewById(R.id.menuListView);
         setArrayList();
@@ -75,26 +73,6 @@ public class OrderActivity extends AppCompatActivity {
         //listView.setAdapter(new AdptMain(this, arrayList, arrayChild));
         cafeMenuAdapter = new CafeMenuAdapter(this,arrayList1,arrayChild);
         listView.setAdapter(cafeMenuAdapter);
-
-
-        /*shoppingLists = new ArrayList<ShoppingList>();
-
-        ShoppingList s1 = new ShoppingList("아메리카노","Iced","medium","샷추가+500","No Coupon","2300");
-        ShoppingList s2 = new ShoppingList("카페모카","Hot", "small","","-500","3500");
-        ShoppingList s3 = new ShoppingList("아메리카노", "Hot", "Large", "연하게+0","No Coupon","1800");
-
-        shoppingLists.add(s1);
-        shoppingLists.add(s2);
-        shoppingLists.add(s3);
-
-        myShoppingListAdapter = new MyShoppingListAdapter(this,R.layout.shoppinglist,shoppingLists);
-
-        sh_listView = (ListView)findViewById(R.id.ShoppingListView);
-        sh_listView.setAdapter(myShoppingListAdapter);
-*/
-
-      //  View header = getLayoutInflater().inflate(R.layout.order_list,null,false);
-      //  listView.addHeaderView(header);
 
     }
     private void setCategory(){
@@ -155,9 +133,70 @@ public class OrderActivity extends AppCompatActivity {
         arrayChild2.put(arrayList2.get(2).getName(),arrayChicken);
 
     }
+    private void setShoppingListData(){
+        /*  ShoppingList(String name, String hot, String size, String option, String coupon, String price)  */
+        sh_arrayList.add(new ShoppingList("카페라떼","hot","medium","샷추가 +500","-500원","2500원"));
+        sh_arrayList.add(new ShoppingList("플레인스무디","","large","","-1000원","2500원"));
+        sh_arrayList.add(new ShoppingList("아메리카노","iced","small","샷추가 +500","","2300원"));
+        sh_arrayList.add(new ShoppingList("카푸치노","hot","medium","","-500원","1800원"));
+        ArrayList<String> arrayTemp = new ArrayList<String>();
+        arrayTemp.add("a");
+
+        sh_arrayChild.put(sh_arrayList.get(0).getName(),arrayTemp);
+        sh_arrayChild.put(sh_arrayList.get(1).getName(),arrayTemp);
+        sh_arrayChild.put(sh_arrayList.get(2).getName(),arrayTemp);
+        sh_arrayChild.put(sh_arrayList.get(3).getName(),arrayTemp);
+    }
     public void onOrderSuccessButtonClicked(View v){
         Intent intent =  new Intent(OrderActivity.this,PaymentActivity.class);
         startActivity(intent);
+    }
+
+    /* 장바구니 클릭시 다이얼로그 */
+
+    public void onShoppingListButtonClicked(View v){
+        final Dialog dialog = new Dialog(OrderActivity.this);
+        dialog.setTitle("장바구니");
+        dialog.setContentView(R.layout.shoppinglistdialog);
+        TextView title = (TextView)dialog.findViewById(R.id.sh_titleView);
+        ImageView imageView = (ImageView)dialog.findViewById(R.id.sh_titleImageView);
+        Button cancel = (Button)dialog.findViewById(R.id.sh_cancelButton);
+        Button payment = (Button)dialog.findViewById(R.id.sh_paymentButton);
+        TextView priceView = (TextView)dialog.findViewById(R.id.sh_totalPriceView);
+        title.setText("장바구니");
+        imageView.setImageResource(R.drawable.shopping_cart);
+
+        cancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderActivity.this,PaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+        sh_listView = (ExpandableListView)dialog.findViewById(R.id.shoppintListView);
+
+        sh_adapter = new ShoppingListAdapter(this,sh_arrayList,sh_arrayChild);
+
+        sh_listView.setClickable(true);
+        sh_listView.setAdapter(sh_adapter);
+        int totalPrice =0;
+        for(int i = 0; i<sh_arrayList.size();i++){
+         //   totalPrice += sh_arrayList.get(0).getPrice();
+            StringTokenizer s = new StringTokenizer(sh_arrayList.get(i).getPrice());
+            String temp = s.nextToken("원");
+            totalPrice += Integer.parseInt(temp);
+        }
+
+        priceView.setText("결제금액" + totalPrice + "원");
+
+        dialog.show();
+
     }
 
     public class CafeMenuAdapter extends BaseExpandableListAdapter {
@@ -165,8 +204,6 @@ public class OrderActivity extends AppCompatActivity {
 
         private ArrayList<CafeMenu> arrayGroup;
         private HashMap<String, ArrayList<String>> arrayChild;
-
-
 
         public CafeMenuAdapter(Context context, ArrayList<CafeMenu> arrayGroup, HashMap<String, ArrayList<String>> arrayChild) {
             this.context = context;
@@ -228,7 +265,7 @@ public class OrderActivity extends AppCompatActivity {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = (RelativeLayout)inflater.inflate(R.layout.menugroup, null);
             }
-            TextView textGroup = (TextView) v.findViewById(R.id.CoffeeNameView);
+            TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.priceVIew);
             priceView.setText(price);
@@ -236,7 +273,7 @@ public class OrderActivity extends AppCompatActivity {
             return v;
         }
 
-        CoffeeViewHolder holder;
+
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -257,6 +294,7 @@ public class OrderActivity extends AppCompatActivity {
               //  holder.menuImageView = (ImageView) convertView.findViewById(R.id.coffeeImageView);
               //  holder.menuNameTextView = (TextView)convertView.findViewById(R.id.CoffeeNameView);
             }
+            /*-------------------------------스피너 어댑터 설정----------------------------------------------------------*/
             ArrayList<String> sizeSpinnerlist = new ArrayList<String>();
 
             sizeSpinnerlist.add("Size");
@@ -284,6 +322,127 @@ public class OrderActivity extends AppCompatActivity {
 
             ArrayAdapter<String>   couponAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item,couponSpinnerlist);
             holder.couponSpinner.setAdapter(couponAdapter);
+            /*-----------------------------------------------------------------------------------*/
+            return v;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+    }
+
+
+    public class ShoppingListAdapter extends BaseExpandableListAdapter{
+        private Context context;
+        private ArrayList<ShoppingList> arrayGroup;
+        private HashMap<String, ArrayList<String>> arrayChild;
+
+        public ShoppingListAdapter(Context context, ArrayList<ShoppingList> arrayGroup, HashMap<String, ArrayList<String>> arrayChild) {
+            this.context = context;
+            this.arrayGroup = arrayGroup;
+            this.arrayChild = arrayChild;
+        }
+
+        public void upDateItemList(ArrayList<ShoppingList> arrayGroup, HashMap<String,ArrayList<String>> arrayChild){
+            this.arrayGroup = arrayGroup;
+            this.arrayChild = arrayChild;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getGroupCount() {
+            return arrayGroup.size();
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return arrayChild.get(arrayGroup.get(groupPosition).getName()).size();
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return arrayGroup.get(groupPosition);
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return arrayChild.get(arrayGroup.get(groupPosition)).get(childPosition);
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            ShoppingList shoppingList = arrayGroup.get(groupPosition);
+
+            String groupName = shoppingList.getName();
+            String price = shoppingList.getPrice();
+            //String groupName = arrayGroup2.get(groupPosition);
+            View v = convertView;
+
+            if(v==null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = (RelativeLayout)inflater.inflate(R.layout.sh_list_group, null);
+            }
+            //Button button = (Button) v.findViewById(R.id.sh_deleteButton);
+            //button.setVisibility();
+            TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
+            textGroup.setText(groupName);
+            TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
+            priceView.setText(price);
+
+            return v;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            String childName = arrayChild.get(arrayGroup.get(groupPosition).getName()).get(childPosition);
+
+            TextView hotView;
+            TextView sizeView;
+            TextView optionView;
+            TextView couponView;
+
+            View v = convertView;
+            String hot = arrayGroup.get(groupPosition).getHot();
+            String size = arrayGroup.get(groupPosition).getSize();
+            String option = arrayGroup.get(groupPosition).getOption();
+            String coupon = arrayGroup.get(groupPosition).getCoupon();
+            Log.i("child",hot + size + option + coupon);
+
+
+            if(v==null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = (LinearLayout)inflater.inflate(R.layout.sh_list_child, null);
+
+                sh_holder = new ShoppingListViewHolder();
+                sh_holder.hotView = (TextView)v.findViewById(R.id.sh_hotVIew);
+                sh_holder.sizeView = (TextView)v.findViewById(R.id.sh_sizeView);
+                sh_holder.optionView = (TextView)v.findViewById(R.id.sh_optionView);
+                sh_holder.couponView = (TextView)v.findViewById(R.id.sh_couponView);
+
+
+
+            }
+
+            sh_holder.hotView.setText(hot);
+            sh_holder.sizeView.setText(size);
+            sh_holder.optionView.setText(option);
+            sh_holder.couponView.setText(coupon);
 
             return v;
         }
@@ -295,79 +454,15 @@ public class OrderActivity extends AppCompatActivity {
     }
 
 
-    public class Coffee{
-        private int image;
-        private String menuname;
-
-        public void setImage(int image){
-            this.image = image;
-        }
-        public void setMenuname(String menuname){
-            this.menuname = menuname;
-        }
-        public int getImage(){
-            return image;
-        }
-        public String getMenuname(){
-            return menuname;
-        }
+    public static class ShoppingListViewHolder{
+        public ImageView imageView;
+        public TextView nameView;
+        public TextView priceView;
+        public TextView hotView;
+        public TextView sizeView;
+        public TextView optionView;
+        public TextView couponView;
     }
-    public class ShoppingList{
-        private String name;
-        private String hot;
-        private String size;
-        private String option;
-        private String coupon;
-        private String price;
-
-        public ShoppingList(){};
-        public ShoppingList(String name, String hot, String size, String option, String coupon, String price) {
-            this.name = name;
-            this.hot = hot;
-            this.size = size;
-            this.option = option;
-            this.coupon = coupon;
-            this.price = price;
-        }
-
-        public String getName() {
-            return name;
-        }
-        public void setName(String name) {
-            this.name = name;
-        }
-        public String getHot() {
-            return hot;
-        }
-        public void setHot(String hot) {
-            this.hot = hot;
-        }
-        public String getSize() {
-            return size;
-        }
-        public void setSize(String size) {
-            this.size = size;
-        }
-        public String getOption() {
-            return option;
-        }
-        public void setOption(String option) {
-            this.option = option;
-        }
-        public String getCoupon() {
-            return coupon;
-        }
-        public void setCoupon(String coupon) {
-            this.coupon = coupon;
-        }
-        public String getPrice() {
-            return price;
-        }
-        public void setPrice(String price) {
-            this.price = price;
-        }
-    }
-
 
     public static class CoffeeViewHolder{
         public RadioGroup radioGroup;
@@ -406,65 +501,7 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
-    /*public class MyShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
-        LayoutInflater lnf;
-
-        public MyShoppingListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<ShoppingList> shoppingLists) {
-            super(context, resource, shoppingLists);
-            lnf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        }
-
-        @Override
-        public int getCount() {
-            return shoppingLists.size();
-        }
-
-        @Override
-        public ShoppingList getItem(int position) {
-            return shoppingLists.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            if(convertView==null){
-                //  LayoutInflater inflater = getLayoutInflater();
-                convertView = lnf.inflate(R.layout.shoppinglist,parent,false);
-            }
-
-            ShoppingList shoppingList = new ShoppingList();
-            shoppingList.setName(shoppingLists.get(position).getName());
-            shoppingList.setHot(shoppingLists.get(position).getHot());
-            shoppingList.setSize(shoppingLists.get(position).getSize());
-            shoppingList.setOption(shoppingLists.get(position).getOption());
-            shoppingList.setCoupon(shoppingLists.get(position).getCoupon());
-            shoppingList.setPrice(shoppingLists.get(position).getPrice());
-
-            TextView nameView = (TextView)convertView.findViewById(R.id.sh_list_nameView);
-            TextView hotView = (TextView)convertView.findViewById(R.id.sh_list_hotView);
-            TextView sizeView = (TextView)convertView.findViewById(R.id.sh_list_sizeView);
-            TextView optionView = (TextView)convertView.findViewById(R.id.sh_list_optionView);
-            TextView couponView = (TextView)convertView.findViewById(R.id.sh_list_couponView);
-            TextView priceView = (TextView)convertView.findViewById(R.id.sh_list_priceView);
-
-            nameView.setText(shoppingList.getName());
-            hotView.setText(shoppingList.getHot());
-            sizeView.setText(shoppingList.getSize());
-            optionView.setText(shoppingList.getOption());
-            couponView.setText(shoppingList.getCoupon());
-            priceView.setText(shoppingList.getPrice()+"원");
-
-            return convertView;
-        }
-    }
-*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
