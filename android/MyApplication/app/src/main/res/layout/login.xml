@@ -120,17 +120,6 @@
             android:textSize="26sp"
             android:textStyle="bold|italic" />
 
-        <Button
-            android:id="@+id/testButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/IDView"
-            android:layout_alignRight="@+id/IDView"
-            android:layout_alignTop="@+id/LoginButton"
-            android:layout_marginTop="13dp"
-            android:onClick="onTestButtonClicked"
-            android:text="test" />
-
     </RelativeLayout>
 
 

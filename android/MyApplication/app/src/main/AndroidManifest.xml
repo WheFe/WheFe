@@ -34,15 +34,16 @@
         <activity android:name=".PaymentActivity" />
         <activity android:name=".CouponActivity" />
         <activity android:name=".CoupListActivity" />
-        <activity
-            android:name=".NavActivity"
-            android:label="@string/title_activity_nav"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MenugroupActivity" />
         <activity android:name=".MenuchildActivity" />
         <activity android:name=".ShoppinglistdialogActivity" />
         <activity android:name=".ShListGroupActivity" />
-        <activity android:name=".ShListChildActivity"></activity>
+        <activity android:name=".ShListChildActivity" />
+        <activity android:name=".nav.NavFrameActivity" />
+        <activity
+            android:name=".NavigationActivity"
+            android:label="@string/title_activity_navigation"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
