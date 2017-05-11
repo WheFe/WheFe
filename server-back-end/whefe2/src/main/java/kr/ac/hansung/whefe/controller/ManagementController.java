@@ -240,7 +240,7 @@ public class ManagementController {
 		if(!cafe_menuService.addMenu(pkArray, menu_nameArray, menu_sizeArray, hot_ice_noneArray, menu_priceArray)) {
 			
 		}
-		return "redirect:/management";
+		return "redirect:/management/menu/"+ category_name;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////

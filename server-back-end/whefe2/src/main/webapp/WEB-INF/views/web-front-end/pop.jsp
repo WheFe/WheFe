@@ -6,26 +6,36 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>Insert title here</title>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript">
+	/* $(document).ready(function() {
+		$("#checkBoxId").change(function() {
+			if ($("#checkBoxId").is(":checked")) {
+				alert("체크박스 체크했음!");
 
-	function init() {
+			} else {
+				alert("체크박스 체크 해제!");
+			}
+		});
+	}); */
+	$(document).ready(function() {
+		$("#checkBoxId").change(function(event) {
+			if ($("#checkBoxId").is(":checked")) {
+				alert("체크박스 체크했음!");
+				$("#textId").removeAttr("disabled");
 
-		// 부모페이지의 값을 불러들이기 위함 window.dialogArguments 포인트!
-
-		var opener = window.dialogArguments;
-
-		var message = opener.message; // 부모창에서 object에 넣었던 값
-
-		alert(message);
-
-		opener.message = "test OK!!!"; // object 값을 변경
-
-		//window.close();
-
-	}
+			} else {
+				alert("체크박스 체크 해제!");
+				$("#textId").attr("disabled","disabled");
+			}
+		});
+	});
 </script>
 </head>
 <body>
-
+	<input type="checkbox" id="checkBoxId" />
+	<input type="text" id="textId" disabled="disabled"/>
+	<h1 class="welcome">Hello</h1>
 </body>
 </html>

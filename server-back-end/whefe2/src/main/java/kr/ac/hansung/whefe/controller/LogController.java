@@ -1,5 +1,6 @@
 package kr.ac.hansung.whefe.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,37 +105,55 @@ public class LogController {
 	 * 
 	 * return resultVO; }
 	 */
-	/*@RequestMapping(value="/android")
-	public String androidTest2(HttpServletRequest request) {
-		System.out.println(request.toString());
-		System.out.println("안드로이드!!");
-		return "androidTest";
-	}*/
-	
-	/*@RequestMapping(value="/android")
-	public String androidTest3(HttpServletRequest request) {
-		System.out.println("안드로이드!!");
-		return "androidTest";
-	}*/
-	
+	/*
+	 * @RequestMapping(value="/android") public String
+	 * androidTest2(HttpServletRequest request) {
+	 * System.out.println(request.toString()); System.out.println("안드로이드!!");
+	 * return "androidTest"; }
+	 */
+
+	/*
+	 * @RequestMapping(value="/android") public String
+	 * androidTest3(HttpServletRequest request) { System.out.println("안드로이드!!");
+	 * return "androidTest"; }
+	 */
+
 	@RequestMapping("/android")
-	public String androidTest_HttpURLConnection() {
-		System.out.println("HttpURLConnection!!!");
-		return "androidTest";
+	public String androidTest_HttpURLConnection(HttpServletRequest request) throws UnsupportedEncodingException {
+		System.out.println("android Test!!!");
+		request.setCharacterEncoding("UTF-8");
+		// 서버측으로 넘어온 데이터를 추출
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String key1=request.getParameter("key1");
+		String key2=request.getParameter("key2");
+		System.out.println("request : " +id + " " + pw + "!!!!!!!!!!" );
+		System.out.println("request : " +key1 + " " + key2 + "!!!!!!!!!!" );
+		return "web-front-end/android";
 	}
 	
+	@RequestMapping(value="/android",  method = RequestMethod.POST)
+	public String androidTest_HttpURLConnectionPost(HttpServletRequest request) throws UnsupportedEncodingException {
+		System.out.println("android Test!!!");
+		request.setCharacterEncoding("UTF-8");
+		// 서버측으로 넘어온 데이터를 추출
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		System.out.println("request : " +id + " " + pw + "!!!!!!!!!!" );
+		return "web-front-end/android";
+	}
+	
+
 	@RequestMapping("/android2")
-	public void androidTest(HttpServletRequest request) {
-		System.out.println(request.getParameter("title")+ request.getParameter("memo"));
+	public void androidTest() {
+		System.out.println("android Test2!!!");
 	}
 
 	@RequestMapping("/android3")
 	public void androidTestWithRequest(HttpServletRequest request) {
 		String id = request.getParameter("id");
 		String pwd = request.getParameter("pwd");
-		System.out.println(id+"!!!!!!!!!!!!!!"+pwd);
+		System.out.println(id + "!!!!!!!!!!!!!!" + pwd);
 	}
-
-
 
 }

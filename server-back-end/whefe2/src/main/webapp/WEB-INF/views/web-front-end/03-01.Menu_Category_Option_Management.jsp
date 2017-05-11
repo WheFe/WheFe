@@ -86,7 +86,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4>
-					<b>카테고리별 옵션관리 </b>
+					<b> ${category_name} 옵션관리 </b>
 				</h4>
 			</div>
 

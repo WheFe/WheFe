@@ -10,6 +10,10 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <style>
 .option-button {
@@ -79,9 +83,8 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4>
-					<b>메뉴 관리
-						<h4>
-					</b>
+					<b> ${category_name} 메뉴 관리</b>
+				</h4>
 			</div>
 
 			<div class="container">
@@ -414,6 +417,7 @@
 										</div>
 									</div>
 								</div>
+								<br>
 							</c:forEach>
 						</div>
 					</div>
@@ -423,10 +427,6 @@
 	</div>
 
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -11,8 +11,24 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#checkBoxId").change(function(event) {
+		if ($("#checkBoxId").is(":checked")) {
+			alert("체크박스 체크했음!");
+			$("#textId").removeAttr("disabled");
 
+		} else {
+			alert("체크박스 체크 해제!");
+			$("#textId").attr("disabled","disabled");
+		}
+	});
+});
+</script>
 </head>
+
 <style>
 /*.navbar-nav {
   font-size: 20px;
@@ -289,8 +305,7 @@
 
 
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	
 	<script
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>

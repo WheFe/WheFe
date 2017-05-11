@@ -74,6 +74,6 @@ public class Cafe_menuDao {
 					+ "values (?,?,?,?,?,?)";
 			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i]});
 			}
-			return false;
+			return true;
 		}
 }
