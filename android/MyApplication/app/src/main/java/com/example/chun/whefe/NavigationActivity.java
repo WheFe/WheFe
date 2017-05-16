@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.chun.whefe.fragments.CouponFragment;
@@ -39,7 +38,9 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Whefe");
 
+      //  toolbar.set
      //   TextView nav_id_view = (TextView)findViewById(R.id.nav_id_view);
        // nav_id_view.setText("rlduf138");
 
@@ -105,25 +106,16 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
-        return true;
-    }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_settings) {
+        if (id == R.id.nav_memberinfo) {    // 네비게이션 회원가입
 
-            return true;
-        }else if(id==R.id.menu_logout){
+        } else if (id == R.id.nav_logout) {     // 네비게이션 로그아웃
             AlertDialog.Builder builder = new AlertDialog.Builder(NavigationActivity.this);
 
             builder.setMessage("로그아웃 하시겠습니까?");
@@ -145,7 +137,7 @@ public class NavigationActivity extends AppCompatActivity
             dialog.show();
 
             return true;
-        }else if(id==R.id.menu_exit){
+        } else if (id == R.id.nav_exit) {       // 네비게이션 종료
             AlertDialog.Builder builder = new AlertDialog.Builder(NavigationActivity.this);
 
             builder.setMessage("종료하시겠습니까?");
@@ -169,31 +161,6 @@ public class NavigationActivity extends AppCompatActivity
             dialog.setTitle("종료");
 
             dialog.show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-
-            this.onFragmentChanged(1);
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -47,8 +47,16 @@ public class OrderFragment extends Fragment {
 
     private ArrayList<CafeMenu> arrayList1 = new ArrayList<CafeMenu>();
     private ArrayList<CafeMenu> arrayList2 = new ArrayList<CafeMenu>();
+    private ArrayList<CafeMenu> arrayList3 = new ArrayList<CafeMenu>();
+    private ArrayList<CafeMenu> arrayList4 = new ArrayList<CafeMenu>();
+    private ArrayList<CafeMenu> arrayList5 = new ArrayList<CafeMenu>();
     private HashMap<String, ArrayList<String>> arrayChild = new HashMap<String,ArrayList<String>>();
     private HashMap<String, ArrayList<String>> arrayChild2 = new HashMap<String,ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> arrayChild3 = new HashMap<String,ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> arrayChild4 = new HashMap<String,ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> arrayChild5 = new HashMap<String,ArrayList<String>>();
+
+
     ExpandableListView listView;
     CoffeeViewHolder holder;
 
@@ -191,7 +199,7 @@ public class OrderFragment extends Fragment {
         button2.setText("스무디");
 
         Button button3 = new Button(getContext());
-        button3.setText("에이드");
+        button3.setText("버블티");
 
         Button button4 = new Button(getContext());
         button4.setText("빵");
@@ -217,6 +225,19 @@ public class OrderFragment extends Fragment {
                 cafeMenuAdapter.upDateItemList(arrayList2,arrayChild2);
             }
         });
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cafeMenuAdapter.upDateItemList(arrayList3,arrayChild3);
+            }
+        });
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cafeMenuAdapter.upDateItemList(arrayList4,arrayChild4);
+            }
+        });
+
     }
     private void setArrayList(){
         for(int i= arrayList1.size()-1;i>=0;i--) {
@@ -227,26 +248,52 @@ public class OrderFragment extends Fragment {
             arrayChild.remove(arrayList2.get(i).getName());
             arrayList2.remove(i);
         }
-
-        arrayList1.add(new CafeMenu("아메리카노","1800원"));
-        arrayList1.add(new CafeMenu("카페라떼","2500원"));
-        arrayList1.add(new CafeMenu("카푸치노","2300원"));
-        arrayList1.add(new CafeMenu("카라멜마끼야또","2500원"));
         ArrayList<String> arrayChicken = new ArrayList<String>();
         arrayChicken.add("a");
+
+        arrayList1.add(new CafeMenu("에스프레소","1500원", R.drawable.espresso));
+        arrayList1.add(new CafeMenu("아메리카노","1800원",R.drawable.americano));
+        arrayList1.add(new CafeMenu("헤이즐넛","2200원", R.drawable.hazelnut));
+        arrayList1.add(new CafeMenu("카푸치노","2500원",R.drawable.cafuchino));
+        arrayList1.add(new CafeMenu("카페라떼","2500원",R.drawable.cafelatte));
+        arrayList1.add(new CafeMenu("카페모카","2500원",R.drawable.cafemocha));
+
 
         arrayChild.put(arrayList1.get(0).getName(),arrayChicken);
         arrayChild.put(arrayList1.get(1).getName(),arrayChicken);
         arrayChild.put(arrayList1.get(2).getName(),arrayChicken);
         arrayChild.put(arrayList1.get(3).getName(),arrayChicken);
+        arrayChild.put(arrayList1.get(4).getName(),arrayChicken);
+        arrayChild.put(arrayList1.get(5).getName(),arrayChicken);
 
-        arrayList2.add(new CafeMenu("플레인스무디","3000원"));
-        arrayList2.add(new CafeMenu("망고스무디","3000원"));
-        arrayList2.add(new CafeMenu("딸기스무디","3000원"));
+        arrayList2.add(new CafeMenu("플레인스무디","3000원",R.drawable.plainsmo));
+        arrayList2.add(new CafeMenu("망고스무디","3000원",R.drawable.mangosmo));
+        arrayList2.add(new CafeMenu("딸기스무디","3000원",R.drawable.strawberrysmo));
+        arrayList2.add(new CafeMenu("쿠앤크스무디","3000원",R.drawable.cokiesmo));
 
         arrayChild2.put(arrayList2.get(0).getName(),arrayChicken);
         arrayChild2.put(arrayList2.get(1).getName(),arrayChicken);
         arrayChild2.put(arrayList2.get(2).getName(),arrayChicken);
+        arrayChild2.put(arrayList2.get(3).getName(),arrayChicken);
+
+        arrayList3.add(new CafeMenu("요거트버블티","3000원",R.drawable.yogurtbubble));
+        arrayList3.add(new CafeMenu("딸기버블티","3000원",R.drawable.strawberrybubble));
+        arrayList3.add(new CafeMenu("아몬드버블티","3000원",R.drawable.armondbubble));
+        arrayList3.add(new CafeMenu("쿠키바닐라버블티","3000원",R.drawable.cookiebubble));
+
+        arrayChild3.put(arrayList3.get(0).getName(),arrayChicken);
+        arrayChild3.put(arrayList3.get(1).getName(),arrayChicken);
+        arrayChild3.put(arrayList3.get(2).getName(),arrayChicken);
+        arrayChild3.put(arrayList3.get(3).getName(),arrayChicken);
+
+        arrayList4.add(new CafeMenu("베이글","3000원",R.drawable.bagel));
+        arrayList4.add(new CafeMenu("허니브레드","3000원",R.drawable.honeybread));
+        arrayList4.add(new CafeMenu("샌드위치","3000원",R.drawable.sandwich));
+
+        arrayChild4.put(arrayList4.get(0).getName(),arrayChicken);
+        arrayChild4.put(arrayList4.get(1).getName(),arrayChicken);
+        arrayChild4.put(arrayList4.get(2).getName(),arrayChicken);
+
 
     }
     private void setShoppingListData(){
@@ -339,6 +386,7 @@ public class OrderFragment extends Fragment {
             String groupName = cafeMenu.getName();
             String price = cafeMenu.getPrice();
             //String groupName = arrayGroup2.get(groupPosition);
+            final int imageResource = cafeMenu.getImageResource();
             View v = convertView;
 
             if(v==null){
@@ -349,6 +397,31 @@ public class OrderFragment extends Fragment {
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.priceVIew);
             priceView.setText(price);
+            ImageView imageView = (ImageView) v.findViewById(R.id.sh_imageView);
+            imageView.setImageResource(imageResource);
+          //  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/res/drawable/americano.jpg";
+          //  Log.i("CGY",path);
+           // imageView.setImageURI(Uri.fromFile(new File(path)));
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(getContext());
+
+                    dialog.setContentView(R.layout.image_zoom_dialog);
+                    ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
+                    ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
+
+                    imageView.setImageResource(imageResource);
+
+                    cancelButton.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+            });
 
             return v;
         }
@@ -593,10 +666,12 @@ public class OrderFragment extends Fragment {
     class CafeMenu {
         private String name;
         private String price;
+        private int imageResource;
 
-        public CafeMenu(String name, String price) {
+        public CafeMenu(String name, String price, int imageResource) {
             this.name = name;
             this.price = price;
+            this.imageResource = imageResource;
         }
 
         public String getName() {
@@ -613,6 +688,14 @@ public class OrderFragment extends Fragment {
 
         public void setPrice(String price) {
             this.price = price;
+        }
+
+        public int getImageResource() {
+            return imageResource;
+        }
+
+        public void setImageResource(int imageResource) {
+            this.imageResource = imageResource;
         }
     }
 }

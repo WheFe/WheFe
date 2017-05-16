@@ -13,6 +13,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
@@ -30,7 +32,6 @@
         <activity android:name=".ListActivity" />
         <activity android:name=".InfoActivity" />
         <activity android:name=".OrderActivity" />
-        <activity android:name=".OrderList2Activity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".CouponActivity" />
         <activity android:name=".CoupListActivity" />
@@ -39,7 +40,6 @@
         <activity android:name=".ShoppinglistdialogActivity" />
         <activity android:name=".ShListGroupActivity" />
         <activity android:name=".ShListChildActivity" />
-        <activity android:name=".nav.NavFrameActivity" />
         <activity
             android:name=".NavigationActivity"
             android:label="@string/title_activity_navigation"

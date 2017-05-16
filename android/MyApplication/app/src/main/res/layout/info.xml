@@ -45,17 +45,73 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <TextView
-                    android:id="@+id/infoView"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginStart="3dp"
-                    android:background="@android:color/holo_orange_light"
-                    android:gravity="center"
-                    android:text="Null"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:background="@android:color/holo_orange_light">
+
+                    <TextView
+                        android:id="@+id/cafeNameView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="8dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/cafeAddressView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/cafeNameView"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="8dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/cafePhoneView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/cafeAddressView"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="8dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/cafeTimeView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/cafePhoneView"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="8dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/cafePersonView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/cafeTimeView"
+                        android:layout_margin="5dp"
+                        android:layout_marginStart="8dp"
+                        android:text="TextView"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/textView"
@@ -114,8 +170,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
 
 
 </RelativeLayout>
