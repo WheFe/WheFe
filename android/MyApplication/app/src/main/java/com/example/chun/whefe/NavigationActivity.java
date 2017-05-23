@@ -2,7 +2,10 @@ package com.example.chun.whefe;
 
 
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.chun.whefe.fragments.CafeListFragment;
 import com.example.chun.whefe.fragments.CouponFragment;
 import com.example.chun.whefe.fragments.FragmentReplaceable;
 import com.example.chun.whefe.fragments.InfoFragment;
@@ -29,6 +33,7 @@ public class NavigationActivity extends AppCompatActivity
     OrderFragment orderFragment;
     CouponFragment couponFragment;
     PaymentFragment paymentFragment;
+    CafeListFragment cafeListFragment;
 
     FragmentTransaction transaction ;
 
@@ -39,10 +44,6 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Whefe");
-
-      //  toolbar.set
-     //   TextView nav_id_view = (TextView)findViewById(R.id.nav_id_view);
-       // nav_id_view.setText("rlduf138");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -62,6 +63,7 @@ public class NavigationActivity extends AppCompatActivity
         orderFragment = new OrderFragment();
         couponFragment = new CouponFragment();
         paymentFragment = new PaymentFragment();
+        cafeListFragment = new CafeListFragment();
 
         setDefaultFragment();
     }
@@ -81,6 +83,7 @@ public class NavigationActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if(index==0){       //지도
+            //((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
              transaction.replace(R.id.container,mapFragment);
          }else if(index==1){    // 카페 정보
             transaction.replace(R.id.container,infoFragment);
@@ -91,6 +94,9 @@ public class NavigationActivity extends AppCompatActivity
             transaction.replace(R.id.container,couponFragment);
         }else if(index==4){ //결제 안내
             transaction.replace(R.id.container,paymentFragment);
+        }
+        else if(index==5){
+            transaction.replace(R.id.container,cafeListFragment);
         }
         transaction.addToBackStack(null);
         transaction.commit();
@@ -115,7 +121,14 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_memberinfo) {    // 네비게이션 회원가입
 
-        } else if (id == R.id.nav_logout) {     // 네비게이션 로그아웃
+        } else if(id == R.id.nav_cafe_list){
+            transaction = getSupportFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.container,cafeListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if (id == R.id.nav_logout) {     // 네비게이션 로그아웃
             AlertDialog.Builder builder = new AlertDialog.Builder(NavigationActivity.this);
 
             builder.setMessage("로그아웃 하시겠습니까?");
@@ -123,7 +136,17 @@ public class NavigationActivity extends AppCompatActivity
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("LOGIN_PREFERENCE", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
 
+                            editor.putInt("autoLogin",0);
+                            editor.putString("id", null);
+                            editor.putString("password", null);
+                            editor.commit();
+
+                            finish();
+                            Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {

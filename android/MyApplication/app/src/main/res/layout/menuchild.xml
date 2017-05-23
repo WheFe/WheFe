@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/childRelativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    tools:context="com.example.chun.whefe.MenuchildActivity">
+    android:layout_height="120dp">
 
     <LinearLayout
         android:id="@+id/l2"
@@ -25,31 +24,25 @@
             android:layout_alignStart="@+id/radioGroup"
             android:layout_marginBottom="23dp"
 
-            android:gravity="center" />
+            android:gravity="center"
+            android:layout_weight="0.00" />
 
         <Spinner
             android:id="@+id/optionSpinner"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/sizeSpinner"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/sizeSpinner"
             android:layout_toRightOf="@+id/sizeSpinner"
-            android:layout_weight="0.53" />
+            android:layout_weight="0.03" />
 
-        <Spinner
-            android:id="@+id/couponSpinner"
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/optionSpinner"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/optionSpinner"
-            android:layout_toRightOf="@+id/optionSpinner"
-            android:layout_weight="1"
-            android:foreground="@android:color/black"
-            android:foregroundGravity="center" />
+            android:layout_weight="0.00" />
 
     </LinearLayout>
 

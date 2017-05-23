@@ -7,24 +7,43 @@ package com.example.chun.whefe;
 
 public class ShoppingList {
 
+        private int id;
         private String name;
         private String hot;
         private String size;
         private String option;
-        private String coupon;
         private String price;
+        private int imageResource;
 
         public ShoppingList(){};
-        public ShoppingList(String name, String hot, String size, String option, String coupon, String price) {
-            this.name = name;
-            this.hot = hot;
-            this.size = size;
-            this.option = option;
-            this.coupon = coupon;
-            this.price = price;
-        }
 
-        public String getName() {
+    public ShoppingList(int id, String name, String hot, String size, String option, String price, int imageResource) {
+        this.id = id;
+        this.name = name;
+        this.hot = hot;
+        this.size = size;
+        this.option = option;
+        this.price = price;
+        this.imageResource = imageResource;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getImageResource() {
+        return imageResource;
+    }
+
+    public void setImageResource(int imageResource) {
+        this.imageResource = imageResource;
+    }
+
+    public String getName() {
             return name;
         }
         public void setName(String name) {
@@ -47,12 +66,6 @@ public class ShoppingList {
         }
         public void setOption(String option) {
             this.option = option;
-        }
-        public String getCoupon() {
-            return coupon;
-        }
-        public void setCoupon(String coupon) {
-            this.coupon = coupon;
         }
         public String getPrice() {
             return price;

@@ -1,5 +1,6 @@
 package com.example.chun.whefe.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,15 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.chun.whefe.MyOpenHelper;
+import com.example.chun.whefe.dbhelper.MyHistoryHelper;
+import com.example.chun.whefe.dbhelper.MyOpenHelper;
 import com.example.chun.whefe.R;
 import com.example.chun.whefe.ShoppingList;
 
@@ -37,12 +43,16 @@ public class PaymentFragment extends Fragment {
 
     MyOpenHelper helper;
     SQLiteDatabase db;
+    MyHistoryHelper historyHelper;
+    SQLiteDatabase historyDB;
 
     private ArrayList<ShoppingList> sh_arrayList = new ArrayList<ShoppingList>();
     private HashMap<String, ArrayList<String>> sh_arrayChild = new HashMap<String, ArrayList<String>>();
     ExpandableListView sh_listView;
     ShoppingListAdapter sh_adapter;
     ShoppingListViewHolder sh_holder;
+
+    Spinner couponSpinner;
 
     @Nullable
     @Override
@@ -51,11 +61,11 @@ public class PaymentFragment extends Fragment {
 
         helper = new MyOpenHelper(getContext());
         db = helper.getWritableDatabase();
+        historyHelper = new MyHistoryHelper(getContext());
+        historyDB = historyHelper.getWritableDatabase();
 
         TextView warningView = (TextView)view.findViewById(R.id.payment_warningVIew);
-        warningView.setText("본 서비스는 사용자가 카페의 XXm 근처에 있으면 주문이 들어가며, 제조가 시작됩니다." +
-                " 음료 수령시간이 늦어져 생기는 품질저하는 책임질 수 없으니, 주의하여 주시기 바랍니다.");
-
+        warningView.setText(" 음료 수령시간이 늦어져 생기는 품질저하는 책임질 수 없으니, 주의하여 주시기 바랍니다.");
 
         setShoppingListData();
         sh_listView = (ExpandableListView)view.findViewById(R.id.payment_orderListView);
@@ -75,10 +85,42 @@ public class PaymentFragment extends Fragment {
         TextView textView = (TextView)view.findViewById(R.id.pay_priceView);
         textView.setText("결제금액 " + totalPrice + " 원");
 
+        ArrayList<String> couponSpinnerList = new ArrayList<String>();
 
+        couponSpinnerList.add("선택해주세요.");
+        couponSpinnerList.add("-500원");
+        couponSpinnerList.add("-700원");
+        couponSpinnerList.add("-1000원");
+
+        ArrayAdapter<String> couponAdapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,couponSpinnerList);
+
+        couponSpinner = (Spinner)view.findViewById(R.id.pay_coupon_spinner);
+        couponSpinner.setAdapter(couponAdapter);
+
+        couponSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                calculatePrice();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Button cancelButton = (Button)view.findViewById(R.id.paymentCancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
 
         return view;
     }
+
+
     public void calculatePrice(){
         int totalPrice =0;
         for(int i = 0; i<sh_arrayList.size();i++) {
@@ -86,6 +128,18 @@ public class PaymentFragment extends Fragment {
             StringTokenizer s = new StringTokenizer(sh_arrayList.get(i).getPrice());
             String temp = s.nextToken("원");
             totalPrice += Integer.parseInt(temp);
+        }
+
+        String coupon = couponSpinner.getSelectedItem().toString();
+        try {
+            StringTokenizer s = new StringTokenizer(coupon);
+            String temp = s.nextToken("원");
+
+            Log.i("coupon","temp : " + temp);
+
+            totalPrice += Integer.parseInt(temp);
+        }catch (Exception e){
+            Log.i("coupon","token error");
         }
         TextView textView = (TextView)getView().findViewById(R.id.pay_priceView);
         textView.setText("결제금액 " + totalPrice + " 원");
@@ -97,16 +151,17 @@ public class PaymentFragment extends Fragment {
         }
         Cursor rs = db.rawQuery("select * from shoppinglist;", null);
         while(rs.moveToNext()){
-            Log.i("DB",rs.getString(0) + rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5));
-            String db_name = rs.getString(0);
-            String db_hot = rs.getString(1);
-            String db_size = rs.getString(2);
-            String db_option = rs.getString(3);
-            String db_coupon = rs.getString(4);
+            Log.i("DB",rs.getInt(0) + rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5) + rs.getInt(6));
+
+            int db_id = rs.getInt(0);
+            String db_name = rs.getString(1);
+            String db_hot = rs.getString(2);
+            String db_size = rs.getString(3);
+            String db_option = rs.getString(4);
             String db_price = rs.getString(5);
+            int db_image = rs.getInt(6);
 
-            sh_arrayList.add(new ShoppingList(db_name,db_hot,db_size,db_option,db_coupon,db_price));
-
+            sh_arrayList.add(new ShoppingList(db_id,db_name,db_hot,db_size,db_option,db_price,db_image));
         }
 
         ArrayList<String> arrayTemp = new ArrayList<String>();
@@ -170,7 +225,7 @@ public class PaymentFragment extends Fragment {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            ShoppingList shoppingList = arrayGroup.get(groupPosition);
+            final ShoppingList shoppingList = arrayGroup.get(groupPosition);
 
             String groupName = shoppingList.getName();
             String price = shoppingList.getPrice();
@@ -184,10 +239,33 @@ public class PaymentFragment extends Fragment {
 
             }
 
+            ImageView imageView = (ImageView)v.findViewById(R.id.sh_imageView);
+            imageView.setImageResource(shoppingList.getImageResource());
             TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
             priceView.setText(price);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Dialog dialog = new Dialog(getContext());
+
+                    dialog.setContentView(R.layout.image_zoom_dialog);
+                    ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
+                    ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
+
+                    imageView.setImageResource(shoppingList.getImageResource());
+
+                    cancelButton.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+            });
 
             return v;
         }
@@ -205,7 +283,6 @@ public class PaymentFragment extends Fragment {
              hot = arrayGroup.get(groupPosition).getHot();
              size = arrayGroup.get(groupPosition).getSize();
              option = arrayGroup.get(groupPosition).getOption();
-             coupon = arrayGroup.get(groupPosition).getCoupon();
 
             if(v==null){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -215,20 +292,17 @@ public class PaymentFragment extends Fragment {
                 sh_holder.hotView = (TextView)v.findViewById(R.id.sh_hotVIew);
                 sh_holder.sizeView = (TextView)v.findViewById(R.id.sh_sizeView);
                 sh_holder.optionView = (TextView)v.findViewById(R.id.sh_optionView);
-                sh_holder.couponView = (TextView)v.findViewById(R.id.sh_couponView);
+
             }
 
             sh_holder.hotView.setText(hot);
             sh_holder.sizeView.setText(size);
             sh_holder.optionView.setText(option);
-            sh_holder.couponView.setText(coupon);
             Button deleteButton = (Button)v.findViewById(R.id.sh_deleteButton);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    db.execSQL("delete from shoppinglist where name = '" + arrayGroup.get(groupPosition).getName() + "' , hot = '" + hot
-                            + "' , size = '" + size + "' , option = '" + option
-                            + "' , coupon = '" + coupon + "', price = '" + arrayGroup.get(groupPosition).getPrice()  + "';"  );
+                    db.execSQL("delete from shoppinglist where _id = '" + arrayGroup.get(groupPosition).getId() + "';"  );
                         arrayChild.remove(arrayGroup.get(groupPosition).getName());
                         arrayGroup.remove(groupPosition);
                         calculatePrice();
@@ -251,6 +325,6 @@ public class PaymentFragment extends Fragment {
         public TextView hotView;
         public TextView sizeView;
         public TextView optionView;
-        public TextView couponView;
+
     }
 }

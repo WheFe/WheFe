@@ -1,5 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fr"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.chun.whefe.NaverMapFragment">
@@ -24,6 +26,7 @@
             android:layout_height="wrap_content"
             android:padding="7dp"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
         <TextView
@@ -36,6 +39,7 @@
             android:padding="5dp"
             android:paddingStart="7dp"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
@@ -48,6 +52,7 @@
             android:padding="5dp"
             android:paddingStart="7dp"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
@@ -60,6 +65,7 @@
             android:padding="5dp"
             android:paddingStart="7dp"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <TextView
@@ -72,6 +78,7 @@
             android:padding="5dp"
             android:paddingStart="7dp"
             android:text="TextView"
+            android:textColor="@android:color/black"
             android:textSize="16sp" />
 
         <Button
@@ -85,5 +92,17 @@
             android:text="자세히"
             android:textSize="18sp" />
     </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/map_location"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="40dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:maxHeight="40dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/location_off" />
 
 </FrameLayout>

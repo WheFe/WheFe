@@ -167,10 +167,18 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements 
             // Spot, Pin icons
             new ResourceIdsOnMap(NMapPOIflagType.PIN, R.drawable.ic_pin_01, R.drawable.ic_pin_02),
             new ResourceIdsOnMap(NMapPOIflagType.SPOT, R.drawable.ic_pin_01, R.drawable.ic_pin_02),
+            /**
+            *  Custom pin!! RED, YELLOW, GREEN
+            */
+            new ResourceIdsOnMap(NMapPOIflagType.GREEN, R.drawable.green_pin,R.drawable.green_pin),
+            new ResourceIdsOnMap(NMapPOIflagType.YELLOW, R.drawable.yellow_pin,R.drawable.yellow_pin),
+            new ResourceIdsOnMap(NMapPOIflagType.RED, R.drawable.red_pin,R.drawable.red_pin),
             // Direction POI icons: From, To
             new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
             new ResourceIdsOnMap(NMapPOIflagType.TO, R.drawable.ic_map_arrive, R.drawable.ic_map_arrive_over),
     };
+
+
 
     /**
      * Find resource id corresponding to the markerId.
@@ -197,6 +205,8 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements 
                 return resourceId;
             }
         }
+
+
 
         if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) { // Direction Number icons
 

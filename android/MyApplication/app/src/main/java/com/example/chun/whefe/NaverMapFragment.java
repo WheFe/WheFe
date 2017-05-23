@@ -3,9 +3,13 @@ package com.example.chun.whefe;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +38,15 @@ import com.nhn.android.mapviewer.overlay.NMapMyLocationOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +55,8 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
     private static final boolean DEBUG = false;
     private static final String LOG_TAG = "NMapViewer";
     private static final String NAVER_CLIENT_ID = "fpin69EB6CPM5ATQLpgI";
+
+
 
     NMapView nMapView;
     NMapController nMapController;
@@ -51,6 +67,8 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
     private List<CafeInfo> cafeInfos;
 
+    NMapPOIdata poIdata;
+
     View baseView;
 
     NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = null;
@@ -59,16 +77,17 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
+
+        String categoryUrl = MainActivity.ip + "/whefe/android/getcafeinfo";
+        new DownloadCategoryTask().execute(categoryUrl);
 
         baseView = inflater.inflate(R.layout.fragment_naver_map, container, false);
         nMapView = (NMapView) baseView.findViewById(R.id.nv_mapView);
 
         nMapView.setClientId(NAVER_CLIENT_ID);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
-        //NMapActivity.setMapDataProviderListener(onDataProviderListener);
 
-
-        // Inflate the layout for this fragment
         return baseView;
 
     }
@@ -86,15 +105,22 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
         mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
         mOverlayManager = new NMapOverlayManager(getContext(), nMapView,mMapViewerResourceProvider);
 
-        startMyLocation();
+       // startMyLocation();
+        ImageButton locationButton = (ImageButton)baseView.findViewById(R.id.map_location);
 
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMyLocation();
+            }
+        });
         int markerId = NMapPOIflagType.PIN;
 
 
         /**
          *  카페 정보 넣기
          */
-        NMapPOIdata poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
+        /*poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
 
         setPOIData(poIdata,markerId);
 
@@ -162,14 +188,160 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
         mMapLocationManager.enableMyLocation(false);
         mMapCompassManager = new NMapCompassManager(getActivity());
         //poIdataOverlay.showAllPOIdata(0);
-        mMyLocationOverlay =  mOverlayManager.createMyLocationOverlay(mMapLocationManager, mMapCompassManager);
+        mMyLocationOverlay =  mOverlayManager.createMyLocationOverlay(mMapLocationManager, mMapCompassManager);*/
     }
+
+    private class DownloadCategoryTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return (String) downloadUrl((String) urls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "다운로드 실패";
+            }
+        }
+
+        protected void onPostExecute(String result) {
+            try {
+                /*poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
+
+                setPOIData(poIdata,0);*/
+
+                cafeInfos = new ArrayList<CafeInfo>();
+
+               // poIdata.beginPOIdata(2);
+
+                JSONArray ja = new JSONArray(result);
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject order = ja.getJSONObject(i);
+                    String cafeName = (String) order.get("cafe_name");
+                    String cafeAddress = (String)order.get("cafe_address");
+                    String cafePhone = (String)order.get("cafe_tel");
+                    String cafeOpen = (String)order.get("cafe_open");
+                    String cafeClose = (String)order.get("cafe_end");
+                    String cafePerson = (String)order.get("cafe_curr");
+                    String cafeMax = (String)order.get("cafe_max");
+
+                    CafeInfo cafeInfo = new CafeInfo(cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax);
+
+                    //Log.e("geocoder",cafeName + cafeAddress + cafePhone + cafeOpen + cafeClose + cafeMax);
+
+                    cafeInfos.add(cafeInfo);
+
+                    String info = cafeInfo.getCafeName();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
+
+            setPOIData(poIdata,0);
+
+            NMapPOIdataOverlay poidataOverlay = mOverlayManager.createPOIdataOverlay(poIdata,null);
+
+            poidataOverlay.setOnStateChangeListener(new NMapPOIdataOverlay.OnStateChangeListener() {
+                @Override
+                public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+                    if (nMapPOIitem != null) {
+                        Log.i(LOG_TAG, "onFocusChanged: " + nMapPOIitem.toString());
+                    } else {
+                        Log.i(LOG_TAG, "onFocusChanged: ");
+                    }
+                }
+
+                @Override
+                public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+                    RelativeLayout relativeLayout = (RelativeLayout)getView().findViewById(R.id.nmap_info);
+                    relativeLayout.setVisibility(View.VISIBLE);
+
+                    int i = 0;
+                    for(i = 0; i<cafeInfos.size();i++){
+                        if(nMapPOIitem.getTitle().equals(cafeInfos.get(i).getCafeName())){
+                            break;
+                        }
+                    }
+
+                    TextView nameView = (TextView)getView().findViewById(R.id.cafeInfoNameView);
+                    TextView addressView = (TextView)getView().findViewById(R.id.cafeInfoAddressView);
+                    TextView phoneView = (TextView)getView().findViewById(R.id.cafeInfoPhoneView);
+                    TextView timeView = (TextView)getView().findViewById(R.id.cafeInfoTimeView);
+                    TextView personView = (TextView)getView().findViewById(R.id.cafeInfoPersonView);
+                    Button button = (Button)getView().findViewById(R.id.cafeInfoButton);
+
+                    nameView.setText(cafeInfos.get(i).getCafeName());
+                    addressView.setText("주소 : " + cafeInfos.get(i).getCafeAddress());
+                    phoneView.setText("전화번호 : " + cafeInfos.get(i).getCafePhone());
+                    timeView.setText("영업시간 : " + cafeInfos.get(i).getCafeOpen() + " ~ " + cafeInfos.get(i).getCafeClose());
+
+                    double person = Double.parseDouble(cafeInfos.get(i).getCafePerson());
+                    double max = Double.parseDouble(cafeInfos.get(i).getCafeMaximum());
+
+                    double maxPerPerson = (double)(person/max*100);
+
+                    personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + maxPerPerson + "% )");
+
+                    if(maxPerPerson > 65){
+                        personView.setTextColor(Color.RED);
+                    }else if(maxPerPerson > 40){
+                        personView.setTextColor(Color.YELLOW);
+                    }else if(maxPerPerson >0){
+                        personView.setTextColor(Color.GREEN);
+                    }
+
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            NavigationActivity activity = (NavigationActivity)getActivity();
+                            stopMyLocation();
+                            activity.onFragmentChanged(1);
+                        }
+                    });
+
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("INFO_PREFERENCE", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putString("name", cafeInfos.get(i).getCafeName());
+                    editor.putString("address", cafeInfos.get(i).getCafeAddress());
+                    editor.putString("phone", cafeInfos.get(i).getCafePhone());
+                    editor.putString("open", cafeInfos.get(i).getCafeOpen());
+                    editor.putString("close",cafeInfos.get(i).getCafeClose());
+                    editor.putString("person", cafeInfos.get(i).getCafePerson());
+                    editor.putString("max", cafeInfos.get(i).getCafeMaximum());
+                    editor.commit();
+                }
+            });
+            mMapLocationManager = new NMapLocationManager(getContext());
+            mMapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
+            mMapLocationManager.enableMyLocation(false);
+            mMapCompassManager = new NMapCompassManager(getActivity());
+            //poIdataOverlay.showAllPOIdata(0);
+            mMyLocationOverlay =  mOverlayManager.createMyLocationOverlay(mMapLocationManager, mMapCompassManager);
+        }
+
+        private String downloadUrl(String myurl) throws IOException {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(myurl);
+                conn = (HttpURLConnection) url.openConnection();
+                System.out.println("status code : " + conn.getResponseCode() + "!!!!!!!!!!!!!!");
+                Log.e("status code", conn.getResponseMessage());
+
+                BufferedReader bufreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                String line = null;
+                String page = "";
+                while ((line = bufreader.readLine()) != null) {
+                    page += line;
+                }
+                return page;
+            } finally {
+            }
+        }
+    }
+
     public NMapPOIdata setPOIData(NMapPOIdata poiData, int markerId){
-
-        cafeInfos = new ArrayList<CafeInfo>();
-
-        poiData.beginPOIdata(2);
-
+       /* poiData.beginPOIdata(2);
         String CafeName = "그라지에 미래관";
         String CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 미래관 B1층";
         String CafePhone = "02-111-1111";
@@ -183,7 +355,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
         String info = cafeInfo.getCafeName();
 
-        poiData.addPOIitem(127.010741, 37.582590, info, markerId, 0);
+        poiData.addPOIitem(127.010741, 37.582590, info, NMapPOIflagType.GREEN, 0);
 
         CafeName = "그라지에 연구관";
         CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 연구관 2층";
@@ -198,7 +370,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
         info = cafeInfo.getCafeName();
 
-        poiData.addPOIitem(127.009844, 37.582323, info, markerId, 0);
+        poiData.addPOIitem(127.009844, 37.582323, info, NMapPOIflagType.YELLOW, 0);
 
         CafeName = "팥고당";
         CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 상상관 2층";
@@ -213,9 +385,57 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
         info = cafeInfo.getCafeName();
 
-        poiData.addPOIitem(127.010010, 37.582562, info, markerId, 0);
+        poiData.addPOIitem(127.010010, 37.582562, info, NMapPOIflagType.RED, 0);
+        poiData.endPOIdata();*/
 
+        poiData.beginPOIdata(2);
+
+
+        for(int i = 0; i<cafeInfos.size();i++){
+            String info = cafeInfos.get(i).getCafeName();
+
+            Geocoder geocoder = new Geocoder(getContext());
+            List<Address> list = null;
+
+            double latitude = 0;
+            double longitude = 0;
+
+            try{
+                list = geocoder.getFromLocationName(cafeInfos.get(i).getCafeAddress(),10);
+                Log.e("geocoder", cafeInfos.get(i).getCafeAddress());
+                Log.e("geocoder",list.toString());
+            }catch (IOException e){
+                e.printStackTrace();
+                Log.e("geocoder", "주소 변환 오류");
+            }
+            if(list!=null){
+                if(list.size()==0){
+                    Log.e("geocoder", "주소 없음");
+                    longitude = 127.010010;
+                    latitude = 37.582562;
+                }else{
+                    latitude = list.get(0).getLatitude();
+                    longitude = list.get(0).getLongitude();
+                }
+            }
+          //  poiData.addPOIitem(latitude,longitude,info,NMapPOIflagType.RED,0);
+            double person = Double.parseDouble(cafeInfos.get(i).getCafePerson());
+            double max = Double.parseDouble(cafeInfos.get(i).getCafeMaximum());
+            double maxPerPerson = (double)(person/max*100);
+
+            if(maxPerPerson > 65){
+                poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.RED, 0);
+            }else if(maxPerPerson > 40){
+                poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.YELLOW, 0);
+            }else if(maxPerPerson >0){
+                poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.GREEN, 0);
+            }
+
+
+            Log.e("geocoder","최종 위도 경도 : " +  latitude + " , " + longitude);
+        }
         poiData.endPOIdata();
+
 
         return poiData;
     }
@@ -251,11 +471,11 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                 if (!nMapView.isAutoRotateEnabled()) {
                     mMyLocationOverlay.setCompassHeadingVisible(true);
 
-                    mMapCompassManager.enableCompass();
+                  //  mMapCompassManager.enableCompass();
 
                     nMapView.setAutoRotateEnabled(true, false);
 
-                    mMapContainerView.requestLayout();
+             //       mMapContainerView.requestLayout();
                 } else {
                     stopMyLocation();
                 }
@@ -282,11 +502,11 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
             if (nMapView.isAutoRotateEnabled()) {
                 mMyLocationOverlay.setCompassHeadingVisible(false);
 
-                mMapCompassManager.disableCompass();
+            //    mMapCompassManager.disableCompass();
 
                 nMapView.setAutoRotateEnabled(false, false);
 
-                mMapContainerView.requestLayout();
+           //     mMapContainerView.requestLayout();
             }
         }
     }

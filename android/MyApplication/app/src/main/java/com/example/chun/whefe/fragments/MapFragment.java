@@ -34,7 +34,12 @@ public class MapFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+    ///    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
+
         view = inflater.inflate(R.layout.map,container,false);
+
+        //ImageView imageView = new ImageView(getContext());
+
 
 
 //Permission Check

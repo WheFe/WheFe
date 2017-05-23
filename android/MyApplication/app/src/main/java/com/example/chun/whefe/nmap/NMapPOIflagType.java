@@ -10,9 +10,15 @@ public class NMapPOIflagType {
     // Single POI icons
     private static final int SINGLE_POI_BASE = 0x0100;
 
+
+
+
     // Spot, Pin icons
     public static final int SPOT = SINGLE_POI_BASE + 1;
     public static final int PIN = SPOT + 1;
+    public static final int GREEN = SPOT + 2;
+    public static final int YELLOW = SPOT + 3;
+    public static final int RED = SPOT + 4;
 
     // Direction POI icons: From, To
     private static final int DIRECTION_POI_BASE = 0x0200;

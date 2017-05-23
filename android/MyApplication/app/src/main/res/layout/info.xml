@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:layout_weight="1"
     android:background="@android:color/background_light"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.chun.whefe.InfoActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,6 +27,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <HorizontalScrollView
@@ -48,7 +48,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/holo_orange_light">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/layout_border">
 
                     <TextView
                         android:id="@+id/cafeNameView"
@@ -122,9 +124,9 @@
                     android:id="@+id/IntroducevIew"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="3dp"
-                    android:layout_marginStart="3dp"
-                    android:background="@android:color/holo_green_light"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/layout_border"
                     android:paddingBottom="3dp"
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp"

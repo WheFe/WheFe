@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_light"
-    tools:context="com.example.chun.whefe.CouponActivity">
+    android:background="@android:color/holo_orange_light">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"

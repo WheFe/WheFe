@@ -4,36 +4,35 @@
 
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 위치 정보 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:hardwareAccelerated="false"
         android:largeHeap="true"
+        android:roundIcon="@drawable/whefe"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        >
+        <activity android:name=".SuccessActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance" />
+
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignupActivity" />
-        <activity
-            android:name=".MapActivity"
-            android:label="MapActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ListActivity" />
-        <activity android:name=".InfoActivity" />
-        <activity android:name=".OrderActivity" />
-        <activity android:name=".PaymentActivity" />
-        <activity android:name=".CouponActivity" />
+        <activity android:name=".SignupActivity"
+            android:theme="@style/AppTheme"
+            />
         <activity android:name=".CoupListActivity" />
         <activity android:name=".MenugroupActivity" />
         <activity android:name=".MenuchildActivity" />
@@ -43,7 +42,8 @@
         <activity
             android:name=".NavigationActivity"
             android:label="@string/title_activity_navigation"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>

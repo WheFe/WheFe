@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
-    android:layout_height="80dp"
-    tools:context="com.example.chun.whefe.ShListChildActivity">
+    android:layout_height="80dp">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -68,21 +67,6 @@
                 android:text="샷추가 +500"
                 android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="Coupon :"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/sh_couponView"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="-500원"
-                android:textSize="16sp" />
         </TableRow>
 
     </TableLayout>

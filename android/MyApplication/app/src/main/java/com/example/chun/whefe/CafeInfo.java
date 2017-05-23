@@ -10,19 +10,27 @@ public class CafeInfo {
     String CafePhone;
     String CafeOpen;
     String CafeClose;
+    String CafePerson;
     String CafeMaximum;
 
     public CafeInfo() {
     }
-    public CafeInfo(String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafeMaximum) {
+    public CafeInfo(String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafePerson,String cafeMaximum) {
         CafeName = cafeName;
         CafeAddress = cafeAddress;
         CafePhone = cafePhone;
         CafeOpen = cafeOpen;
         CafeClose = cafeClose;
+        CafePerson = cafePerson;
         CafeMaximum = cafeMaximum;
     }
 
+    public String getCafePerson() {
+        return CafePerson;
+    }
+    public void setCafePerson(String cafePerson) {
+        CafePerson = cafePerson;
+    }
     public String getCafeName() {
         return CafeName;
     }
