@@ -56,10 +56,72 @@ $(document).ready(function() {
 	margin-top: 5px;
 }
 </style>
+<style>
 
+
+/*body{
+  background: url('http://i66.tinypic.com/14y98ag.jpg') fixed;
+}*/
+body{
+background: url('http://i67.tinypic.com/2ldeel3.jpg') fixed;
+}
+
+
+ .navbar{
+   /*opacity : 0.7;*/
+ }
+
+ .option-button {
+  border-radius: 10px;
+  width: 250px;
+  height: 50px;
+ }
+
+ .btn-round {
+  border-radius: 17px;
+ }
+
+ .btn-lg {
+  border-radius: 10px;
+  width: 190px;
+  height: 50px;
+ }
+
+ .btn-round-lg {
+  border-radius: 10px;
+  width: 400px;
+ }
+
+ .btn-round-sm {
+  border-radius: 15px;
+ }
+
+ #menu {
+  margin-top: 5px;
+ }
+
+ .panel{
+   /*opacity:0.7;*/
+  background-color : #00ff0000;
+ }
+
+ .panel > .panel-body{
+  /*opacity : 0.5;*/
+  /*background-color:black;*/
+ }
+
+ .panel > .panel-heading {
+     background-image: none;
+     background-color: #222222;
+     /*background-color : black;*/
+     color: white;
+     opacity:1.0;
+ }
+ 
+</style>
 
 <body>
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 
@@ -81,7 +143,7 @@ $(document).ready(function() {
 				<ul class="nav navbar-nav navbar-right">
 					<li><div class="user-info"
 							style="margin-top: 15px; color: #636363">
-							<span class="glyphicon glyphicon-user"></span>&nbsp; ${pageContext.request.userPrincipal.name}
+							<span class="glyphicon glyphicon-user"></span>&nbsp; <a href="<c:url value="/cafeinfo?cafe_id=${pageContext.request.userPrincipal.name}"/>">${pageContext.request.userPrincipal.name}</a>
 						</div></li>
 					<li><a href="<c:url value="/logout"/>"><span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>

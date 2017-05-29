@@ -39,20 +39,36 @@ public class CategoryDao {
 		});
 	}
 	
-	public boolean addCategory(Category category) {
+	public List<Category> getCategories(String cafe_id) {
+		String sqlStatement = "select * from category where cafe_id=?";
+		return jdbcTemplateObject.query(sqlStatement, new Object[] {cafe_id},new RowMapper<Category>() {
+
+			@Override
+			public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Category category = new Category();
+				category.setCafe_id(rs.getString("cafe_id"));
+				category.setCategory_name(rs.getString("category_name"));
+				return category;
+			}
+
+		});
+	}
+	
+	public boolean addCategory(String cafe_id, Category category) {
 		String category_name = category.getCategory_name();
-		String sql = "insert into category (category_name) values (?)";
-		return ((jdbcTemplateObject.update(sql, category_name))==1);
+		String sql = "insert into category (cafe_id, category_name) values (?,?)";
+		return ((jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name}))==1);
 	}
 	
-	public boolean deleteCategory(String category_name) {
+	public boolean deleteCategory(String cafe_id, String category_name) {
 		System.out.println("DAO!!!!!!!!!!" + category_name);
-		String sql = "delete from category where category_name = ?";
-		return (jdbcTemplateObject.update(sql, (String)category_name)==1);
+		String sql = "delete from category where cafe_id = ? and category_name = ?";
+		return (jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name})==1);
 	}
 	
-	public boolean editCategory(String category_name, String newName) {
-		String sql = "update category set category_name = ? where category_name = ?";
-		return ((jdbcTemplateObject.update(sql, newName, category_name))==1);
+	public boolean editCategory(String cafe_id, String category_name, String newName) {
+		String sql = "update category set category_name = ? where cafe_id = ? and category_name = ?";
+		return ((jdbcTemplateObject.update(sql, new Object[] {newName, cafe_id, category_name}))==1);
 	}
 }

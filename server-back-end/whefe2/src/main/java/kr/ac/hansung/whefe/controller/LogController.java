@@ -1,6 +1,10 @@
 package kr.ac.hansung.whefe.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.ac.hansung.whefe.model.Cafe_info;
 import kr.ac.hansung.whefe.model.Category;
@@ -67,16 +72,35 @@ public class LogController {
 
 	@RequestMapping("/login/signup") // 회원가입 창 띄울 때
 	public String signup(Model model, HttpServletRequest request) {
-
-		return "web-front-end/02.Sign_Up";
+		return "web-front-end/02.Sign_Up3";
 	}
 
-	@RequestMapping(value = "/login/signup", method = RequestMethod.POST) // 회원가입
-																			// 요청
-																			// 할
-																			// 때
-	public String signupPost(Cafe_info cafe_info) {
+	@RequestMapping(value = "/login/signup", method = RequestMethod.POST) // 때
+	public String signupPost(Cafe_info cafe_info, HttpServletRequest request) {
+
 		System.out.println(cafe_info.toString());
+		MultipartFile cafe_image = cafe_info.getCafe_image();
+		String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+		Path savePath = Paths.get(rootDirectory + "\\resources\\images\\" + cafe_image.getOriginalFilename());
+		if (cafe_image != null && !cafe_image.isEmpty()) {
+			try {
+				cafe_image.transferTo(new File(savePath.toString()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		cafe_info.setImageFilename(cafe_image.getOriginalFilename());
+
+		if (cafe_image.isEmpty() == false) {
+			System.out.println("---------file start ---------");
+			System.out.println("name: " + cafe_image.getName());
+			System.out.println("filename: " + cafe_image.getOriginalFilename());
+			System.out.println("size: " + cafe_image.getSize());
+			System.out.println("---------file end ---------");
+
+		}
+
 		if (!cafe_infoService.addCafe_info(cafe_info)) {
 			System.out.println("Adding info cannot be done");
 		}
@@ -84,13 +108,15 @@ public class LogController {
 	}
 
 	@RequestMapping("/login/denied") // 권한 없을 때
-	public String denied() {
-		return "denied";
+	public String denied(Model model, Authentication auth, HttpServletRequest req) {
+		return "web-front-end/denied";
 	}
 
 	@RequestMapping(value = "/management")
-	public String loginSuccess(Model model) {
-		List<Category> categories = categoryService.getCategories();
+	public String loginSuccess(Model model, Principal principal) {
+		String cafe_id= principal.getName();
+		//List<Category> categories = categoryService.getCategories();
+		List<Category> categories = categoryService.getCategories(cafe_id);
 		model.addAttribute("categories", categories);
 		model.addAttribute("Test", "test");
 		return "web-front-end/03.Menu-Management";
@@ -118,31 +144,30 @@ public class LogController {
 	 * return "androidTest"; }
 	 */
 
-	@RequestMapping("/android")
+	/*@RequestMapping("/android")
 	public String androidTest_HttpURLConnection(HttpServletRequest request) throws UnsupportedEncodingException {
 		System.out.println("android Test!!!");
 		request.setCharacterEncoding("UTF-8");
 		// 서버측으로 넘어온 데이터를 추출
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
-		String key1=request.getParameter("key1");
-		String key2=request.getParameter("key2");
-		System.out.println("request : " +id + " " + pw + "!!!!!!!!!!" );
-		System.out.println("request : " +key1 + " " + key2 + "!!!!!!!!!!" );
+		String key1 = request.getParameter("key1");
+		String key2 = request.getParameter("key2");
+		System.out.println("request : " + id + " " + pw + "!!!!!!!!!!");
+		System.out.println("request : " + key1 + " " + key2 + "!!!!!!!!!!");
 		return "web-front-end/android";
 	}
-	
-	@RequestMapping(value="/android",  method = RequestMethod.POST)
+
+	@RequestMapping(value = "/android", method = RequestMethod.POST)
 	public String androidTest_HttpURLConnectionPost(HttpServletRequest request) throws UnsupportedEncodingException {
 		System.out.println("android Test!!!");
 		request.setCharacterEncoding("UTF-8");
 		// 서버측으로 넘어온 데이터를 추출
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
-		System.out.println("request : " +id + " " + pw + "!!!!!!!!!!" );
+		System.out.println("request : " + id + " " + pw + "!!!!!!!!!!");
 		return "web-front-end/android";
 	}
-	
 
 	@RequestMapping("/android2")
 	public void androidTest() {
@@ -154,6 +179,6 @@ public class LogController {
 		String id = request.getParameter("id");
 		String pwd = request.getParameter("pwd");
 		System.out.println(id + "!!!!!!!!!!!!!!" + pwd);
-	}
+	}*/
 
 }

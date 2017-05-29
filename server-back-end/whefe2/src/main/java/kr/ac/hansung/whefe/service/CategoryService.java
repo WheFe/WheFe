@@ -22,15 +22,19 @@ public class CategoryService {
 		return categoryDao.getCategories();
 	}
 	
-	public boolean addCategory(Category category) {
-		return categoryDao.addCategory(category);
+	public List<Category> getCategories(String cafe_id) {
+		return categoryDao.getCategories(cafe_id);
 	}
 	
-	public boolean deleteCategory(String category_name) {
-		return categoryDao.deleteCategory(category_name);
+	public boolean addCategory(String cafe_id, Category category) {
+		return categoryDao.addCategory(cafe_id, category);
 	}
 	
-	public boolean editCategory(String category_name, String newName) {
-		return categoryDao.editCategory(category_name, newName);
+	public boolean deleteCategory(String cafe_id, String category_name) {
+		return categoryDao.deleteCategory(cafe_id, category_name);
+	}
+	
+	public boolean editCategory(String cafe_id, String category_name, String newName) {
+		return categoryDao.editCategory(cafe_id, category_name, newName);
 	}
 }

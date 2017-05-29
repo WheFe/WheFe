@@ -14,16 +14,15 @@
 </head>
 <style>
 body {
-	background:
-		url('https://image-proxy.namuwikiusercontent.com/r/http%3A%2F%2Fpress.hansung.ac.kr%2FUserFiles%2FImage%2F479%2F0101-02.jpg')
-		fixed;
-	background-size: cover;
-	padding: 0;
-	margin: 0;
-}
+    background: url('http://www.thegladcafe.co.uk/upload/background11.jpg') fixed;
+    background-size: cover;
+    padding: 0;
+    margin: 0;
+    opacity: 0.9;
+  }
 
 .panel {
-	opacity: 0.7;
+	/* opacity: 0.9; */
 }
 </style>
 <body>
@@ -36,21 +35,51 @@ body {
 			<div class="panel panel-info">
 				<div class="panel-heading">
 					<div class="panel-title">로그인</div>
+
 					<div
 						style="float: right; font-size: 80%; position: relative; top: -10px">
 						<a href="#">비밀번호 찾기</a>
 					</div>
 				</div>
+				
 				<c:if test="${not empty error}">
-					<div style="color: #ff0000">
-						<h3>${error}</h3>
+					<div style="color: #E15F5F; font-size:90%">
+						<div class="error">
+							<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;입력하신
+							아이디와 비밀번호가 등록된 정보와 일치하지 않습니다.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;확인
+							후 다시 시도하세요.
+						</div>
 					</div>
 				</c:if>
+
 				<c:if test="${not empty logout}">
 					<div style="color: #0000ff">
 						<h3>${logout}</h3>
 					</div>
 				</c:if>
+				<div class="modal" id="info-false" role="dialog">
+					<div class="modal-dialog modal-sm">
+
+						<div class="modal-content">
+
+							<div class="modal-header">
+								<h4 class="modal-title">ID, PW 확인</h4>
+							</div>
+
+							<div class="modal-body">
+								<div class="container">
+									<div class="row">ID나 비밀번호를 확인해주세요</div>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary btn-md"
+									data-dismiss="modal">확인</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
 				<div style="padding-top: 30px" class="panel-body">
 
 					<div style="display: none" id="login-alert"
@@ -89,7 +118,8 @@ body {
 							<div class="form-group">
 								<div class="col-sm-1"></div>
 								<div class="col-sm-5">
-									<input type="submit"
+									<input type="submit" data-target="#info-false"
+										data-toggle="modal"
 										class="btn btn-primary btn-login-submit btn-block "
 										value="로그인" />
 								</div>

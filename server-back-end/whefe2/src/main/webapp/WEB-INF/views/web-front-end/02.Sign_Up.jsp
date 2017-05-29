@@ -1,96 +1,90 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
 <head>
-	<title>È¸¿ø°¡ÀÔ</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>íšŒì›ê°€ì…</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 
 <style>
-	body {
-		padding-top: 40px;
-	}
+body {
+	padding-top: 40px;
+}
 
-	.form-control {
-		margin-bottom: 10px;
-	}
+.form-control {
+	margin-bottom: 10px;
+}
 </style>
 
 <body>
-<!-- <script>
-	$("#cafe_id").keyup(function() {
-		$.ajax({
-			url : "/login/duplicationCheck",
-			type : "post",
-			data : $("#form").serialize(),
-			success : function(data) {
-				if (data.length > 0) {
-				document.getElementById("duplicateResult").value = "ÀÌ¹Ì ÇØ´ç ¾ÆÀÌµğ·Î °¡ÀÔµÈ È¸¿ø°¡ ÀÖ½À´Ï´Ù.";
-				} else {
-					if ($("#cafe_id").val().length < 5) {
-					document.getElementById("duplicateResult").value = "¾ÆÀÌµğ¸¦ 5ÀÚ ÀÌ»ó ÀÔ·ÂÇØÁÖ¼¼¿ä.";
-					} else {
-						document.getElementById("duplicateResult").value = "»ç¿ë °¡´ÉÇÑ ¾ÆÀÌµğÀÔ´Ï´Ù.";
-					}
-				}
-			},
-			error : function(error) {
-				alert(error.statusText);
-			}
-		});
-
-		return false;
-	});
-</script> -->
 	<div class="container">
-		<div id="signup-box" style="margin-top:50px;" class="signupbox col-md-offset-4 col-sm-12 col-sm-offset-4">
+		<div id="signup-box" style="margin-top: 50px;"
+			class="signupbox col-md-offset-4 col-sm-12 col-sm-offset-4">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-4 well well-sm">
-					<legend>È¸¿ø°¡ÀÔ</legend>
-					<form action="${pageContext.request.contextPath}/login/signup?${_csrf.parameterName}=${_csrf.token}" method="post" id="form" name="form" class="form" role="form">
-						<input class="form-control" id="cafe_id" name="cafe_id" placeholder="ID" type="text" required autofocus />
+					<legend>íšŒì›ê°€ì…</legend>
+					<form
+						action="${pageContext.request.contextPath}/login/signup"
+						method="post" id="form" name="form" class="form">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						<input class="form-control" id="cafe_id" name="cafe_id"
+							placeholder="ID" type="text" required autofocus />
 						<div class="row">
 							<div class="col-md-6 col-md-6">
-								<input class="form-control" name="cafe_pw" placeholder="ºñ¹Ğ¹øÈ£" type="password" />
+								<input class="form-control" name="cafe_pw" placeholder="ë¹„ë°€ë²ˆí˜¸"
+									type="password" />
 							</div>
 							<div class="col-md-6 col-md-6">
-								<input class="form-control" name="password-check" placeholder="ºñ¹Ğ¹øÈ£ È®ÀÎ" type="password" />
+								<input class="form-control" name="password-check"
+									placeholder="ë¹„ë°€ë²ˆí˜¸ í™•ì¸" type="password" />
 							</div>
 						</div>
-						<input class="form-control" name="cafe_name" placeholder="Ä«Æä ÀÌ¸§" type="text" />
-						<input class="form-control" name="cafe_address" placeholder="Ä«Æä ÁÖ¼Ò" type="text" />
-						<input class="form-control" name="cafe_tel" placeholder="Ä«Æä ÀüÈ­¹øÈ£ (-»ı·«)" type="text" />
+						<input class="form-control" name="cafe_name" placeholder="ì¹´í˜ ì´ë¦„"
+							type="text" /> <input class="form-control" name="cafe_address"
+							placeholder="ì¹´í˜ ì£¼ì†Œ" type="text" /> <input class="form-control"
+							name="cafe_tel" placeholder="ì¹´í˜ ì „í™”ë²ˆí˜¸ (-ìƒëµ)" type="text" />
 
-						<!--<label for="">¿µ¾÷½Ã°£</label>-->
+						<!--<label for="">ì˜ì—…ì‹œê°„</label>-->
 						<div class="row"></div>
 						<div class="row">
 							<div class="col-md-6 col-md-6">
-								<input class="form-control" name="cafe_open" placeholder="¿µ¾÷ ½ÃÀÛ½Ã°£" type="text" />
+								<input class="form-control" name="cafe_open"
+									placeholder="ì˜ì—… ì‹œì‘ì‹œê°„" type="text" />
 							</div>
 							<div class="col-md-6 col-md-6">
-								<input class="form-control" name="cafe_end" placeholder="¿µ¾÷ Á¾·á½Ã°£" type="text" />
+								<input class="form-control" name="cafe_end"
+									placeholder="ì˜ì—… ì¢…ë£Œì‹œê°„" type="text" />
 							</div>
 						</div>
-						<input class="form-control" name="cafe_max" placeholder="Ä«ÆäÁ¤¿ø" type="text" />
-
+						<input class="form-control" name="cafe_max" placeholder="ì¹´í˜ì •ì›"
+							type="text" /> <input class="form-control" name="cafe_image"
+							placeholder="ì¹´í˜ ì´ë¯¸ì§€" type="file" />
 						<div class="row">
-							<div class="col-xs-12 col-md-6"><input type="submit" value="È¸¿ø°¡ÀÔ" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
-							<a href="<c:url value="/login"/>"></a><div class="col-xs-12 col-md-6"><div class="btn btn-danger btn-block btn-lg">Ãë¼Ò</div>
-						</div>
+							<div class="col-xs-12 col-md-6">
+								<input type="submit" value="íšŒì›ê°€ì…"
+									class="btn btn-primary btn-block btn-lg" tabindex="7">
+							</div>
+							<a href="<c:url value="/login"/>"></a>
+							<div class="col-xs-12 col-md-6">
+								<div class="btn btn-danger btn-block btn-lg">ì·¨ì†Œ</div>
+							</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

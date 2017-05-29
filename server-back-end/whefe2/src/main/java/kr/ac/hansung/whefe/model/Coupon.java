@@ -10,9 +10,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Coupon {
+	private int coupon_num;
 	private String coupon_name;
 	private String cafe_id;
-	private int coupon_price;
+	private String coupon_price; // private String coupon_price;
+	
 	private String coupon_start;
 	private String coupon_end;
 	private boolean use_ox;

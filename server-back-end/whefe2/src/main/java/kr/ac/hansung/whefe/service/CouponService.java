@@ -24,6 +24,11 @@ public class CouponService {
 		return couponDao.getCoupons();
 	}
 	
+	public List<Coupon> getCoupons(String cafe_id) {
+		System.out.println("Service!!!!!!!!!!!!!!");
+		return couponDao.getCoupons(cafe_id);
+	}
+	
 	public boolean addCoupon(Coupon coupon) {
 		return couponDao.addCoupon(coupon);
 	}

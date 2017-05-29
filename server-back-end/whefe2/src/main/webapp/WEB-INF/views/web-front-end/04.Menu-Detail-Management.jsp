@@ -10,10 +10,11 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="<c:url value="/resources/js/checkboxReaction.js"/>"></script>
 </head>
 <style>
 .option-button {
@@ -44,10 +45,51 @@
 .price {
 	max-width: 100px;
 }
+
+body {
+	background: url('http://i67.tinypic.com/2ldeel3.jpg') fixed;
+}
+
+.panel {
+	/*opacity:0.7;*/
+	background-color: #00ff0000;
+}
+
+.panel>.panel-body {
+	/*opacity : 0.5;*/
+	/*background-color:black;*/
+	
+}
+
+.panel>.panel-heading {
+	background-image: none;
+	background-color: #222222;
+	/*background-color : black;*/
+	color: white;
+	opacity: 1.0;
 }
 </style>
+<script>
+	function moneyCheck(obj) {
+		var v = obj.value;
+		v = parseInt(v / 10) * 10;
+		obj.value = v;
+	}
+	function validate(evt) {
+		var theEvent = evt || window.event;
+		var key = theEvent.keyCode || theEvent.which;
+		key = String.fromCharCode(key);
+		var regex = /[0-9]|\./;
+		if (!regex.test(key)) {
+			theEvent.returnValue = false;
+			if (theEvent.preventDefault)
+				theEvent.preventDefault();
+		}
+	}
+</script>
+
 <body>
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -66,13 +108,15 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><div class="user-info"
-							style="margin-top: 15px; color: #636363">
+					<li>
+						<div class="user-info" style="margin-top: 15px; color: #636363">
 							<span class="glyphicon glyphicon-user"></span>&nbsp;
 							${pageContext.request.userPrincipal.name}
-						</div></li>
-					<li><a href="<c:url value="/logout"/>"><span
-							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
+						</div>
+					</li>
+					<li><a href="<c:url value=" /logout"/>"> <span
+							class="glyphicon glyphicon-log-out"></span> 로그아웃
+					</a></li>
 				</ul>
 			</div>
 
@@ -105,8 +149,9 @@
 							<button type="button" class="btn btn-default btn-round-lg btn-lg"
 								data-toggle="modal" data-target="#addMenu"
 								style="border: 0; text-align: left">
-								<b><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;메뉴
-									추가하기</b>
+								<b> <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;메뉴
+									추가하기
+								</b>
 							</button>
 							<!--메뉴 추가하기 팝업-->
 							<div class="modal fade" id="addMenu" role="dialog">
@@ -128,7 +173,7 @@
 												<div class="container-fluid">
 													<div class="row">
 														<div class="input-group">
-															<span class="input-group-addon"> </span> <input
+															<span class="input-group-addon"></span> <input
 																id="menu_name" type="text" class="form-control"
 																name="menu_name" placeholder="추가할 메뉴 이름 입력">
 														</div>
@@ -150,60 +195,120 @@
 																<tbody>
 																	<tr>
 																		<th scope="row">HOT</th>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="hot_small" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="hot_medium" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="hot_large" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="hot_none" type="text" class="form-control"></input></label>
-																			</div></td>
+																		<td>
+																			<div class="checkbox price">
+																				<label><input type="checkbox" id="hot_small" />
+																					<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="hot_medium"> <input id="hot_medium_box"
+																					name="hot_medium" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="hot_large"> <input id="hot_large_box"
+																					name="hot_large" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox" id="hot_none">
+																					<input id="hot_none_box" name="hot_none"
+																					type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
 																	</tr>
 																	<tr>
 																		<th scope="row">ICE</th>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="ice_small" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="ice_medium" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="ice_large" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="ice_none" type="text" class="form-control"></input></label>
-																			</div></td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="ice_small"> <input id="ice_small_box"
+																					name="ice_small" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="ice_medium"> <input id="ice_medium_box"
+																					name="ice_medium" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="ice_large"> <input id="ice_large_box"
+																					name="ice_large" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox" id="ice_none">
+																					<input id="ice_none_box" name="ice_none"
+																					type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
 																	</tr>
 																	<tr>
 																		<th scope="row">단일 메뉴</th>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="none_small" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="none_medium" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="none_large" type="text" class="form-control"></input></label>
-																			</div></td>
-																		<td><div class="checkbox price">
-																				<label><input type="checkbox" value=""><input
-																					name="none_none" type="text" class="form-control"></input></label>
-																			</div></td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="none_small"> <input id="none_small_box"
+																					name="none_small" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="none_medium"> <input
+																					id="none_medium_box" name="none_medium" type="text"
+																					class="form-control" disabled="disabled"
+																					onkeypress="validate()" onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="none_large"> <input id="none_large_box"
+																					name="none_large" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="checkbox price">
+																				<label> <input type="checkbox"
+																					id="none_none"> <input id="none_none_box"
+																					name="none_none" type="text" class="form-control"
+																					disabled="disabled" onkeypress="validate()"
+																					onblur="moneyCheck(this)" /></label>
+																			</div>
+																		</td>
 																	</tr>
 																</tbody>
 															</table>
@@ -271,6 +376,7 @@
 												<div class="modal-body">
 													<div class="container-fluid">
 														<!--가격 관리 표 삽입-->
+
 														<div class="table">
 															<table class="table">
 																<thead>
@@ -279,20 +385,102 @@
 																		<th>Small</th>
 																		<th>Medium</th>
 																		<th>Large</th>
+																		<th>None</th>
 																	</tr>
 																</thead>
 																<tbody>
 																	<tr>
 																		<th scope="row">HOT</th>
-																		<td>2,200</td>
-																		<td>2,500</td>
-																		<td>2,800</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
 																	</tr>
 																	<tr>
 																		<th scope="row">ICE</th>
-																		<td>2,500</td>
-																		<td>2,800</td>
-																		<td>3,100</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<th scope="row">None</th>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
+																		<td>
+																			<div class="price">
+																				<input type="text" id="hot_small_box"
+																					name="hot_small" class="form-control"
+																					onkeypress="validate()" onblur="moneyCheck(this)" />
+																			</div>
+																		</td>
 																	</tr>
 																</tbody>
 															</table>
@@ -309,8 +497,6 @@
 											</div>
 										</div>
 									</div>
-
-
 
 									<div class="col-lg-2">
 										<button type="button" class="btn btn-warning btn-lg"
@@ -425,7 +611,6 @@
 			</div>
 		</div>
 	</div>
-
 
 </body>
 

@@ -33,7 +33,33 @@ public class CouponDao {
 				Coupon coupon = new Coupon();
 				coupon.setCoupon_name(rs.getString("coupon_name"));
 				coupon.setCafe_id(rs.getString("cafe_id"));
-				coupon.setCoupon_price(rs.getInt("coupon_price"));
+				// coupon.setCoupon_num(rs.getInt("coupon_num"));				//추가
+				//coupon.setCoupon_price(rs.getInt("coupon_price"));
+				coupon.setCoupon_price(rs.getString("coupon_price"));		//추가
+				coupon.setCoupon_start(rs.getString("coupon_start"));
+				coupon.setCoupon_end(rs.getString("coupon_end"));
+				coupon.setUse_ox(rs.getBoolean("use_ox"));
+				
+				return coupon;
+			}
+
+		});
+	}
+	
+	public List<Coupon> getCoupons(String cafe_id) {
+		String sqlStatement = "select * from cafe_coupon whefe cafe_id=?";
+		
+		return jdbcTemplateObject.query(sqlStatement, new Object[] {cafe_id}, new RowMapper<Coupon>() {
+
+			@Override
+			public Coupon mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Coupon coupon = new Coupon();
+				coupon.setCoupon_name(rs.getString("coupon_name"));
+				coupon.setCafe_id(rs.getString("cafe_id"));
+				// coupon.setCoupon_num(rs.getInt("coupon_num"));				//추가
+				//coupon.setCoupon_price(rs.getInt("coupon_price"));
+				coupon.setCoupon_price(rs.getString("coupon_price"));		//추가
 				coupon.setCoupon_start(rs.getString("coupon_start"));
 				coupon.setCoupon_end(rs.getString("coupon_end"));
 				coupon.setUse_ox(rs.getBoolean("use_ox"));
@@ -45,7 +71,7 @@ public class CouponDao {
 	}
 	
 	public boolean addCoupon(Coupon coupon) {
-		String sql = "insert into cafe_coupon(coupon_name,cafe_id,coupon_price,coupon_start,coupon_end,use_ox) values (?,?,?,?,?,?)";
+		String sql = "insert into cafe_coupon(coupon_name,cafe_id, coupon_num, coupon_price,coupon_start,coupon_end,use_ox) values (?,?,3,?,?,?,?)";
 		Object[] object = {coupon.getCoupon_name(), coupon.getCafe_id(), coupon.getCoupon_price(), coupon.getCoupon_start(), coupon.getCoupon_end(),coupon.isUse_ox()};
 		return (jdbcTemplateObject.update(sql, object))==1;
 	}

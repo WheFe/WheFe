@@ -1,8 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%><!DOCTYPE html>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<!DOCTYPE html>
 <html>
-
 <head>
 <title>주문 확인</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,10 +67,32 @@
 	text-align: center;
 	position: absolute;
 }
-</style>
 
+body {
+	background: url('http://i67.tinypic.com/2ldeel3.jpg') fixed;
+}
+
+.panel {
+	/*opacity:0.7;*/
+	background-color: #00ff0000;
+}
+
+.panel>.panel-body {
+	/*opacity : 0.5;*/
+	/*background-color:black;*/
+	
+}
+
+.panel>.panel-heading {
+	background-image: none;
+	background-color: #222222;
+	/*background-color : black;*/
+	color: white;
+	opacity: 1.0;
+}
+</style>
 <body>
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -79,38 +102,32 @@
 				</button>
 				<a class="navbar-brand" href="#">Grazie</a>
 			</div>
-
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li><a href="#">메뉴관리</a></li>
-					<li><a href="#">쿠폰관리</a></li>
+					<li><a href="<c:url value="/management"/>">메뉴관리</a></li>
+					<li><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
 					<li class="active"><a href="#">주문확인</a></li>
 				</ul>
-
 				<ul class="nav navbar-nav navbar-right">
 					<li><div class="user-info"
 							style="margin-top: 15px; color: #636363">
 							<span class="glyphicon glyphicon-user"></span>&nbsp;
 							${pageContext.request.userPrincipal.name}
 						</div></li>
-					<li><a href="#"><span class="glyphicon glyphicon-log-out"></span>
-							로그아웃</a></li>
+					<li><a href="<c:url value="/logout"/>"><span
+							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
 				</ul>
 			</div>
-
 		</div>
 	</nav>
-
 	<div class="container-fluid" style="margin-top: 80px">
 		<div class="panel panel-default panel-outer">
-
 			<div class="panel-heading">
 				<h4>
 					<b>주문확인
 						<h4>
 					</b>
 			</div>
-
 			<div class="panel-body">
 				<div class="row">
 					<!-- 혼잡도 박스-->
@@ -119,261 +136,105 @@
 							<h3>&nbsp;3&nbsp;&nbsp;/&nbsp;&nbsp;24&nbsp;</h3>
 						</div>
 					</div>
-
-
 					<!-- 주문 목록-->
 					<div class="col-lg-offset-1 col-lg-5">
 						<h3>
-							<div style="text-align: center">주문 현황</div>
+							<div style="text-align: center">주문 목록</div>
 						</h3>
 						<div class="panel panel-default panel-inner"
 							style="height: 330px; overflow-y: scroll">
 							<div class="container-fluid">
 								<div class="row">
-
-									<div class="panel panel-default coupon-expired-custom">
-										<div class="panel-body">
-
-											<!--주문 한개-->
-											<div class="row">
-												<div class="col-md-8">
-													<div class="text-left">
-														<h5>
-															<ul>
-																<li>메뉴명 : 아메리카노(ICE)
-																<li>추가 옵션 : 샷 추가*2, 진하게
-																<li>고객명 : 주승권
-															</ul>
-														</h5>
-													</div>
-												</div>
-												<div class="col-md-4">
-													<button type="button"
-														class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-														완성</button>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
-
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
+									<c:forEach var="order" items="${orders}" varStatus="status">
+										<div class="panel panel-default coupon-expired-custom">
+											<div class="panel-body">
+												<!--주문 한개-->
+												<div class="row">
 													<div class="col-md-8">
 														<div class="text-left">
 															<h5>
 																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
+																	<li>메뉴명 : ${order.menu_name} (${order.hotIceNone})
+
+																	
+																	<li>사이즈 : ${order.menu_size }
+																	<li>추가 옵션 : ${order.option_info }
+																	<li>고객명 : ${order.customer_name }
+																	<li>주문량 : ${order.menu_quantity }
 																</ul>
 															</h5>
 														</div>
 													</div>
 													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
+														<a
+															href="<spring:url value="/management/order/${order.menu_name}"/>">
+															<button type="button"
+																class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
+																완성</button>
+														</a>
 													</div>
 												</div>
+												<!--주문 한개 끝-->
 											</div>
-											<!--주문 한개 끝-->
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
-																</ul>
-															</h5>
-														</div>
-													</div>
-													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
-													</div>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
-																</ul>
-															</h5>
-														</div>
-													</div>
-													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
-													</div>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
-																</ul>
-															</h5>
-														</div>
-													</div>
-													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
-													</div>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
-																</ul>
-															</h5>
-														</div>
-													</div>
-													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
-													</div>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
-											<!--주문 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
-																</ul>
-															</h5>
-														</div>
-													</div>
-													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-															완성</button>
-													</div>
-												</div>
-											</div>
-											<!--주문 한개 끝-->
 										</div>
-									</div>
+									</c:forEach>
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<!-- 완성 목록-->
 					<div class="col-lg-5">
 						<h3>
-							<div style="text-align: center">메뉴 완성</div>
+							<div style="text-align: center">완성 메뉴</div>
 						</h3>
 						<div class="panel panel-default panel-inner"
 							style="height: 330px; overflow-y: scroll;">
 							<div class="container-fluid">
 								<div class="row">
-
-									<div class="panel panel-default coupon-expired-custom">
-										<div class="panel-body">
-
-											<!--완성 목록 한개-->
-											<div class="row">
-												<div class="col-md-8">
-													<div class="text-left">
-														<h5>
-															<ul>
-																<li>메뉴명 : 아메리카노(ICE)
-																<li>추가 옵션 : 샷 추가*2, 진하게
-																<li>고객명 : 주승권
-															</ul>
-														</h5>
-													</div>
-												</div>
-												<div class="col-md-4">
-													<button type="button"
-														class="btn btn-default btn-lg btn-huge btn-block ready-button">수령
-														확인</button>
-												</div>
-											</div>
-											<!--완성 목록 한개 끝-->
-
-											<!--완성 목록 한개 시작-->
-											<div class="row">
-
-												<div class="panel panel-default">
+									<c:forEach var="completeOrder" items="${completeOrders}"
+										varStatus="status">
+										<div class="panel panel-default coupon-expired-custom">
+											<div class="panel-body">
+												<!--주문 한개-->
+												<div class="row">
 													<div class="col-md-8">
 														<div class="text-left">
 															<h5>
 																<ul>
-																	<li>메뉴명 : 카페라떼(HOT)
-																	<li>추가 옵션 : 없음
-																	<li>고객명 : 우윤원
+																	<li>메뉴명 : ${completeOrder.menu_name}
+																		(${completeOrder.hotIceNone})
+																	<li>사이즈 : ${completeOrder.menu_size }
+																	<li>추가 옵션 : ${completeOrder.option_info }
+																	<li>고객명 : ${completeOrder.customer_name }
+																	<li>주문량 : ${completeOrder.menu_quantity }
 																</ul>
 															</h5>
 														</div>
 													</div>
 													<div class="col-md-4">
-														<button type="button"
-															class="btn btn-default btn-lg btn-huge btn-block ready-button">수령
-															확인</button>
+														<a
+															href="<spring:url value="/management/order/${order.menu_name}"/>">
+															<button type="button"
+																class="btn btn-default btn-lg btn-huge btn-block ready-button">수령
+																확인</button>
+														</a>
 													</div>
 												</div>
+												<!--주문 한개 끝-->
 											</div>
-											<!--완성 목록 한개 끝-->
 										</div>
-
-									</div>
+									</c:forEach>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
-
-
-		<script
-			src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
-
 </html>

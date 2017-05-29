@@ -24,9 +24,53 @@ public class Cafe_menuDao {
 			this.jdbcTemplateObject = new JdbcTemplate(dataSource);
 		}
 		
-		public List<Cafe_menu> getCafe_menu(String category_name) {
+		/*public List<Cafe_menu> getCafe_menu(String category_name) {
 			String sql = "select distinct menu_name from cafe_menu where category_name = " + "\""+category_name +"\"";
 			return jdbcTemplateObject.query(sql, new RowMapper<Cafe_menu>() {
+
+				@Override
+				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					Cafe_menu cafe_menu = new Cafe_menu();
+					cafe_menu.setCategory_name(rs.getString("category_name"));
+					cafe_menu.setCafe_id(rs.getString("cafe_id"));
+					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setMenu_name(rs.getString("menu_name"));
+					cafe_menu.setMenu_price(rs.getInt("menu_price"));
+					cafe_menu.setMenu_size(rs.getString("menu_size"));
+					return cafe_menu;
+				}
+
+			});
+		}*/
+		
+		public List<Cafe_menu> getCafe_menu(String cafe_id) {
+			String sql = "select distinct menu_name, cafe_id,category_name, menu_price, menu_image from cafe_menu where cafe_id=?";
+			return jdbcTemplateObject.query(sql, new Object[] {cafe_id}, new RowMapper<Cafe_menu>() {
+
+				@Override
+				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					Cafe_menu cafe_menu = new Cafe_menu();
+					
+					cafe_menu.setCafe_id(rs.getString("cafe_id"));
+					cafe_menu.setMenu_name(rs.getString("menu_name"));
+					cafe_menu.setCategory_name(rs.getString("category_name"));
+					cafe_menu.setMenu_price(rs.getString("menu_price"));
+					cafe_menu.setMenu_image(rs.getString("menu_image"));
+					/*cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					
+					
+					cafe_menu.setMenu_size(rs.getString("menu_size"));*/
+					return cafe_menu;
+				}
+
+			});
+		}
+		
+		public List<Cafe_menu> getCafe_menu(String cafe_id, String category_name) {
+			String sql = "select distinct menu_name from cafe_menu where category_name = ? and cafe_id=?";
+			return jdbcTemplateObject.query(sql, new Object[] {category_name, cafe_id},new RowMapper<Cafe_menu>() {
 
 				@Override
 				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -38,6 +82,26 @@ public class Cafe_menuDao {
 					cafe_menu.setMenu_name(rs.getString("menu_name"));
 					/*cafe_menu.setMenu_price(rs.getInt("menu_price"));
 					cafe_menu.setMenu_size(rs.getString("menu_size"));*/
+					return cafe_menu;
+				}
+
+			});
+		}
+		
+		public List<Cafe_menu> getCafe_menu() {
+			String sql = "select distinct * from cafe_menu";
+			return jdbcTemplateObject.query(sql, new RowMapper<Cafe_menu>() {
+				@Override
+				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					Cafe_menu cafe_menu = new Cafe_menu();
+					cafe_menu.setMenu_name(rs.getString("menu_name"));
+					cafe_menu.setCategory_name(rs.getString("category_name"));
+					cafe_menu.setCafe_id(rs.getString("cafe_id"));
+					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setMenu_price(rs.getString("menu_price"));
+					//cafe_menu.setMenu_price(rs.getString("menu_price"));
+					cafe_menu.setMenu_size(rs.getString("menu_size"));
 					return cafe_menu;
 				}
 
@@ -70,7 +134,7 @@ public class Cafe_menuDao {
 			String sql="";
 			
 			for(int i=0;i<size;i++) {
-			sql = "insert into cafe_menu(cafe_id, category_name, menu_name, hot_ice_none, menu_size, menu_price)"
+			sql = "insert into cafe_menu(cafe_id, category_name, menu_name, menu_size, hot_ice_none, menu_price)"
 					+ "values (?,?,?,?,?,?)";
 			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i]});
 			}

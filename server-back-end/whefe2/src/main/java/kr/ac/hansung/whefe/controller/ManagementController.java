@@ -1,16 +1,12 @@
 package kr.ac.hansung.whefe.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-
-import java.text.DateFormat;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,16 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
+import kr.ac.hansung.whefe.model.Cafe_info;
 import kr.ac.hansung.whefe.model.Cafe_menu;
 import kr.ac.hansung.whefe.model.Category;
 import kr.ac.hansung.whefe.model.Coupon;
 import kr.ac.hansung.whefe.model.Opt;
+import kr.ac.hansung.whefe.model.Order;
 import kr.ac.hansung.whefe.service.Cafe_infoService;
 import kr.ac.hansung.whefe.service.Cafe_menuService;
 import kr.ac.hansung.whefe.service.CategoryService;
 import kr.ac.hansung.whefe.service.CouponService;
 import kr.ac.hansung.whefe.service.OptService;
+import kr.ac.hansung.whefe.service.OrderService;
 
 @Controller
 public class ManagementController {
@@ -44,11 +45,14 @@ public class ManagementController {
 	private OptService optService;
 	@Autowired
 	private CouponService couponService;
+	@Autowired
+	private OrderService orderService;
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 쿠폰 컨트롤러
 	@RequestMapping(value = "/management/coupon")
 	public String couponManagement(Model model) throws ParseException {
 		System.out.println("Controller!!!!!!!!!!!!");
+		
 		List<Coupon> coupons = couponService.getCoupons();
 		/*Date today = new Date();
 		DateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
@@ -79,37 +83,67 @@ public class ManagementController {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 주문 컨트롤러
 	@RequestMapping(value = "/management/order")
-	public String orderManagement() {
-		return "web-front-end/06.Order_Check";
-	}
+    public String orderManagement(Model model) {
+        List<Order> orders = orderService.getOrders();
+        model.addAttribute("orders", orders);
+        List<Order>completeOrders = orderService.getCompleteOrders();
+        model.addAttribute("completeOrders", completeOrders);
+        
+        return "web-front-end/06.Order_Check";
+    }
+    
+    @RequestMapping(value = "/management/order/{menu_name}") //primary key 삽입해야할 듯 90% 완성
+    public String orderComplete(@PathVariable String menu_name, Model model){
+        Order completeOrder = orderService.getOrderForEdit(menu_name);
+        orderService.editMenuCompleted(menu_name);
+        System.out.println("do edit");
+        System.out.println("do call completed orderlist");
+        return "redirect:/management/order";
+    }
+	
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 카테고리 컨트롤러
 	@RequestMapping(value = "/management/addcategory")
-	public String addCategory(Category category, HttpServletRequest request) {
-
+	public String addCategory(Category category, HttpServletRequest request, Principal principal) {
+		String cafe_id= principal.getName();
 		String name = request.getParameter("category_name");
 		System.out.println(name + "!!!!!!!!!!!!!!!");
-		if (!categoryService.addCategory(category)) {
+		if (!categoryService.addCategory(cafe_id, category)) {
 			System.out.println("Adding Category cannot be done");
 		}
+		/*if (!categoryService.addCategory(category)) {
+			System.out.println("Adding Category cannot be done");
+		}*/
 		return "redirect:/management";
 	}
 
 	@RequestMapping(value = "/management/deletecategory/{category_name}")
-	public String deleteCategory(@PathVariable String category_name, HttpServletRequest request) {
-		if (!categoryService.deleteCategory(category_name)) {
+	public String deleteCategory(@PathVariable String category_name, HttpServletRequest request, Principal principal) {
+		String cafe_id= principal.getName();
+		if (!categoryService.deleteCategory(cafe_id,category_name)) {
 			System.out.println("Deleting Category cannot be done");
 		}
 		return "redirect:/management";
 	}
+	
+	/*@RequestMapping(value = "/management/deletecategory",method=RequestMethod.GET)
+	public String deleteCategory(HttpServletRequest request,HttpServletResponse response) {
+		String category_name=request.getParameter("category");
+		System.out.println("해당품목 : "+category_name);
+		if (!categoryService.deleteCategory(category_name)) {
+			System.out.println("Deleting Category cannot be done");
+		}
+		return "redirect:/management";
+	}*/
 
 	@RequestMapping(value = "/management/editcategory/{category_name}")
-	public String editCategory(@PathVariable String category_name, HttpServletRequest request) {
+	public String editCategory(@PathVariable String category_name, HttpServletRequest request, Principal principal) {
+		String cafe_id= principal.getName();
 		String newName = request.getParameter("category_name");
 		String originalName = request.getParameter("original");
 		System.out.println(originalName + " !!!!!!!!!!!!! " + newName + " !!!!!!!!!!!!!!!!");
-		if (!categoryService.editCategory(category_name, newName)) {
+		if (!categoryService.editCategory(cafe_id, category_name, newName)) {
 			System.out.println("editting Category cannot be done");
 		}
 		return "redirect:/management";
@@ -118,7 +152,7 @@ public class ManagementController {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 메뉴 컨트롤러
 	
-	@RequestMapping(value = "/management/menu/{category_name}")
+	/*@RequestMapping(value = "/management/menu/{category_name}")
 	public String menuManagement(@PathVariable String category_name, Model model) {
 		List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(category_name);
 		if(cafe_menu==null) {
@@ -128,6 +162,19 @@ public class ManagementController {
 		model.addAttribute("category_name", category_name);
 		return "web-front-end/04.Menu-Detail-Management";
 	}
+	*/
+	@RequestMapping(value = "/management/menu/{category_name}")
+	public String menuManagement(@PathVariable String category_name, Model model, Principal principal) {
+		String cafe_id= principal.getName();
+		List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(cafe_id,category_name);
+		if(cafe_menu==null) {
+			System.out.println("cafe_menu NULL!!!!!!!!!!!!!!!!!!!!!!!");
+		}
+		model.addAttribute("cafe_menu", cafe_menu);
+		model.addAttribute("category_name", category_name);
+		return "web-front-end/04.Menu-Detail-Management";
+	}
+	
 	
 	@RequestMapping(value = "/management/menu/addmenu")
 	public String addMenu(HttpServletRequest request, HttpServletResponse response) {
@@ -293,5 +340,55 @@ public class ManagementController {
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
+	@RequestMapping(value="/cafeinfo")
+	public String cafeinfo(HttpServletRequest request, Model model) {
+			
+		//System.out.println("management/cafeinfo/{cafe_id} " + request.getParameter("cafe_id") + "!!!!!!!!!!!!!");
+		
+		return "web-front-end/UserInfo";
+	}
+	
+	@RequestMapping(value="/cafeinfo", method=RequestMethod.POST)
+	public String cafeinfoPost(Cafe_info cafe_info, HttpServletRequest request) {
+		System.out.println("management/cafeinfo/{cafe_id} " + request.getParameter("cafe_id") + "!!!!!!!!!!!!!");
+		cafe_info.setCafe_id(request.getParameter("cafe_id"));
+		MultipartFile cafe_image = cafe_info.getCafe_image();
+		String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+		
+		Path savePath = Paths.get(rootDirectory+"\\resources\\images\\"+ cafe_image.getOriginalFilename());
+		if(cafe_image !=null && !cafe_image.isEmpty()) {
+			try {
+				cafe_image.transferTo(new File(savePath.toString()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		cafe_info.setImageFilename(cafe_image.getOriginalFilename());
+		
+		if(cafe_image.isEmpty()==false) {
+			System.out.println("---------file start ---------");
+			System.out.println("name: " + cafe_image.getName());
+			System.out.println("filename: " + cafe_image.getOriginalFilename());
+			System.out.println("size: " + cafe_image.getSize());
+			System.out.println("---------file end ---------");
+			
+		}
+		
+		if (!cafe_infoService.editCafe_info(cafe_info)) {
+			System.out.println("Adding info cannot be done");
+		}
+		return "redirect:/login";
+	}
+	
+	@RequestMapping(value="/image")
+	public String viewImage(Model model, HttpServletRequest request) {
+		System.out.println();
+		List<Cafe_info> cafe_info = cafe_infoService.getCafe_info();
+		String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+		System.out.println(rootDirectory+"!!!!!!!!!!!!!!!!!!!!!!");
+		model.addAttribute("cafe_info",cafe_info.get(cafe_info.size()-1));
+		return "web-front-end/image";
+	}
 }

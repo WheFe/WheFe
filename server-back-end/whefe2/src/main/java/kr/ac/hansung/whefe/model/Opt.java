@@ -11,6 +11,7 @@ public class Opt {
 
 	private String option_name;
 	private int option_price;
+	//private String option_price;
 	private String category_name;
 	
 	public Opt() {

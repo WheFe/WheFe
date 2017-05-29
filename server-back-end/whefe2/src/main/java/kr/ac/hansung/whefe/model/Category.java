@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 public class Category {
 
-	
+	private String cafe_id;
 	private String category_name;
 	
 	public Category() {

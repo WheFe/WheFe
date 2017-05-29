@@ -15,8 +15,20 @@ public class Cafe_menuService {
 	@Autowired
 	private Cafe_menuDao cafe_menuDao;
 	
-	public List<Cafe_menu> getCafe_menu(String category_name) {
+	/*public List<Cafe_menu> getCafe_menu(String category_name) {
 		return cafe_menuDao.getCafe_menu(category_name);
+	}*/
+	
+	public List<Cafe_menu> getCafe_menu(String cafe_id) {
+		return cafe_menuDao.getCafe_menu(cafe_id);
+	}
+	
+	public List<Cafe_menu> getCafe_menu(String cafe_id, String category_name) {
+		return cafe_menuDao.getCafe_menu(cafe_id, category_name);
+	}
+	
+	public List<Cafe_menu> getCafe_menu() {
+		return cafe_menuDao.getCafe_menu();
 	}
 	
 	public boolean addMenu(String[] param) {

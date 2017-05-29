@@ -58,10 +58,33 @@
 .coupon {
 	margin-left: 55px;
 }
+
+body {
+	background: url('http://i67.tinypic.com/2ldeel3.jpg') fixed;
+}
+
+.panel {
+	/*opacity:0.7;*/
+	background-color: #00ff0000;
+}
+
+.panel>.panel-body {
+	/*opacity : 0.5;*/
+	/*background-color:black;*/
+	
+}
+
+.panel>.panel-heading {
+	background-image: none;
+	background-color: #222222;
+	/*background-color : black;*/
+	color: white;
+	opacity: 1.0;
+}
 </style>
 
 <body>
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -80,9 +103,10 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-				<li><div class="user-info"
+					<li><div class="user-info"
 							style="margin-top: 15px; color: #636363">
-							<span class="glyphicon glyphicon-user"></span>&nbsp; ${pageContext.request.userPrincipal.name}
+							<span class="glyphicon glyphicon-user"></span>&nbsp;
+							${pageContext.request.userPrincipal.name}
 						</div></li>
 					<li><a href="<c:url value="/logout"/>"><span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
@@ -213,7 +237,7 @@
 											<button type="submit"
 												class="btn btn-danger btn-lg btn-huge btn-block coupon-expired-button">
 												<span style="margin-bottom: 20px margin-top:20px"
-													class="glyphicon glyphicon-trash"></span>&nbsp;기간만료 쿠폰 삭제
+													class="glyphicon glyphicon-trash"></span>&nbsp;삭제
 											</button>
 										</div>
 									</div>
