@@ -94,13 +94,14 @@
         android:id="@+id/testButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/SignupText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/SignupText"
+        android:layout_marginEnd="42dp"
+        android:layout_marginRight="42dp"
         android:onClick="onTestButtonClicked"
         android:text="Push test"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/LoginButton"
-        android:layout_alignEnd="@+id/LoginButton"
-        android:layout_marginRight="42dp"
-        android:layout_marginEnd="42dp" />
+        android:visibility="invisible" />
 
     <CheckBox
         android:id="@+id/autoLogin"

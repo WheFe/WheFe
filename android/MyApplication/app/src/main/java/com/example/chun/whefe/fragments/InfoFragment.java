@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,14 +19,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chun.whefe.MainActivity;
 import com.example.chun.whefe.NavigationActivity;
 import com.example.chun.whefe.R;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 
@@ -36,10 +36,10 @@ import java.net.URL;
 public class InfoFragment extends Fragment{
 
     //
-    Bitmap bmImg;
-    String imgUrl = MainActivity.ip + "/whefe/image";
-    back task;
 
+    Bitmap bitmap;
+
+    String imageFilename;
     //
     LinearLayout imageList;
     View view;
@@ -52,8 +52,12 @@ public class InfoFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.info,container,false);
 
-        task = new back();
-        task.execute(imgUrl);
+
+       // URL url = new URL(MainActivity.ip + "/whefe/image/Notebook_SAMSUNG.jpg");
+      //  task = new back();
+      //  task.execute(imgUrl);
+
+
 
         TextView nameView = (TextView)view.findViewById(R.id.cafeNameView);
         TextView addressView = (TextView)view.findViewById(R.id.cafeAddressView);
@@ -89,6 +93,8 @@ public class InfoFragment extends Fragment{
         String cafeClose = preferences.getString("close","NOTFOUND");
         String cafePerson = preferences.getString("person","NOTFOUND");
         String cafeMax = preferences.getString("max","NOTFOUND");
+        String cafeIntro = preferences.getString("intro","");
+        imageFilename = preferences.getString("image","");
 
         // Tool bar 타이틀 설정
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(cafeName);
@@ -97,13 +103,25 @@ public class InfoFragment extends Fragment{
         addressView.setText("주소 : " + cafeAddress);
         phoneView.setText("전화번호 : " + cafePhone);
         timeView.setText("영업시간 : " + cafeOpen + " ~ " + cafeClose);
-        String temp = "13";
-        personView.setText("혼잡도 : " + cafePerson + " / " + cafeMax);
 
-        introduceView.setText("착한 가격, 착한 맛으로 모십니다.\n");
+        double person = Double.parseDouble(cafePerson);
+        double max = Double.parseDouble(cafeMax);
 
+        double maxPerPerson = person/max*100;
 
-            setImageList();
+        if(maxPerPerson > 65){
+            personView.setBackgroundColor(Color.RED);
+        }else if(maxPerPerson > 40){
+            //personView.setTextColor(Color.YELLOW);
+            personView.setBackgroundColor(Color.YELLOW);
+        }else if(maxPerPerson >0){
+            personView.setBackgroundColor(Color.GREEN);
+        }
+        personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + maxPerPerson + "% )");
+
+        introduceView.setText(cafeIntro);
+
+        setImageList();
 
 
         imageView1.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +133,8 @@ public class InfoFragment extends Fragment{
                 ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
                 ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
 
-                imageView.setImageResource(R.drawable.grazie1);
+               // imageView.setImageResource(R.drawable.grazie1);
+                imageView.setImageBitmap(bitmap);
                 imageView.setAdjustViewBounds(true);
                 cancelButton.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -156,8 +175,10 @@ public class InfoFragment extends Fragment{
     public void setImageList() {
         imageList = (LinearLayout)view.findViewById(R.id.info_imageList);
 
+        new LoadImage().execute(MainActivity.ip + "/whefe/resources/images/menuimage/americano.jpg");
+
         imageView1 = new ImageView(getContext());
-        imageView1.setImageResource(R.drawable.grazie1);
+     //   imageView1.setImageResource(R.drawable.grazie1);
        /* URL url = new URL(MainActivity.ip + "/whefe/image");
         Bitmap bitmap = BitmapFactory.decodeStream(url.openStream());*/
       //  imageView1.setImageBitmap(bitmap);
@@ -176,39 +197,32 @@ public class InfoFragment extends Fragment{
 
 
     }
-
-    private class back extends AsyncTask<String, Integer,Bitmap>{
-
+    private class LoadImage extends AsyncTask<String, String, Bitmap> {
         @Override
-        protected Bitmap doInBackground(String... urls) {
-            try{
-                URL myFileUri = new URL(urls[0]);
-                HttpURLConnection conn = (HttpURLConnection)myFileUri.openConnection();
-                conn.setDoInput(true);
-                conn.connect();
-                InputStream is = conn.getInputStream();
-                bmImg = BitmapFactory.decodeStream(is);
-            }catch (IOException e){
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Bitmap doInBackground(String... args) {
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            return bmImg;
+            return bitmap;
         }
-        protected  void onPostExecute(Bitmap img){
-            /*imageList = (LinearLayout)view.findViewById(R.id.info_imageList);
 
-            imageView1 = new ImageView(getContext());
-            //imageView1.setImageResource(R.drawable.grazie1);
-      *//*  URL url = new URL(MainActivity.ip + "/whefe/image");
-        Bitmap bitmap = BitmapFactory.decodeStream(url.openStream());*//*
-            //  imageView1.setImageBitmap(bitmap);
-            imageView1.setAdjustViewBounds(true);
-            imageView1.setVisibility(View.VISIBLE);
+        protected void onPostExecute(Bitmap image) {
+            if(image != null) {
+                bitmap = image;
+                imageView1.setImageBitmap(image);
 
-            imageList.addView(imageView1);*/
+            } else {
 
-            //imageView1.setImageBitmap(bmImg);
+                Toast.makeText(getContext(), "이미지가 존재하지 않거나 네트워크 오류 발생", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
 
 }

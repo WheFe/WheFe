@@ -24,6 +24,7 @@ import com.example.chun.whefe.fragments.InfoFragment;
 import com.example.chun.whefe.fragments.MapFragment;
 import com.example.chun.whefe.fragments.OrderFragment;
 import com.example.chun.whefe.fragments.PaymentFragment;
+import com.example.chun.whefe.fragments.ShowCouponFragment;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentReplaceable {
@@ -34,6 +35,7 @@ public class NavigationActivity extends AppCompatActivity
     CouponFragment couponFragment;
     PaymentFragment paymentFragment;
     CafeListFragment cafeListFragment;
+    ShowCouponFragment showCouponFragment;
 
     FragmentTransaction transaction ;
 
@@ -64,6 +66,7 @@ public class NavigationActivity extends AppCompatActivity
         couponFragment = new CouponFragment();
         paymentFragment = new PaymentFragment();
         cafeListFragment = new CafeListFragment();
+        showCouponFragment = new ShowCouponFragment();
 
         setDefaultFragment();
     }
@@ -125,6 +128,13 @@ public class NavigationActivity extends AppCompatActivity
             transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.container,cafeListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        else if(id == R.id.nav_coupon_list){
+            transaction = getSupportFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.container,showCouponFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }

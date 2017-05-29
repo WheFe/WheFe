@@ -20,8 +20,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="17dp"
-            android:background="@drawable/layout_border"
-            android:gravity="center"
+            android:gravity="left"
             android:padding="5dp"
             android:text="카페 목록"
             android:textColor="@android:color/black"
@@ -29,12 +28,15 @@
 
         <Button
             android:id="@+id/cl_backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/cl_listView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="Back" />
+            android:layout_marginTop="15dp"
+            android:background="@drawable/mybutton"
+            android:text="Back"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/cl_listView"
@@ -46,6 +48,26 @@
             android:layout_alignStart="@+id/textView12"
             android:layout_below="@+id/textView12"
             android:layout_marginTop="20dp" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView12"
+            android:layout_alignStart="@+id/textView12"
+            android:layout_below="@+id/textView12"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/border" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/border"
+            android:layout_below="@+id/cl_listView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
 </RelativeLayout>

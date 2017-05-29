@@ -58,6 +58,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
 
 
+
     NMapView nMapView;
     NMapController nMapController;
     NMapLocationManager mMapLocationManager;
@@ -79,7 +80,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
 
-        String categoryUrl = MainActivity.ip + "/whefe/android/getcafeinfo";
+        String categoryUrl = MainActivity.ip + "/whefe/android/cafeinfo";
         new DownloadCategoryTask().execute(categoryUrl);
 
         baseView = inflater.inflate(R.layout.fragment_naver_map, container, false);
@@ -216,6 +217,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                 JSONArray ja = new JSONArray(result);
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject order = ja.getJSONObject(i);
+                    String cafe_id = (String)order.get("cafe_id");
                     String cafeName = (String) order.get("cafe_name");
                     String cafeAddress = (String)order.get("cafe_address");
                     String cafePhone = (String)order.get("cafe_tel");
@@ -223,8 +225,10 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     String cafeClose = (String)order.get("cafe_end");
                     String cafePerson = (String)order.get("cafe_curr");
                     String cafeMax = (String)order.get("cafe_max");
+                    String cafe_intro = (String)order.get("cafe_intro");
+                    String cafe_image = (String)order.get("imageFilename");
 
-                    CafeInfo cafeInfo = new CafeInfo(cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax);
+                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image);
 
                     //Log.e("geocoder",cafeName + cafeAddress + cafePhone + cafeOpen + cafeClose + cafeMax);
 
@@ -234,6 +238,8 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }finally {
+                Toast.makeText(getContext(), "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
             }
             poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
 
@@ -278,16 +284,17 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     double person = Double.parseDouble(cafeInfos.get(i).getCafePerson());
                     double max = Double.parseDouble(cafeInfos.get(i).getCafeMaximum());
 
-                    double maxPerPerson = (double)(person/max*100);
+                    double maxPerPerson = (person/max*100);
 
                     personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + maxPerPerson + "% )");
 
                     if(maxPerPerson > 65){
-                        personView.setTextColor(Color.RED);
+                        personView.setBackgroundColor(Color.RED);
                     }else if(maxPerPerson > 40){
-                        personView.setTextColor(Color.YELLOW);
+                        //personView.setTextColor(Color.YELLOW);
+                        personView.setBackgroundColor(Color.YELLOW);
                     }else if(maxPerPerson >0){
-                        personView.setTextColor(Color.GREEN);
+                        personView.setBackgroundColor(Color.GREEN);
                     }
 
                     button.setOnClickListener(new View.OnClickListener() {
@@ -302,6 +309,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("INFO_PREFERENCE", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
+                    editor.putString("cafe_id",cafeInfos.get(i).getCafe_id());
                     editor.putString("name", cafeInfos.get(i).getCafeName());
                     editor.putString("address", cafeInfos.get(i).getCafeAddress());
                     editor.putString("phone", cafeInfos.get(i).getCafePhone());
@@ -309,6 +317,8 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     editor.putString("close",cafeInfos.get(i).getCafeClose());
                     editor.putString("person", cafeInfos.get(i).getCafePerson());
                     editor.putString("max", cafeInfos.get(i).getCafeMaximum());
+                    editor.putString("intro", cafeInfos.get(i).getCafe_intro());
+                    editor.putString("image",cafeInfos.get(i).getCafe_image());
                     editor.commit();
                 }
             });
@@ -341,54 +351,6 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
     }
 
     public NMapPOIdata setPOIData(NMapPOIdata poiData, int markerId){
-       /* poiData.beginPOIdata(2);
-        String CafeName = "그라지에 미래관";
-        String CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 미래관 B1층";
-        String CafePhone = "02-111-1111";
-        String CafeOpen = "08:30";
-        String CafeClose = "21:00";
-        String CafeMaximum = "20";
-
-        CafeInfo cafeInfo = new CafeInfo(CafeName,CafeAddress,CafePhone,CafeOpen,CafeClose,CafeMaximum);
-
-        cafeInfos.add(cafeInfo);
-
-        String info = cafeInfo.getCafeName();
-
-        poiData.addPOIitem(127.010741, 37.582590, info, NMapPOIflagType.GREEN, 0);
-
-        CafeName = "그라지에 연구관";
-        CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 연구관 2층";
-        CafePhone = "02-222-2222";
-        CafeOpen = "08:30";
-        CafeClose = "21:00";
-        CafeMaximum = "100";
-
-        cafeInfo = new CafeInfo(CafeName,CafeAddress,CafePhone,CafeOpen,CafeClose,CafeMaximum);
-
-        cafeInfos.add(cafeInfo);
-
-        info = cafeInfo.getCafeName();
-
-        poiData.addPOIitem(127.009844, 37.582323, info, NMapPOIflagType.YELLOW, 0);
-
-        CafeName = "팥고당";
-        CafeAddress = "서울특별시 성북구 삼선동2가 389 한성대학교 상상관 2층";
-        CafePhone = "02-333-3333";
-        CafeOpen = "08:30";
-        CafeClose = "21:00";
-        CafeMaximum = "20";
-
-        cafeInfo = new CafeInfo(CafeName,CafeAddress,CafePhone,CafeOpen,CafeClose,CafeMaximum);
-
-        cafeInfos.add(cafeInfo);
-
-        info = cafeInfo.getCafeName();
-
-        poiData.addPOIitem(127.010010, 37.582562, info, NMapPOIflagType.RED, 0);
-        poiData.endPOIdata();*/
-
-        poiData.beginPOIdata(2);
 
 
         for(int i = 0; i<cafeInfos.size();i++){

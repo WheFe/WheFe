@@ -83,14 +83,17 @@
 
         <Button
             android:id="@+id/cafeInfoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/cafeInfoPhoneView"
             android:layout_marginTop="7dp"
+            android:background="@drawable/mybutton"
             android:text="자세히"
-            android:textSize="18sp" />
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <ImageButton

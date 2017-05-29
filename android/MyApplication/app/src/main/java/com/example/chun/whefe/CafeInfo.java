@@ -12,10 +12,14 @@ public class CafeInfo {
     String CafeClose;
     String CafePerson;
     String CafeMaximum;
+    String cafe_id;
+    String cafe_intro;
+    String cafe_image;
 
     public CafeInfo() {
     }
-    public CafeInfo(String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafePerson,String cafeMaximum) {
+    public CafeInfo(String cafe_id,String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafePerson,String cafeMaximum, String cafe_intro, String cafe_image) {
+        this.cafe_id = cafe_id;
         CafeName = cafeName;
         CafeAddress = cafeAddress;
         CafePhone = cafePhone;
@@ -23,8 +27,16 @@ public class CafeInfo {
         CafeClose = cafeClose;
         CafePerson = cafePerson;
         CafeMaximum = cafeMaximum;
+        this.cafe_intro = cafe_intro;
+        this.cafe_image = cafe_image;
     }
 
+    public String getCafe_id() {
+        return cafe_id;
+    }
+    public void setCafe_id(String cafe_id) {
+        this.cafe_id = cafe_id;
+    }
     public String getCafePerson() {
         return CafePerson;
     }
@@ -66,5 +78,17 @@ public class CafeInfo {
     }
     public void setCafeMaximum(String cafeMaximum) {
         CafeMaximum = cafeMaximum;
+    }
+    public String getCafe_intro() {
+        return cafe_intro;
+    }
+    public void setCafe_intro(String cafe_intro) {
+        this.cafe_intro = cafe_intro;
+    }
+    public String getCafe_image() {
+        return cafe_image;
+    }
+    public void setCafe_image(String cafe_image) {
+        this.cafe_image = cafe_image;
     }
 }

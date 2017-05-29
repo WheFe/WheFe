@@ -10,16 +10,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyMenuHelper extends SQLiteOpenHelper {
     public MyMenuHelper(Context context) {
-        super(context, "menu.sqlite", null, 1);
+        super(context, "menu2.sqlite", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE menulist ( menu_name VARCHAR(30), menu_price VARCHAR(20), menu_category VARCHAR(20) );");
+        db.execSQL("CREATE TABLE menulist ( menu_name VARCHAR(30), menu_price VARCHAR(20),menu_image VARCHAR(30), menu_category VARCHAR(20) );");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("CREATE TABLE menulist ( menu_name VARCHAR(30), menu_price VARCHAR(20), menu_category VARCHAR(20) );");
+        db.execSQL("CREATE TABLE menulist ( menu_name VARCHAR(30), menu_price VARCHAR(20),menu_image VARCHAR(30), menu_category VARCHAR(20) );");
     }
 }

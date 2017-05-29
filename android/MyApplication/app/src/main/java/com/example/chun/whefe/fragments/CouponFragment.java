@@ -1,6 +1,7 @@
 package com.example.chun.whefe.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -49,6 +50,10 @@ public class CouponFragment extends Fragment {
     View view;
     String coupon_name;
     DBTask dbTask;
+
+    private String cafe_id;
+    private String cafeName;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +61,10 @@ public class CouponFragment extends Fragment {
         dbTask = new DBTask();
 
         coupons = new ArrayList<Coupon>();
+
+        SharedPreferences preferences = getContext().getSharedPreferences("INFO_PREFERENCE",Context.MODE_PRIVATE);
+        cafeName = preferences.getString("name","NOTFOUND");
+        cafe_id = preferences.getString("cafe_id","NOTFOUND");
 
         /*try {
             //coupon_name = dbTask.execute("http://223.194.155.51/cafecouponlist.php").get();
@@ -103,7 +112,7 @@ public class CouponFragment extends Fragment {
             e.printStackTrace();
         } catch (JSONException e) {
             Toast.makeText(getContext(),"JSONException",Toast.LENGTH_SHORT).show();
-            couponArray[0] = new Coupon();
+            /*couponArray[0] = new Coupon();
             couponArray[0].setStr1("500원 할인");
             couponArray[0].setCoupon_num(0);
             couponArray[0].setCafe_id("0");
@@ -119,7 +128,7 @@ public class CouponFragment extends Fragment {
             couponArray[2].setStr1("1000원 할인");
             couponArray[2].setCoupon_num(0);
             couponArray[2].setCafe_id("0");
-            coupons.add(couponArray[2]);
+            coupons.add(couponArray[2]);*/
 
             e.printStackTrace();
         }

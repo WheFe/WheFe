@@ -10,17 +10,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyCategoryHelper extends SQLiteOpenHelper {
     public MyCategoryHelper(Context context) {
-        super(context, "category.sqlite", null, 1);
+        super(context, "category2.sqlite", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-       db.execSQL("CREATE TABLE categorylist ( category_name VARCHAR(20), cafe_id INTEGER);");
+       db.execSQL("CREATE TABLE categorylist ( category_name VARCHAR(20), cafe_id VARCHAR(20));");
         // create table ~~~~ _id integer PRIMARY KEY autoincrement
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-       db.execSQL("CREATE TABLE categorylist ( category_name VARCHAR(20), cafe_id INTEGER);");
+       db.execSQL("CREATE TABLE categorylist ( category_name VARCHAR(20), cafe_id VARCHAR(20));");
     }
 }

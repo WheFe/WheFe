@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     CheckLoginTask loginTask;
 
-    public static final String ip = "http://223.194.153.74:8080";
+    public static final String ip = "http://223.194.157.125:8080";
 
 
     @Override

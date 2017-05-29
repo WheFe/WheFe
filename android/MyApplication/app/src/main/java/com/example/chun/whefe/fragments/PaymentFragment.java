@@ -1,12 +1,18 @@
 package com.example.chun.whefe.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +22,21 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.chun.whefe.dbhelper.MyHistoryHelper;
-import com.example.chun.whefe.dbhelper.MyOpenHelper;
+import com.example.chun.whefe.MainActivity;
 import com.example.chun.whefe.R;
 import com.example.chun.whefe.ShoppingList;
+import com.example.chun.whefe.dbhelper.MyHistoryHelper;
+import com.example.chun.whefe.dbhelper.MyOpenHelper;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -38,8 +47,16 @@ import java.util.StringTokenizer;
 
 public class PaymentFragment extends Fragment {
 
+    private String cafe_id;
+    private String cafeName;
+    private String my_id;
+
+    Bitmap bitmap;
+
     ShoppingList shoppingList;
     // MyShoppingListAdapter myShoppingListAdapter;
+
+    ArrayList<OrderList> orderLists;
 
     MyOpenHelper helper;
     SQLiteDatabase db;
@@ -58,6 +75,13 @@ public class PaymentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.payment,container,false);
+
+        SharedPreferences preferences = getContext().getSharedPreferences("INFO_PREFERENCE", Context.MODE_PRIVATE);
+        cafeName = preferences.getString("name","NOTFOUND");
+        cafe_id = preferences.getString("cafe_id","NOTFOUND");
+
+        SharedPreferences preferences1 = getContext().getSharedPreferences("LOGIN_PREFERENCE", Context.MODE_PRIVATE);
+        my_id = preferences1.getString("id","");
 
         helper = new MyOpenHelper(getContext());
         db = helper.getWritableDatabase();
@@ -102,7 +126,6 @@ public class PaymentFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 calculatePrice();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -114,6 +137,29 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getFragmentManager().popBackStack();
+            }
+        });
+
+        Button paymentButton = (Button)view.findViewById(R.id.paymentButton);
+        paymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // customer_id, cafe_id, menu_name , hot_ice_none, menu_size, option_name
+                orderLists = new ArrayList<OrderList>();
+
+                Cursor rs = db.rawQuery("select * from shoppinglist;", null);
+                if(rs.getCount()==0){
+                    Toast.makeText(getContext(), "장바구니에 물품 없음", Toast.LENGTH_SHORT).show();
+                }else {
+                    while (rs.moveToNext()) {
+                        String db_name = rs.getString(1);
+                        String db_hot = rs.getString(2);
+                        String db_size = rs.getString(3);
+                        String db_option = rs.getString(4);
+
+                        orderLists.add(new OrderList(my_id, cafe_id, db_name, db_hot, db_size, db_option));
+                    }
+                }
             }
         });
 
@@ -159,7 +205,7 @@ public class PaymentFragment extends Fragment {
             String db_size = rs.getString(3);
             String db_option = rs.getString(4);
             String db_price = rs.getString(5);
-            int db_image = rs.getInt(6);
+            String db_image = rs.getString(6);
 
             sh_arrayList.add(new ShoppingList(db_id,db_name,db_hot,db_size,db_option,db_price,db_image));
         }
@@ -239,14 +285,16 @@ public class PaymentFragment extends Fragment {
 
             }
 
+            String imageFilename = shoppingList.getImageFilename();
             ImageView imageView = (ImageView)v.findViewById(R.id.sh_imageView);
-            imageView.setImageResource(shoppingList.getImageResource());
+            new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename);
+          //  imageView.setImageResource(shoppingList.getImageResource());
             TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
             priceView.setText(price);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            /*imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Dialog dialog = new Dialog(getContext());
@@ -265,7 +313,7 @@ public class PaymentFragment extends Fragment {
                     });
                     dialog.show();
                 }
-            });
+            });*/
 
             return v;
         }
@@ -325,6 +373,89 @@ public class PaymentFragment extends Fragment {
         public TextView hotView;
         public TextView sizeView;
         public TextView optionView;
+
+    }
+    private class LoadImage extends AsyncTask<String, String, Bitmap> {
+        ImageView imageView;
+        Context context;
+
+        public LoadImage(ImageView imageView, Context context){
+            this.imageView = imageView;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Bitmap doInBackground(String... args) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap image) {
+            if(image != null) {
+                bitmap = image;
+                //imageView1.setImageBitmap(image);
+                imageView.setImageBitmap(bitmap);
+            } else {
+                //bitmap = R.drawable.whefe;
+                Resources res = getResources();
+                BitmapDrawable bd = null;
+                bd = (BitmapDrawable) ContextCompat.getDrawable(getContext(),R.drawable.whefe);
+                bitmap = bd.getBitmap();
+
+
+                //Toast.makeText(getContext(), "이미지가 존재하지 않거나 네트워크 오류 발생", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public class OrderList{
+        private String customer_id;
+        private String cafe_id;
+        private String menu_name;
+        private String hot_ice_none;
+        private String menu_size;
+        private String option_name;
+
+        public OrderList(String customer_id, String cafe_id, String menu_name, String hot_ice_none, String menu_size, String option_name) {
+            this.customer_id = customer_id;
+            this.cafe_id = cafe_id;
+            this.menu_name = menu_name;
+            this.hot_ice_none = hot_ice_none;
+            this.menu_size = menu_size;
+            this.option_name = option_name;
+        }
+
+        public String getCustomer_id() {
+            return customer_id;
+        }
+
+        public String getCafe_id() {
+            return cafe_id;
+        }
+
+        public String getMenu_name() {
+            return menu_name;
+        }
+
+        public String getHot_ice_none() {
+            return hot_ice_none;
+        }
+
+        public String getMenu_size() {
+            return menu_size;
+        }
+
+        public String getOption_name() {
+            return option_name;
+        }
 
     }
 }

@@ -32,6 +32,7 @@
                 android:id="@+id/coup_TextView"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1.02"
                 android:background="@drawable/layout_border"
                 android:gravity="center"
@@ -41,11 +42,14 @@
             <Button
                 android:id="@+id/coup_ReceiveButton"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
+                android:layout_width="69dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/layout_border"
-                android:text="쿠폰 받기" />
+                android:layout_marginTop="5dp"
+                android:background="@drawable/mybutton"
+                android:text="쿠폰 받기"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -52,7 +52,7 @@ public class CafeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.cafe_list,container,false);
 
-        String categoryUrl = MainActivity.ip + "/whefe/android/getcafeinfo";
+        String categoryUrl = MainActivity.ip + "/whefe/android/cafeinfo";
         new DownloadCategoryTask().execute(categoryUrl);
 
         listView = (ListView)view.findViewById(R.id.cl_listView);
@@ -91,6 +91,7 @@ public class CafeListFragment extends Fragment {
                 JSONArray ja = new JSONArray(result);
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject order = ja.getJSONObject(i);
+                    String cafe_id = (String)order.get("cafe_id");
                     String cafeName = (String) order.get("cafe_name");
                     String cafeAddress = (String)order.get("cafe_address");
                     String cafePhone = (String)order.get("cafe_tel");
@@ -98,8 +99,10 @@ public class CafeListFragment extends Fragment {
                     String cafeClose = (String)order.get("cafe_end");
                     String cafeMax = (String)order.get("cafe_max");
                     String cafePerson = (String)order.get("cafe_curr");
+                    String cafe_intro = (String)order.get("cafe_intro");
+                    String cafe_image = (String)order.get("imageFilename");
 
-                    CafeInfo cafeInfo = new CafeInfo(cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax);
+                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image);
                     cafeList.add(cafeInfo);
 
 
@@ -113,6 +116,7 @@ public class CafeListFragment extends Fragment {
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("INFO_PREFERENCE", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+                        editor.putString("cafe_id",cafeList.get(position).getCafe_id());
                         editor.putString("name", cafeList.get(position).getCafeName());
                         editor.putString("address", cafeList.get(position).getCafeAddress());
                         editor.putString("phone", cafeList.get(position).getCafePhone());
@@ -120,6 +124,8 @@ public class CafeListFragment extends Fragment {
                         editor.putString("close",cafeList.get(position).getCafeClose());
                         editor.putString("person",cafeList.get(position).getCafePerson());
                         editor.putString("max", cafeList.get(position).getCafeMaximum());
+                        editor.putString("intro", cafeList.get(position).getCafe_intro());
+                        editor.putString("image",cafeList.get(position).getCafe_image());
                         editor.commit();
 
                         NavigationActivity activity = (NavigationActivity)getActivity();
