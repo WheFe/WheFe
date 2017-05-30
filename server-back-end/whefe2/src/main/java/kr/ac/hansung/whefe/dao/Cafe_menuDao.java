@@ -107,6 +107,26 @@ public class Cafe_menuDao {
 			});
 		}
 		
+		public List<Cafe_menu> getMenu_price(String cafe_id, String menu_name) {
+			String sql = "select * from cafe_menu where cafe_id = ? and menu_name = ?";
+			return jdbcTemplateObject.query(sql, new Object[] {cafe_id,menu_name},new RowMapper<Cafe_menu>() {
+				@Override
+				public Cafe_menu mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					Cafe_menu cafe_menu = new Cafe_menu();
+					cafe_menu.setMenu_name(rs.getString("menu_name"));
+					cafe_menu.setCategory_name(rs.getString("category_name"));
+					cafe_menu.setCafe_id(rs.getString("cafe_id"));
+					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setMenu_size(rs.getString("menu_size"));
+					cafe_menu.setMenu_price(rs.getString("menu_price"));
+					//cafe_menu.setMenu_price(rs.getString("menu_price"));
+					return cafe_menu;
+				}
+
+			});
+		}
+		
 		public boolean addMenu(String[] param) {
 			String cafe_id = param[0];
 			String category_name = param[1];
@@ -139,5 +159,15 @@ public class Cafe_menuDao {
 			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i], menu_image});
 			}
 			return true;
+		}
+		
+		public boolean editMenu_name(String cafe_id,String menu_name,String new_name) {
+			String sql = "update cafe_menu set menu_name=? where cafe_id = ? and menu_name = ?";
+			return jdbcTemplateObject.update(sql, new Object[] {new_name,cafe_id,menu_name})==1;
+		}
+		
+		public boolean deleteMenu(String cafe_id,String menu_name) {
+			String sql = "delete from cafe_menu where cafe_id = ? and menu_name = ?";
+			return jdbcTemplateObject.update(sql, new Object[] {cafe_id,menu_name})==1;
 		}
 }

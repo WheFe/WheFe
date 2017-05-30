@@ -406,8 +406,8 @@ body {
 									</div>
 
 									<div class="col-lg-2">
-										<button type="button" class="btn btn-default btn-lg"
-											data-toggle="modal" data-target="#price-management">가격관리</button>
+										<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/menu/editmenu/${cafe_menu.menu_name}"/>'"
+											>가격관리</button>
 									</div>
 									<!--가격 관리 팝업-->
 									<div class="modal fade" id="price-management" role="dialog">
@@ -556,45 +556,49 @@ body {
 
 												<!-- Modal content-->
 												<div class="modal-content">
-
-													<div class="modal-header">
-														<button type="button" class="close" data-dismiss="modal">&times;</button>
-														<h4 class="modal-title">메뉴 이름 수정하기</h4>
-													</div>
-													<div class="modal-body">
-														<div class="container">
-															<div class="row">
-																<input class="form-control" style="max-width: 270px"
-																	name="category-name" placeholder="메뉴 이름" type="text"
-																	required autofocus />
-															</div>
+													<form
+														action="<c:url value="/management/menu/editmenuname"/>">
+														<input type="hidden" name="category_name"
+															value="${category_name }" /> <input type="hidden"
+															name="menu_name" value="${cafe_menu.menu_name}" />
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal">&times;</button>
+															<h4 class="modal-title">메뉴 이름 수정하기</h4>
 														</div>
+														<div class="modal-body">
+															<div class="container">
+																<div class="row">
+																	<input class="form-control" style="max-width: 270px"
+																		name="new_name" placeholder="${cafe_menu.menu_name}"
+																		type="text" required autofocus />
+																</div>
+															</div>
 
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default btn-md"
-															data-toggle="modal"
-															data-target="#menu-name-edit-complete">메뉴 이름 수정</button>
-														<!--메뉴 추가 완료-->
-														<div class="modal" id="menu-name-edit-complete"
-															role="dialog">
-															<div class="modal-dialog modal-sm">
-																<div class="modal-content">
-																	<div class="modal-body">
-																		<div class="row" style="text-align: center">
-																			<b>메뉴 이름 수정 완료!</b>
+														</div>
+														<div class="modal-footer">
+															<button type="submit" class="btn btn-default btn-md"
+																data-toggle="modal"
+																data-target="#menu-name-edit-complete">메뉴 이름 수정</button>
+															<!--메뉴 추가 완료-->
+															<div class="modal" id="menu-name-edit-complete"
+																role="dialog">
+																<div class="modal-dialog modal-sm">
+																	<div class="modal-content">
+																		<div class="modal-body">
+																			<div class="row" style="text-align: center">
+																				<b>메뉴 이름 수정 완료!</b>
+																			</div>
 																		</div>
-																	</div>
-																	<div class="modal-footer" data-dismiss="modal">
-																		<button type="button" class="btn btn-default btn-md">확인</button>
+																		<div class="modal-footer" data-dismiss="modal">
+																			<button type="button" class="btn btn-default btn-md">확인</button>
+																		</div>
 																	</div>
 																</div>
 															</div>
+															<button type="button" class="btn btn-danger btn-md"
+																data-dismiss="modal">취소</button>
 														</div>
-														<button type="button" class="btn btn-danger btn-md"
-															data-dismiss="modal">취소</button>
-													</div>
-
+													</form>
 												</div>
 
 											</div>
@@ -617,33 +621,40 @@ body {
 														<button type="button" class="close" data-dismiss="modal">&times;</button>
 														<h4 class="modal-title">메뉴 삭제하기</h4>
 													</div>
-													<div class="modal-body">
-														<div class="container">
-															<div class="row">메뉴를 삭제하시겠습니까?</div>
-														</div>
+													<form
+														action="<c:url value="/management/menu/deletemenu"/>">
+														<input type="hidden" name="category_name"
+															value="${category_name}" /> <input type="hidden"
+															name="menu_name" value="${cafe_menu.menu_name }" />
+														<div class="modal-body">
+															<div class="container">
+																<div class="row">메뉴를 삭제하시겠습니까?</div>
+															</div>
 
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default btn-md"
-															data-toggle="modal" data-target="#menu-delete-complete">삭제하기</button>
-														<!--메뉴 삭제 완료-->
-														<div class="modal" id="menu-delete-complete" role="dialog">
-															<div class="modal-dialog modal-sm">
-																<div class="modal-content">
-																	<div class="modal-body">
-																		<div class="row" style="text-align: center">
-																			<b>메뉴 삭제 완료!</b>
+														</div>
+														<div class="modal-footer">
+															<button type="submit" class="btn btn-default btn-md"
+																data-toggle="modal" data-target="#menu-delete-complete">삭제하기</button>
+															<!--메뉴 삭제 완료-->
+															<div class="modal" id="menu-delete-complete"
+																role="dialog">
+																<div class="modal-dialog modal-sm">
+																	<div class="modal-content">
+																		<div class="modal-body">
+																			<div class="row" style="text-align: center">
+																				<b>메뉴 삭제 완료!</b>
+																			</div>
 																		</div>
-																	</div>
-																	<div class="modal-footer" data-dismiss="modal">
-																		<button type="button" class="btn btn-default btn-md">확인</button>
+																		<div class="modal-footer" data-dismiss="modal">
+																			<button type="button" class="btn btn-default btn-md">확인</button>
+																		</div>
 																	</div>
 																</div>
 															</div>
+															<button type="button" class="btn btn-danger btn-md"
+																data-dismiss="modal">취소</button>
 														</div>
-														<button type="button" class="btn btn-danger btn-md"
-															data-dismiss="modal">취소</button>
-													</div>
+													</form>
 												</div>
 											</div>
 										</div>

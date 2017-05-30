@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.ac.hansung.whefe.dao.OrderDao;
 import kr.ac.hansung.whefe.model.Order;
+import kr.ac.hansung.whefe.model.Orderlist;
 
 @Service
 public class OrderService {
@@ -16,6 +17,10 @@ public class OrderService {
    
    public void setOrderDao(OrderDao orderDao){
       this.orderDao = orderDao;
+   }
+   
+   public boolean addOrderlist(Orderlist orderlist) {
+	   return orderDao.addOrderlist(orderlist);
    }
    
    public List<Order> getOrders(String cafe_id){

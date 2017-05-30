@@ -1,3 +1,6 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 
@@ -121,7 +124,7 @@
   <div class="container" style="margin-top:80px">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h4><b>가격 수정하기<h4></b>
+        <h4><b>가격 수정하기</h4></b>
      </div>
      <div class="panel-body">
        <!--가격 관리 표 삽입-->
@@ -141,57 +144,57 @@
                <th scope="row">HOT</th>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onchange="getNumber(this);" onkeyup="getNumber(this);" onblur="value2(this)"/></div>
+                   <input type="text" id="hot_small_box" name="hot_small" value="${hot_small}" class="form-control" onchange="getNumber(this);" onkeyup="getNumber(this);" onblur="value2(this)"/></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="hot_medium" value="${hot_medium}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="hot_large" value="${hot_large}"class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="hot_none" value="${hot_none}"class="form-control" onkeypress='validate(event)' /></div>
                </td>
              </tr>
              <tr>
                <th scope="row">ICE</th>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="ice_small" value="${ice_small}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="ice_medium" value="${ice_medium}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="ice_large" value="${ice_large}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="ice_none" value="${ice_none}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
              </tr>
              <tr>
                <th scope="row">None</th>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="none_small" value="${none_small}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="none_medium" value="${none_medium}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="none_large" value="${none_large}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
                <td>
                  <div class="price">
-                   <input type="text" id="hot_small_box" name="hot_small" class="form-control" onkeypress='validate(event)' /></div>
+                   <input type="text" id="hot_small_box" name="none_none" value="${none_none}" class="form-control" onkeypress='validate(event)' /></div>
                </td>
              </tr>
            </tbody>

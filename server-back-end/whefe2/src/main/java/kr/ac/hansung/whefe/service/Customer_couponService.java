@@ -21,4 +21,12 @@ public class Customer_couponService {
 	public List<Customer_coupon> getCustomer_coupon(String cafe_id, String customer_id) {
 		return customer_couponDao.getCustomer_coupon(cafe_id, customer_id);
 	}
+	
+	public boolean disableCoupon(String cafe_id, String coupon_name) {
+		return customer_couponDao.disableCoupon(cafe_id, coupon_name);
+	}
+	
+	public boolean downloadCoupon() {
+		return customer_couponDao.downloadCoupon();
+	}
 }

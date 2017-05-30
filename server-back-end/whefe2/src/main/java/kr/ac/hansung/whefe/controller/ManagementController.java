@@ -89,39 +89,46 @@ public class ManagementController {
 	// 주문 컨트롤러
 
 	@RequestMapping(value = "/management/order")
-	   public String orderManagement(Model model, Principal principal) {
-	      String cafe_id = principal.getName();
-	      List<Order> orders = orderService.getOrders(cafe_id);
-	      model.addAttribute("orders", orders);
-	      List<Order>completeOrders = orderService.getCompleteOrders(cafe_id);
-	      model.addAttribute("completeOrders", completeOrders);
-	      Cafe_info cafe_info = cafe_infoService.getCurrent(cafe_id);
-	      model.addAttribute("cafe_info", cafe_info);
-	      
-	      return "web-front-end/06.Order_Check";
-	   }
-	   
-	   @RequestMapping(value = "/management/order/{orderlist_id}") //primary key 삽입해야할 듯 90% 완성
-	   public String orderComplete(@PathVariable String orderlist_id, Model model, Principal principal){
-	      String cafe_id = principal.getName();
-	      Order completeOrder = orderService.getOrderForEdit(orderlist_id, cafe_id);
-	      orderService.editMenuCompleted(orderlist_id, cafe_id);
-	      System.out.println("do edit");
-	      System.out.println("do call completed orderlist");
-	      return "redirect:/management/order";
-	   }
-	   
-	   @RequestMapping(value = "/management/order/deleteOrder/{orderlist_id}") //primary key 삽입해야할 듯 90% 완성
-	   public String orderDelete(@PathVariable String orderlist_id, Model model, Principal principal){
-	      String cafe_id = principal.getName();
-	     // System.out.println("orderlist_id" +"!!!!!! " + orderlist_id);
-	      if(!orderService.deleteOrder(orderlist_id, cafe_id)){
-	         System.out.println("Deleting MenuOrder cannot be done.");
-	      }
-	      
-	      return "redirect:/management/order";
-	   }
-	   
+	public String orderManagement(Model model, Principal principal) {
+		String cafe_id = principal.getName();
+		List<Order> orders = orderService.getOrders(cafe_id);
+		model.addAttribute("orders", orders);
+		List<Order> completeOrders = orderService.getCompleteOrders(cafe_id);
+		model.addAttribute("completeOrders", completeOrders);
+		Cafe_info cafe_info = cafe_infoService.getCurrent(cafe_id);
+		model.addAttribute("cafe_info", cafe_info);
+
+		return "web-front-end/06.Order_Check";
+	}
+
+	@RequestMapping(value = "/management/order/{orderlist_id}") // primary key
+																// 삽입해야할 듯 90%
+																// 완성
+	public String orderComplete(@PathVariable String orderlist_id, Model model, Principal principal) {
+		String cafe_id = principal.getName();
+		Order completeOrder = orderService.getOrderForEdit(orderlist_id, cafe_id);
+		orderService.editMenuCompleted(orderlist_id, cafe_id);
+		System.out.println("do edit");
+		System.out.println("do call completed orderlist");
+		return "redirect:/management/order";
+	}
+
+	@RequestMapping(value = "/management/order/deleteOrder/{orderlist_id}") // primary
+																			// key
+																			// 삽입해야할
+																			// 듯
+																			// 90%
+																			// 완성
+	public String orderDelete(@PathVariable String orderlist_id, Model model, Principal principal) {
+		String cafe_id = principal.getName();
+		// System.out.println("orderlist_id" +"!!!!!! " + orderlist_id);
+		if (!orderService.deleteOrder(orderlist_id, cafe_id)) {
+			System.out.println("Deleting MenuOrder cannot be done.");
+		}
+
+		return "redirect:/management/order";
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// 카테고리 컨트롤러
 	@RequestMapping(value = "/management/addcategory")
@@ -207,7 +214,7 @@ public class ManagementController {
 		ArrayList<String> hot_ice_noneArray = new ArrayList<String>();
 		ArrayList<String> menu_sizeArray = new ArrayList<String>();
 		ArrayList<String> pkArray = new ArrayList<String>();
-
+			
 		String cafe_id = request.getParameter("cafe_id");
 		pkArray.add(cafe_id);
 
@@ -335,6 +342,109 @@ public class ManagementController {
 
 		}
 		return "redirect:/management/menu/" + category_name;
+	}
+	@RequestMapping(value = "/management/menu/editmenuname")
+	public String editMenu_name(HttpServletRequest request, Principal principal) {
+		String cafe_id = principal.getName();
+		String new_name = request.getParameter("new_name");
+		String menu_name = request.getParameter("menu_name");
+		String category_name = request.getParameter("category_name");
+		cafe_menuService.editMenu_name(cafe_id,menu_name,new_name);
+		return "redirect:/management/menu/" + category_name;
+		
+	}
+	@RequestMapping(value="/management/menu/deletemenu")
+	public String deleteMenu(HttpServletRequest request, Principal principal) {
+		String cafe_id = principal.getName();
+		String menu_name = request.getParameter("menu_name");
+		String category_name = request.getParameter("category_name");
+		//String menu_name = request.getParameter("menu_name");
+		cafe_menuService.deleteMenu(cafe_id,menu_name);
+		return "redirect:/management/menu/" + category_name;
+	}
+	@RequestMapping(value = "/management/menu/editmenu")
+	public String editMM() {
+		return "web-front-end/Price-Management";
+	}
+	@RequestMapping(value = "/management/menu/editmenu/{menu_name}")
+	public String editMenu(@PathVariable String menu_name, Model model, Principal principal) {
+		String cafe_id = principal.getName();
+		String hot_small = "";
+		String hot_medium = "";
+		String hot_large = "";
+		String hot_none = "";
+		String ice_small = "";
+		String ice_medium = "";
+		String ice_large = "";
+		String ice_none = "";
+		String none_small = "";
+		String none_medium = "";
+		String none_large = "";
+		String none_none = "";
+		
+		List<Cafe_menu> menus = cafe_menuService.getMenu_price(cafe_id, menu_name);
+		for(int i=0;i<menus.size();i++) {
+			System.out.println(menus.get(i).toString());
+		}
+		for (int i = 0; i < menus.size(); i++) {
+			if(menus.get(i).getHot_ice_none().equals("hot")) {
+				if(menus.get(i).getMenu_size().equals("S")) {
+					hot_small = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("M")) {
+					hot_medium = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("L")) {
+					hot_large = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("only")) {
+					System.out.println("hot_none!!!!!!!!!!!!!!!!!!");
+					hot_none = menus.get(i).getMenu_price();
+				}
+			}
+			if(menus.get(i).getHot_ice_none().equals("ice")) {
+				if(menus.get(i).getMenu_size().equals("S")) {
+					ice_small = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("M")) {
+					ice_medium = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("L")) {
+					ice_large = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("only")) {
+					ice_none = menus.get(i).getMenu_price();
+				}
+			}
+			if(menus.get(i).getHot_ice_none().equals("none")) {
+				if(menus.get(i).getMenu_size().equals("S")) {
+					none_small = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("M")) {
+					none_medium = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("L")) {
+					none_large = menus.get(i).getMenu_price();
+				}
+				else if(menus.get(i).getMenu_size().equals("only")) {
+					none_none = menus.get(i).getMenu_price();
+				}
+			}
+		}
+		model.addAttribute("hot_small",hot_small);
+		model.addAttribute("hot_medium",hot_medium);
+		model.addAttribute("hot_large",hot_large);
+		model.addAttribute("hot_none", hot_none);
+		model.addAttribute("ice_small",ice_small);
+		model.addAttribute("ice_medium",ice_medium);
+		model.addAttribute("ice_large",ice_large);
+		model.addAttribute("ice_none",ice_none);
+		model.addAttribute("none_small",none_small);
+		model.addAttribute("none_medium",none_medium);
+		model.addAttribute("none_large",none_large);
+		model.addAttribute("none_none",none_none);
+		
+		return "web-front-end/Price-Management";
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////

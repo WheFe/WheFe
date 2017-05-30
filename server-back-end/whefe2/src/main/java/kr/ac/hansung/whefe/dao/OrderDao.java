@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import kr.ac.hansung.whefe.model.Order;
-
+import kr.ac.hansung.whefe.model.Orderlist;
 @Repository
 public class OrderDao {
    private JdbcTemplate jdbcTemplateObject;
@@ -20,6 +20,18 @@ public class OrderDao {
    @Autowired
    public void setDataSource(DataSource dataSource) {
       this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+   }
+   
+   public boolean addOrderlist(Orderlist orderlist) {
+	   String cafe_id = orderlist.getCafe_id();
+	   String customer_id = orderlist.getCustomer_id();
+	   String menu_name = orderlist.getMenu_name();
+	   String menu_size = orderlist.getMenu_size();
+	   String hot_ice_none = orderlist.getHot_ice_none();
+	   String option_name = orderlist.getOption_name();
+	   String sql = "insert into orderlist (cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name,menu_completed)"
+	   		+ "values (?,?,?,?,?,?,0)";
+	   return ((jdbcTemplateObject.update(sql, new Object[] {cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name} ))==1);
    }
 
    public List<Order> getOrders(String cafe_id) {
@@ -37,7 +49,6 @@ public class OrderDao {
             order.setHotIceNone(rs.getString("hot_ice_none"));
             order.setMenu_size(rs.getString("menu_size"));
             order.setOption_info(rs.getString("option_name"));
-            order.setCategory_name(rs.getString("category_name"));
             order.setCafe_id(rs.getString("cafe_id"));
 
             return order;
@@ -60,7 +71,6 @@ public class OrderDao {
             completeOrder.setHotIceNone(rs.getString("hot_ice_none"));
             completeOrder.setMenu_size(rs.getString("menu_size"));
             completeOrder.setOption_info(rs.getString("option_name"));
-            completeOrder.setCategory_name(rs.getString("category_name"));
             completeOrder.setCafe_id(rs.getString("cafe_id"));
 
             return completeOrder;
@@ -89,7 +99,6 @@ public class OrderDao {
             completeOrders.setHotIceNone(rs.getString("hot_ice_none"));
             completeOrders.setMenu_size(rs.getString("menu_size"));
             completeOrders.setOption_info(rs.getString("option_name"));
-            completeOrders.setCategory_name(rs.getString("category_name"));
             completeOrders.setCafe_id(rs.getString("cafe_id"));
 
             return completeOrders;
@@ -104,7 +113,7 @@ public class OrderDao {
    }
    
    public boolean countPeople(String cafe_id, String count){
-      String sql = "update cafe_info set cafe_cur = ? where cafe_id = ?";
+      String sql = "update cafe_info set cafe_curr = ? where cafe_id = ?";
       
       return (jdbcTemplateObject.update(sql, count ,cafe_id) ==1);
    }

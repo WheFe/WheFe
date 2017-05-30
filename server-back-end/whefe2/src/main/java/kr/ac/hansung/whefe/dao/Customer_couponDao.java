@@ -32,9 +32,14 @@ public class Customer_couponDao {
 
 				Customer_coupon customer_coupon = new Customer_coupon();
 				customer_coupon.setCafe_id(rs.getString("cafe_id"));
+				customer_coupon.setCafe_name(rs.getString("cafe_name"));
 				customer_coupon.setCustomer_id(rs.getString("customer_id"));
 				customer_coupon.setCoupon_name(rs.getString("coupon_name"));
+				customer_coupon.setCoupon_price(rs.getString("coupon_price"));
 				customer_coupon.setCoupon_num(rs.getString("coupon_num"));
+				customer_coupon.setUsable(rs.getString("usable"));
+				customer_coupon.setCoupon_start(rs.getString("coupon_start"));
+				customer_coupon.setCoupon_end(rs.getString("coupon_end"));
 				
 				return customer_coupon;
 			}
@@ -61,5 +66,16 @@ public class Customer_couponDao {
 
 		});
 
+	}
+	
+	public boolean disableCoupon(String cafe_id, String coupon_name) {
+		String sql = "update customer_coupon set usable = 0 where cafe_id = ? , coupon_name = ?";
+		return jdbcTemplateObject.update(sql, new Object[] {cafe_id, coupon_name})==1;
+	}
+	
+	public boolean downloadCoupon() {
+		String sql = "insert into customer_coupon(customer_id,cafe_id,coupon_name,coupon_num,usable)"
+				+ "values(?,?,?,?,1)";
+		return jdbcTemplateObject.update(sql,new Object[] {})==1;
 	}
 }
