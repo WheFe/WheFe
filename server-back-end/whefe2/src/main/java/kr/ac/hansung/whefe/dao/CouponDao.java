@@ -47,7 +47,7 @@ public class CouponDao {
 	}
 	
 	public List<Coupon> getCoupons(String cafe_id) {
-		String sqlStatement = "select * from cafe_coupon whefe cafe_id=?";
+		String sqlStatement = "select * from cafe_coupon where cafe_id=?";
 		
 		return jdbcTemplateObject.query(sqlStatement, new Object[] {cafe_id}, new RowMapper<Coupon>() {
 

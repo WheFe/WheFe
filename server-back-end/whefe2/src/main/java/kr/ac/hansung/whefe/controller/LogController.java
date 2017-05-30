@@ -79,27 +79,72 @@ public class LogController {
 	public String signupPost(Cafe_info cafe_info, HttpServletRequest request) {
 
 		System.out.println(cafe_info.toString());
-		MultipartFile cafe_image = cafe_info.getCafe_image();
+		MultipartFile cafe_image1 = cafe_info.getCafe_image1();
+		MultipartFile cafe_image2 = cafe_info.getCafe_image2();
+		MultipartFile cafe_image3 = cafe_info.getCafe_image3();
 		String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-		Path savePath = Paths.get(rootDirectory + "\\resources\\images\\" + cafe_image.getOriginalFilename());
-		if (cafe_image != null && !cafe_image.isEmpty()) {
+		Path savePath = Paths.get(rootDirectory + "\\resources\\images\\" + cafe_image1.getOriginalFilename());
+		if (cafe_image1 != null && !cafe_image1.isEmpty()) {
 			try {
-				cafe_image.transferTo(new File(savePath.toString()));
+				cafe_image1.transferTo(new File(savePath.toString()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		cafe_info.setImageFilename(cafe_image.getOriginalFilename());
+		cafe_info.setImageFilename1(cafe_image1.getOriginalFilename());
 
-		if (cafe_image.isEmpty() == false) {
+		if (cafe_image1.isEmpty() == false) {
 			System.out.println("---------file start ---------");
-			System.out.println("name: " + cafe_image.getName());
-			System.out.println("filename: " + cafe_image.getOriginalFilename());
-			System.out.println("size: " + cafe_image.getSize());
+			System.out.println("name: " + cafe_image1.getName());
+			System.out.println("filename: " + cafe_image1.getOriginalFilename());
+			System.out.println("size: " + cafe_image1.getSize());
 			System.out.println("---------file end ---------");
 
 		}
+		
+		
+		Path savePath2 = Paths.get(rootDirectory + "\\resources\\images\\" + cafe_image2.getOriginalFilename());
+		if (cafe_image2 != null && !cafe_image2.isEmpty()) {
+			try {
+				cafe_image2.transferTo(new File(savePath2.toString()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		cafe_info.setImageFilename2(cafe_image2.getOriginalFilename());
+
+		if (cafe_image2.isEmpty() == false) {
+			System.out.println("---------file start ---------");
+			System.out.println("name: " + cafe_image2.getName());
+			System.out.println("filename: " + cafe_image2.getOriginalFilename());
+			System.out.println("size: " + cafe_image2.getSize());
+			System.out.println("---------file end ---------");
+
+		}
+
+		
+		Path savePath3 = Paths.get(rootDirectory + "\\resources\\images\\" + cafe_image3.getOriginalFilename());
+		if (cafe_image3 != null && !cafe_image3.isEmpty()) {
+			try {
+				cafe_image3.transferTo(new File(savePath3.toString()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		cafe_info.setImageFilename3(cafe_image3.getOriginalFilename());
+
+		if (cafe_image3.isEmpty() == false) {
+			System.out.println("---------file start ---------");
+			System.out.println("name: " + cafe_image3.getName());
+			System.out.println("filename: " + cafe_image3.getOriginalFilename());
+			System.out.println("size: " + cafe_image3.getSize());
+			System.out.println("---------file end ---------");
+
+		}
+
 
 		if (!cafe_infoService.addCafe_info(cafe_info)) {
 			System.out.println("Adding info cannot be done");

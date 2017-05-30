@@ -68,6 +68,31 @@ body {
 	color: white;
 	opacity: 1.0;
 }
+
+.image-preview-input {
+	position: relative;
+	overflow: hidden;
+	margin: 0px;
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
+
+.image-preview-input input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+}
+
+.image-preview-input-title {
+	margin-left: 2px;
+}
 </style>
 <script>
 	function moneyCheck(obj) {
@@ -108,12 +133,14 @@ body {
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<div class="user-info" style="margin-top: 15px; color: #636363">
-							<span class="glyphicon glyphicon-user"></span>&nbsp;
-							${pageContext.request.userPrincipal.name}
-						</div>
-					</li>
+					<li><div class="user-info"
+							style="margin-top: 15px; color: #636363">
+							<a
+								href="<c:url value="/cafeinfo?cafe_id=${pageContext.request.userPrincipal.name}"/>">
+								<span class="glyphicon glyphicon-user"></span>&nbsp;
+								${pageContext.request.userPrincipal.name}
+							</a>
+						</div></li>
 					<li><a href="<c:url value=" /logout"/>"> <span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃
 					</a></li>
@@ -164,7 +191,8 @@ body {
 											<button type="button" class="close" data-dismiss="modal">&times;</button>
 											<h4 class="modal-title">메뉴 추가하기</h4>
 										</div>
-										<form action="<c:url value="/management/menu/addmenu"/>">
+										<form action="<c:url value="/management/menu/addmenu"/>"
+											method="POST" enctype="multipart/form-data">
 											<input type="hidden" name="category_name"
 												value="${category_name}" /> <input type="hidden"
 												name="cafe_id"
@@ -313,6 +341,24 @@ body {
 																</tbody>
 															</table>
 														</div>
+													</div>
+													<div class="input-group image-preview bottom">
+														<input placeholder="" type="text"
+															class="form-control image-preview-filename"
+															disabled="disabled"> <span
+															class="input-group-btn">
+															<button type="button"
+																class="btn btn-default image-preview-clear"
+																style="display: none;">
+																<span class="glyphicon glyphicon-remove"></span> Clear
+															</button>
+															<div class="btn btn-default image-preview-input">
+																<span class="glyphicon glyphicon-folder-open"></span> <span
+																	class="image-preview-input-title">Browse</span> <input
+																	type="file" accept="image/png, image/jpeg, image/gif"
+																	name="menu_image" />
+															</div>
+														</span>
 													</div>
 												</div>
 											</div>

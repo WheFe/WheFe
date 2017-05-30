@@ -36,10 +36,6 @@ body {
 				<div class="panel-heading">
 					<div class="panel-title">로그인</div>
 
-					<div
-						style="float: right; font-size: 80%; position: relative; top: -10px">
-						<a href="#">비밀번호 찾기</a>
-					</div>
 				</div>
 				
 				<c:if test="${not empty error}">
@@ -52,34 +48,7 @@ body {
 					</div>
 				</c:if>
 
-				<c:if test="${not empty logout}">
-					<div style="color: #0000ff">
-						<h3>${logout}</h3>
-					</div>
-				</c:if>
-				<div class="modal" id="info-false" role="dialog">
-					<div class="modal-dialog modal-sm">
-
-						<div class="modal-content">
-
-							<div class="modal-header">
-								<h4 class="modal-title">ID, PW 확인</h4>
-							</div>
-
-							<div class="modal-body">
-								<div class="container">
-									<div class="row">ID나 비밀번호를 확인해주세요</div>
-								</div>
-							</div>
-
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary btn-md"
-									data-dismiss="modal">확인</button>
-							</div>
-						</div>
-
-					</div>
-				</div>
+				
 				<div style="padding-top: 30px" class="panel-body">
 
 					<div style="display: none" id="login-alert"

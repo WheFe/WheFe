@@ -100,7 +100,7 @@ body {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Grazie</a>
+				<a class="navbar-brand" href="<c:url value='/management'/>">Grazie</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
@@ -111,8 +111,11 @@ body {
 				<ul class="nav navbar-nav navbar-right">
 					<li><div class="user-info"
 							style="margin-top: 15px; color: #636363">
-							<span class="glyphicon glyphicon-user"></span>&nbsp;
-							${pageContext.request.userPrincipal.name}
+							<a
+								href="<c:url value="/cafeinfo?cafe_id=${pageContext.request.userPrincipal.name}"/>">
+								<span class="glyphicon glyphicon-user"></span>&nbsp;
+								${pageContext.request.userPrincipal.name}
+							</a>
 						</div></li>
 					<li><a href="<c:url value="/logout"/>"><span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
@@ -129,107 +132,119 @@ body {
 					</b>
 			</div>
 			<div class="panel-body">
-				<div class="row">
-					<!-- 혼잡도 박스-->
-					<div class="col-lg-1">
-						<div class="panel panel-primary" id="congestion-box">
-							<h3>&nbsp;3&nbsp;&nbsp;/&nbsp;&nbsp;24&nbsp;</h3>
+				<div id="panel-body">
+					<div class="row">
+						<!-- 혼잡도 박스-->
+						<div class="col-lg-1">
+							<div class="panel panel-primary" id="congestion-box">
+								<h3>&nbsp;${cafe_info.cafe_curr }&nbsp;&nbsp;/&nbsp;&nbsp;${cafe_info.cafe_max }&nbsp;</h3>
+							</div>
 						</div>
-					</div>
-					<!-- 주문 목록-->
-					<div class="col-lg-offset-1 col-lg-5">
-						<h3>
-							<div style="text-align: center">주문 목록</div>
-						</h3>
-						<div class="panel panel-default panel-inner"
-							style="height: 330px; overflow-y: scroll">
-							<div class="container-fluid">
-								<div class="row">
-									<c:forEach var="order" items="${orders}" varStatus="status">
-										<div class="panel panel-default coupon-expired-custom">
-											<div class="panel-body">
-												<!--주문 한개-->
-												<div class="row">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : ${order.menu_name} (${order.hotIceNone})
-
-																	
-																	<li>사이즈 : ${order.menu_size }
-																	<li>추가 옵션 : ${order.option_info }
-																	<li>고객명 : ${order.customer_name }
-																	<li>주문량 : ${order.menu_quantity }
-																</ul>
-															</h5>
+						<!-- 주문 목록-->
+						<div class="col-lg-offset-1 col-lg-5">
+							<h3>
+								<div style="text-align: center">주문 목록</div>
+							</h3>
+							<div class="panel panel-default panel-inner"
+								style="height: 330px; overflow-y: scroll">
+								<div class="container-fluid">
+									<div class="row">
+										<c:forEach var="order" items="${orders}" varStatus="status">
+											<div class="panel panel-default coupon-expired-custom">
+												<div class="panel-body">
+													<!--주문 한개-->
+													<div class="row">
+														<div class="col-md-8">
+															<div class="text-left">
+																<h5>
+																	<ul>
+																		<li>메뉴명 : ${order.menu_name}
+																			(${order.hotIceNone})
+																		<li>사이즈 : ${order.menu_size }
+																		<li>추가 옵션 : ${order.option_info }
+																		<li>고객ID : ${order.customer_id }
+																	</ul>
+																</h5>
+															</div>
+														</div>
+														<div class="col-md-4">
+															<a
+																href="<spring:url value="/management/order/${order.orderlist_id}"/>">
+																<button type="button"
+																	class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
+																	완성</button>
+															</a>
 														</div>
 													</div>
-													<div class="col-md-4">
-														<a
-															href="<spring:url value="/management/order/${order.menu_name}"/>">
-															<button type="button"
-																class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
-																완성</button>
-														</a>
-													</div>
+													<!--주문 한개 끝-->
 												</div>
-												<!--주문 한개 끝-->
 											</div>
-										</div>
-									</c:forEach>
+										</c:forEach>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<!-- 완성 목록-->
-					<div class="col-lg-5">
-						<h3>
-							<div style="text-align: center">완성 메뉴</div>
-						</h3>
-						<div class="panel panel-default panel-inner"
-							style="height: 330px; overflow-y: scroll;">
-							<div class="container-fluid">
-								<div class="row">
-									<c:forEach var="completeOrder" items="${completeOrders}"
-										varStatus="status">
-										<div class="panel panel-default coupon-expired-custom">
-											<div class="panel-body">
-												<!--주문 한개-->
-												<div class="row">
-													<div class="col-md-8">
-														<div class="text-left">
-															<h5>
-																<ul>
-																	<li>메뉴명 : ${completeOrder.menu_name}
-																		(${completeOrder.hotIceNone})
-																	<li>사이즈 : ${completeOrder.menu_size }
-																	<li>추가 옵션 : ${completeOrder.option_info }
-																	<li>고객명 : ${completeOrder.customer_name }
-																	<li>주문량 : ${completeOrder.menu_quantity }
-																</ul>
-															</h5>
+						<!-- 완성 목록-->
+						<div class="col-lg-5">
+							<h3>
+								<div style="text-align: center">완성 메뉴</div>
+							</h3>
+							<div class="panel panel-default panel-inner"
+								style="height: 330px; overflow-y: scroll;">
+								<div class="container-fluid">
+									<div class="row">
+										<c:forEach var="completeOrder" items="${completeOrders}"
+											varStatus="status">
+											<div class="panel panel-default coupon-expired-custom">
+												<div class="panel-body">
+													<!--주문 한개-->
+													<div class="row">
+														<div class="col-md-8">
+															<div class="text-left">
+																<h5>
+																	<ul>
+																		<li>메뉴명 : ${completeOrder.menu_name}
+																			(${completeOrder.hotIceNone})
+																		<li>사이즈 : ${completeOrder.menu_size }
+																		<li>추가 옵션 : ${completeOrder.option_info }
+																		<li>고객ID : ${completeOrder.customer_id }
+																	</ul>
+																</h5>
+															</div>
+														</div>
+														<div class="col-md-4">
+															<a
+																href="<spring:url value="/management/order/deleteOrder/${completeOrder.orderlist_id}"/>">
+																<button type="button"
+																	class="btn btn-default btn-lg btn-huge btn-block ready-button">수령
+																	확인</button>
+															</a>
 														</div>
 													</div>
-													<div class="col-md-4">
-														<a
-															href="<spring:url value="/management/order/${order.menu_name}"/>">
-															<button type="button"
-																class="btn btn-default btn-lg btn-huge btn-block ready-button">수령
-																확인</button>
-														</a>
-													</div>
+													<!--주문 한개 끝-->
 												</div>
-												<!--주문 한개 끝-->
 											</div>
-										</div>
-									</c:forEach>
+										</c:forEach>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<script language="javascript">
+				function autoRefresh_div() {
+					var currentLocation = window.location;
+					$("#panel-body").load(currentLocation + ' #panel-body');
+				}
+				setInterval('autoRefresh_div()', 3000);
+				
+				function autoRefresh_div2() {
+					var currentLocation = window.location;
+					$("#congestion-box").load(currentLocation + ' #congestion-box');
+				}
+				setInterval('autoRefresh_div2()', 3000);
+			</script>
 		</div>
 	</div>
 	<script

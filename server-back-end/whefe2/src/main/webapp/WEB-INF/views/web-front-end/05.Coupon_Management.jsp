@@ -92,7 +92,7 @@ body {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Grazie</a>
+				<a class="navbar-brand" href="<c:url value='/management'/>">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
@@ -105,8 +105,11 @@ body {
 				<ul class="nav navbar-nav navbar-right">
 					<li><div class="user-info"
 							style="margin-top: 15px; color: #636363">
-							<span class="glyphicon glyphicon-user"></span>&nbsp;
-							${pageContext.request.userPrincipal.name}
+							<a
+								href="<c:url value="/cafeinfo?cafe_id=${pageContext.request.userPrincipal.name}"/>">
+								<span class="glyphicon glyphicon-user"></span>&nbsp;
+								${pageContext.request.userPrincipal.name}
+							</a>
 						</div></li>
 					<li><a href="<c:url value="/logout"/>"><span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>

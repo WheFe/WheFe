@@ -7,15 +7,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Order {
+public class Orderlist {
 	private int orderlist_id;
 	private String cafe_id;
 	private String customer_id;
-	private String menu_name;
 	private String category_name;
-	private String option_info;
+	private String menu_name;
+	private String hot_ice_none;
 	private String menu_size;
-	private String hotIceNone;
-	private int menu_quantity;
-	private boolean menu_completed;
+	private String option_name;
+	private String menu_completed;
 }

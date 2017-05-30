@@ -45,7 +45,7 @@ public class Cafe_menuDao {
 		}*/
 		
 		public List<Cafe_menu> getCafe_menu(String cafe_id) {
-			String sql = "select distinct menu_name, cafe_id,category_name, menu_price, menu_image from cafe_menu where cafe_id=?";
+			String sql = "select distinct menu_name, cafe_id,category_name, menu_price, menu_image, hot_ice_none, menu_size from cafe_menu where cafe_id=?";
 			return jdbcTemplateObject.query(sql, new Object[] {cafe_id}, new RowMapper<Cafe_menu>() {
 
 				@Override
@@ -57,11 +57,10 @@ public class Cafe_menuDao {
 					cafe_menu.setMenu_name(rs.getString("menu_name"));
 					cafe_menu.setCategory_name(rs.getString("category_name"));
 					cafe_menu.setMenu_price(rs.getString("menu_price"));
-					cafe_menu.setMenu_image(rs.getString("menu_image"));
-					/*cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setImageFilename(rs.getString("menu_image"));
+					cafe_menu.setHot_ice_none(rs.getString("hot_ice_none"));
+					cafe_menu.setMenu_size(rs.getString("menu_size"));
 					
-					
-					cafe_menu.setMenu_size(rs.getString("menu_size"));*/
 					return cafe_menu;
 				}
 
@@ -127,6 +126,7 @@ public class Cafe_menuDao {
 			String cafe_id = pkArray.get(0);
 			String category_name = pkArray.get(1);
 			String menu_name = pkArray.get(2);
+			String menu_image = pkArray.get(3);
 			Object[] menu_nameObject = menu_nameArray.toArray();
 			Object[] menu_sizeObject = menu_sizeArray.toArray();
 			Object[] hot_ice_noneObject = hot_ice_noneArray.toArray();
@@ -134,9 +134,9 @@ public class Cafe_menuDao {
 			String sql="";
 			
 			for(int i=0;i<size;i++) {
-			sql = "insert into cafe_menu(cafe_id, category_name, menu_name, menu_size, hot_ice_none, menu_price)"
-					+ "values (?,?,?,?,?,?)";
-			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i]});
+			sql = "insert into cafe_menu(cafe_id, category_name, menu_name, menu_size, hot_ice_none, menu_price, menu_image)"
+					+ "values (?,?,?,?,?,?,?)";
+			jdbcTemplateObject.update(sql, new Object[] {cafe_id, category_name, menu_name, menu_sizeObject[i], hot_ice_noneObject[i], menu_priceObject[i], menu_image});
 			}
 			return true;
 		}
