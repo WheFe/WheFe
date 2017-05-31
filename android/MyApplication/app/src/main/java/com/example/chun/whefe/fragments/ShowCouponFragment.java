@@ -2,6 +2,8 @@ package com.example.chun.whefe.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.example.chun.whefe.MainActivity;
 import com.example.chun.whefe.R;
+import com.example.chun.whefe.dbhelper.MyCafeInfoHelper;
+import com.example.chun.whefe.dbhelper.MyCustomerCouponHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import static com.example.chun.whefe.R.layout.mycoupon;
@@ -35,6 +42,8 @@ import static com.example.chun.whefe.R.layout.mycoupon;
 
 public class ShowCouponFragment extends Fragment {
 
+    private static final String tag = "ShowCoupon";
+
     private String cafe_id;
     private String cafeName;
     private String my_id;
@@ -42,12 +51,22 @@ public class ShowCouponFragment extends Fragment {
 
     ExpandableListView expandableListView;
 
-    Vector<ParentData> data = new Vector<>();
+    Vector<ParentData> data;
+    SQLiteDatabase db;
+    MyCustomerCouponHelper helper;
+    MyCafeInfoHelper infoHelper;
+    SQLiteDatabase infoDB;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(mycoupon, container, false);
+
+        infoHelper = new MyCafeInfoHelper(getContext());
+        infoDB = infoHelper.getWritableDatabase();
+
+        helper = new MyCustomerCouponHelper(getContext());
+        db = helper.getWritableDatabase();
 
         expandableListView = (ExpandableListView)view.findViewById(R.id.myCouponListView);
 
@@ -61,17 +80,17 @@ public class ShowCouponFragment extends Fragment {
 
         setCouponListData();
 
-        ParentAdapter adapter = new ParentAdapter(getContext(),data);
-        expandableListView.setAdapter(adapter);
+        /*ParentAdapter adapter = new ParentAdapter(getContext(),data);
+        expandableListView.setAdapter(adapter);*/
 
-      /*  String myCouponUrl = MainActivity.ip + "/whefe/android/coupon?customer_id=" + my_id;
-        new DownloadCategoryTask().execute(myCouponUrl);*/
+       String myCouponUrl = MainActivity.ip + "/whefe/android/customercoupon?customer_id=" + my_id;
+        new DownloadCouponTask().execute(myCouponUrl);
 
         return view;
     }
 
     public void setCouponListData(){
-        ParentData parentData1 = new ParentData("그라지에 미래관");
+       /* ParentData parentData1 = new ParentData("그라지에 미래관");
         parentData1.child.add(new Child("300원 할인"));
         parentData1.child.add(new Child("400원 할인"));
         parentData1.child.add(new Child("200원 할인"));
@@ -89,16 +108,10 @@ public class ShowCouponFragment extends Fragment {
 
         data.add(parentData1);
         data.add(parentData2);
-        data.add(parentData3);
+        data.add(parentData3);*/
     }
 
-    public void setCouponListServer(){
-
-    }
-
-    private class DownloadCategoryTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
-
-        String[] cafeid = new String[7];
+    private class DownloadCouponTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
 
         @Override
         protected String doInBackground(String... urls) {
@@ -113,32 +126,52 @@ public class ShowCouponFragment extends Fragment {
         protected void onPostExecute(String result) {
             System.out.println("onPostExecute!");
             Log.e("Json", result);
-            Log.i("CGY","DownloadCategory");
-
+            Log.i("CGY","DownloadCafeCoupon");
+            ParentData parentData;
+         //   cafeCoupons = new ArrayList<CafeCoupon>();
+            ArrayList<CustomerCoupon> cafeCoupons = new ArrayList<CustomerCoupon>();
             try {
                 JSONArray ja = new JSONArray(result);
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject order = ja.getJSONObject(i);
-                    String couponName = (String) order.get("coupon_name");
-                    String cafe_id = (String)order.get("cafe_id");
-                    String couponNum = (String)order.get("coupon_num");
+                    String coupon_name = (String) order.get("coupon_name");
+                    String cafe_id = (String) order.get("cafe_id");
+                    String cafe_name = (String) order.get("cafe_name");
+                    String coupon_price = (String) order.get("coupon_price");
+                    String coupon_start = (String) order.get("coupon_start");
+                    String coupon_end = (String) order.get("coupon_end");
 
-                    /*int check = -1;
-                    for(int j = 0; j<cafeid.length;j++){
-                        if(cafeid[j].equals(cafe_id)){
-                            check = j;
-                            break;
+                    db.execSQL("insert into customercoupon(cafe_id, cafe_name, coupon_name, coupon_price, usable, coupon_start, coupon_end) " +
+                            "values('"+ cafe_id + "','" + cafe_name + "','"+ coupon_name + "','"+ coupon_price + "','"+ false + "','"+ coupon_start + "','" + coupon_end  + "');");
+
+                    cafeCoupons.add(new CustomerCoupon(cafe_id,cafe_name,coupon_name,coupon_price,false,coupon_start,coupon_end));
+                }
+
+
+                Cursor rs = infoDB.rawQuery("select * from cafeinfo;", null);
+                int cafe_count = 0;
+                Log.i(tag,"cafe_count" + cafe_count);
+                data = new Vector<>();
+                ArrayList<String> cafes = new ArrayList<String>();
+                while(rs.moveToNext()){
+                    String cafe_id = rs.getString(0);
+                    String cafe_name = rs.getString(1);
+
+                    cafes.add(cafe_name);
+                    cafe_count++;
+                }
+
+                for(int i = 0; i < cafe_count;i++) {    // 카페의 개수
+                    data.add(new ParentData(cafes.get(i))); // data = parentData의 벡터
+
+                    for(int j = 0; j < cafeCoupons.size();j++) {
+                        if (data.get(i).getCafeName().equals(cafeCoupons.get(j).getCafe_name())) {
+                            data.get(i).child.add(cafeCoupons.get(j));
                         }
                     }
-                    if(check==-1){
-                        TextView cafeNameTextView = new TextView(getContext());
-                        cafeNameTextView.setText(cafe_id);
-                        cafeNameTextView.setTextColor(Color.BLACK);
-                        cafeNameTextView.setTextSize(20);
-                        linearLayout.addView(cafeNameTextView);
-                    }*/
-                    setCouponListServer();
                 }
+                ParentAdapter adapter = new ParentAdapter(getContext(),data);
+                expandableListView.setAdapter(adapter);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -161,6 +194,46 @@ public class ShowCouponFragment extends Fragment {
                 return page;
             } finally {
             }
+        }
+    }
+    public class CustomerCoupon{
+        private String cafe_id;
+        private String cafe_name;
+        private String coupon_name;
+        private String coupon_price;
+        private Boolean usable;
+        private String coupon_start;
+        private String coupon_end;
+
+        public CustomerCoupon(String cafe_id, String cafe_name, String coupon_name, String coupon_price, Boolean usable, String coupon_start, String coupon_end) {
+            this.cafe_id = cafe_id;
+            this.cafe_name = cafe_name;
+            this.coupon_name = coupon_name;
+            this.coupon_price = coupon_price;
+            this.usable = usable;
+            this.coupon_start = coupon_start;
+            this.coupon_end = coupon_end;
+        }
+        public String getCafe_id() {
+            return cafe_id;
+        }
+        public String getCafe_name() {
+            return cafe_name;
+        }
+        public String getCoupon_name() {
+            return coupon_name;
+        }
+        public String getCoupon_price() {
+            return coupon_price;
+        }
+        public Boolean getUsable() {
+            return usable;
+        }
+        public String getCoupon_start() {
+            return coupon_start;
+        }
+        public String getCoupon_end() {
+            return coupon_end;
         }
     }
 
@@ -192,13 +265,30 @@ public class ShowCouponFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            TextView nameView = null;
+            TextView priceView = null;
+            TextView periodView = null;
+            Button button = null;
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.mycoupon_child, parent, false);
+                convertView = inflater.inflate(R.layout.coup_list, parent, false);
+                nameView = (TextView) convertView.findViewById(R.id.coup_nameView);
+                priceView = (TextView) convertView.findViewById(R.id.coup_priceView);
+                periodView = (TextView) convertView.findViewById(R.id.coup_periodView);
+                button = (Button) convertView.findViewById(R.id.coup_ReceiveButton);
+
+                button.setVisibility(View.INVISIBLE);
+                CustomerCoupon customerCoupon = data.get(groupPosition).child.get(childPosition);
+
+                nameView.setText(customerCoupon.getCoupon_name());
+                priceView.setText(customerCoupon.getCoupon_price()+ " 원");
+                periodView.setText(customerCoupon.getCoupon_start() + " ~ " + customerCoupon.getCoupon_end());
             }
 
-            TextView couponNameView = (TextView)convertView.findViewById(R.id.mc_couponNameView);
-            couponNameView.setText(data.get(groupPosition).child.get(childPosition).getCouponName());
+
+
+
+
 
             return convertView;
         }
@@ -238,7 +328,7 @@ public class ShowCouponFragment extends Fragment {
 
     public class ParentData{
         private String cafeName;
-        public Vector<Child> child;
+        public Vector<CustomerCoupon> child;
 
         public ParentData(String cafeName) {
             this.cafeName = cafeName;

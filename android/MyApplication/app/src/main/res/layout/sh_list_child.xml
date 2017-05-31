@@ -42,7 +42,12 @@
                 android:id="@+id/sh_deleteButton"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
-                android:text="삭제" />
+                android:layout_marginStart="5dp"
+                android:background="@drawable/mybutton"
+                android:text="삭제"
+                android:textColor="@android:color/background_light"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </TableRow>
 

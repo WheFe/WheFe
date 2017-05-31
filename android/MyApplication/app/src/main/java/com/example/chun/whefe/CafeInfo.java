@@ -14,11 +14,13 @@ public class CafeInfo {
     String CafeMaximum;
     String cafe_id;
     String cafe_intro;
-    String cafe_image;
+    String cafe_image1;
+    String cafe_image2;
+    String cafe_image3;
 
     public CafeInfo() {
     }
-    public CafeInfo(String cafe_id,String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafePerson,String cafeMaximum, String cafe_intro, String cafe_image) {
+    public CafeInfo(String cafe_id,String cafeName, String cafeAddress, String cafePhone, String cafeOpen, String cafeClose, String cafePerson,String cafeMaximum, String cafe_intro, String cafe_image1, String cafe_image2, String cafe_image3) {
         this.cafe_id = cafe_id;
         CafeName = cafeName;
         CafeAddress = cafeAddress;
@@ -28,7 +30,9 @@ public class CafeInfo {
         CafePerson = cafePerson;
         CafeMaximum = cafeMaximum;
         this.cafe_intro = cafe_intro;
-        this.cafe_image = cafe_image;
+        this.cafe_image1 = cafe_image1;
+        this.cafe_image2 = cafe_image2;
+        this.cafe_image3 = cafe_image3;
     }
 
     public String getCafe_id() {
@@ -85,10 +89,16 @@ public class CafeInfo {
     public void setCafe_intro(String cafe_intro) {
         this.cafe_intro = cafe_intro;
     }
-    public String getCafe_image() {
-        return cafe_image;
+    public String getCafe_image1() {
+        return cafe_image1;
     }
-    public void setCafe_image(String cafe_image) {
-        this.cafe_image = cafe_image;
+    public void setCafe_image1(String cafe_image1) {
+        this.cafe_image1 = cafe_image1;
+    }
+    public String getCafe_image2() {
+        return cafe_image2;
+    }
+    public String getCafe_image3() {
+        return cafe_image3;
     }
 }

@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.chun.whefe.NaverMapFragment;
 import com.example.chun.whefe.NonSwipeViewPager;
 import com.example.chun.whefe.R;
 

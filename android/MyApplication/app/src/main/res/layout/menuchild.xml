@@ -85,11 +85,15 @@
             <Button
                 android:id="@+id/addButton"
                 android:layout_width="76dp"
-                android:layout_height="wrap_content"
+                android:layout_height="38dp"
                 android:layout_alignLeft="@+id/couponSpinner"
                 android:layout_alignStart="@+id/couponSpinner"
                 android:layout_alignTop="@+id/radioGroup"
-                android:text="추가" />
+                android:background="@drawable/mybutton"
+                android:text="추가"
+                android:textColor="@android:color/background_light"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </RadioGroup>
     </LinearLayout>
 </RelativeLayout>

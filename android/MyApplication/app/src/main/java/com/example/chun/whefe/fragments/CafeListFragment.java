@@ -2,6 +2,7 @@ package com.example.chun.whefe.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.example.chun.whefe.CafeInfo;
 import com.example.chun.whefe.MainActivity;
 import com.example.chun.whefe.NavigationActivity;
 import com.example.chun.whefe.R;
+import com.example.chun.whefe.dbhelper.MyCafeInfoHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,11 +48,15 @@ public class CafeListFragment extends Fragment {
     CafeListAdapter cafeListAdapter;
     ArrayList<CafeInfo> cafeList = new ArrayList<CafeInfo>();
 
+    MyCafeInfoHelper helper;
+    SQLiteDatabase db;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.cafe_list,container,false);
+        helper = new MyCafeInfoHelper(getContext());
+        db = helper.getWritableDatabase();
 
         String categoryUrl = MainActivity.ip + "/whefe/android/cafeinfo";
         new DownloadCategoryTask().execute(categoryUrl);
@@ -86,7 +92,7 @@ public class CafeListFragment extends Fragment {
                 cafeList.remove(i);
             }
             try {
-
+                db.execSQL("delete from cafeinfo");
 
                 JSONArray ja = new JSONArray(result);
                 for (int i = 0; i < ja.length(); i++) {
@@ -100,12 +106,15 @@ public class CafeListFragment extends Fragment {
                     String cafeMax = (String)order.get("cafe_max");
                     String cafePerson = (String)order.get("cafe_curr");
                     String cafe_intro = (String)order.get("cafe_intro");
-                    String cafe_image = (String)order.get("imageFilename");
+                    String cafe_image1 = (String)order.get("imageFilename1");
+                    String cafe_image2 = (String)order.get("imageFilename2");
+                    String cafe_image3 = (String)order.get("imageFilename3");
 
-                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image);
+                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image1, cafe_image2,cafe_image3);
                     cafeList.add(cafeInfo);
 
-
+                    db.execSQL("insert into cafeinfo(cafe_id, cafe_name) " +
+                            "values('"+ cafe_id + "','" + cafeName  + "');");
                 }
                 cafeListAdapter = new CafeListAdapter(getContext(),cafeList,R.layout.list_group);
                 listView.setAdapter(cafeListAdapter);
@@ -125,7 +134,9 @@ public class CafeListFragment extends Fragment {
                         editor.putString("person",cafeList.get(position).getCafePerson());
                         editor.putString("max", cafeList.get(position).getCafeMaximum());
                         editor.putString("intro", cafeList.get(position).getCafe_intro());
-                        editor.putString("image",cafeList.get(position).getCafe_image());
+                        editor.putString("image1",cafeList.get(position).getCafe_image1());
+                        editor.putString("image2",cafeList.get(position).getCafe_image1());
+                        editor.putString("image3",cafeList.get(position).getCafe_image1());
                         editor.commit();
 
                         NavigationActivity activity = (NavigationActivity)getActivity();
@@ -215,17 +226,17 @@ public class CafeListFragment extends Fragment {
            double maxPerPerson = (double)(person/max*100);
 
            maxView.setText((int)person + "/" + (int)max);
-           personPerMax.setText("( " + maxPerPerson + "% )");
+           personPerMax.setText("( " + (int)maxPerPerson + "% )");
 
            if(maxPerPerson > 65){
-               maxView.setTextColor(Color.RED);
-               personPerMax.setTextColor(Color.RED);
+               maxView.setBackgroundColor(Color.RED);
+               personPerMax.setBackgroundColor(Color.RED);
            }else if(maxPerPerson > 40){
-               maxView.setTextColor(Color.YELLOW);
-               personPerMax.setTextColor(Color.YELLOW);
+               maxView.setBackgroundColor(Color.YELLOW);
+               personPerMax.setBackgroundColor(Color.YELLOW);
            }else if(maxPerPerson >0){
-               maxView.setTextColor(Color.GREEN);
-               personPerMax.setTextColor(Color.GREEN);
+               maxView.setBackgroundColor(Color.GREEN);
+               personPerMax.setBackgroundColor(Color.GREEN);
            }
 
            return convertView;

@@ -1,8 +1,9 @@
-package com.example.chun.whefe;
+package com.example.chun.whefe.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -18,11 +19,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chun.whefe.CafeInfo;
+import com.example.chun.whefe.MainActivity;
+import com.example.chun.whefe.NavigationActivity;
+import com.example.chun.whefe.R;
+import com.example.chun.whefe.dbhelper.MyCafeInfoHelper;
 import com.example.chun.whefe.nmap.NMapFragment;
 import com.example.chun.whefe.nmap.NMapPOIflagType;
 import com.example.chun.whefe.nmap.NMapViewerResourceProvider;
@@ -56,7 +61,8 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
     private static final String LOG_TAG = "NMapViewer";
     private static final String NAVER_CLIENT_ID = "fpin69EB6CPM5ATQLpgI";
 
-
+    MyCafeInfoHelper helper;
+    SQLiteDatabase db;
 
 
     NMapView nMapView;
@@ -80,8 +86,12 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Whefe");
 
+        helper = new MyCafeInfoHelper(getContext());
+        db = helper.getWritableDatabase();
+
         String categoryUrl = MainActivity.ip + "/whefe/android/cafeinfo";
         new DownloadCategoryTask().execute(categoryUrl);
+
 
         baseView = inflater.inflate(R.layout.fragment_naver_map, container, false);
         nMapView = (NMapView) baseView.findViewById(R.id.nv_mapView);
@@ -107,14 +117,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
         mOverlayManager = new NMapOverlayManager(getContext(), nMapView,mMapViewerResourceProvider);
 
        // startMyLocation();
-        ImageButton locationButton = (ImageButton)baseView.findViewById(R.id.map_location);
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startMyLocation();
-            }
-        });
         int markerId = NMapPOIflagType.PIN;
 
 
@@ -213,6 +216,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                 cafeInfos = new ArrayList<CafeInfo>();
 
                // poIdata.beginPOIdata(2);
+                db.execSQL("delete from cafeinfo");
 
                 JSONArray ja = new JSONArray(result);
                 for (int i = 0; i < ja.length(); i++) {
@@ -226,9 +230,13 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     String cafePerson = (String)order.get("cafe_curr");
                     String cafeMax = (String)order.get("cafe_max");
                     String cafe_intro = (String)order.get("cafe_intro");
-                    String cafe_image = (String)order.get("imageFilename");
+                    String cafe_image1 = (String)order.get("imageFilename1");
+                    String cafe_image2 = (String)order.get("imageFilename2");
+                    String cafe_image3 = (String)order.get("imageFilename3");
 
-                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image);
+                    CafeInfo cafeInfo = new CafeInfo(cafe_id,cafeName,cafeAddress,cafePhone,cafeOpen,cafeClose,cafePerson,cafeMax,cafe_intro,cafe_image1, cafe_image2,cafe_image3);
+                    db.execSQL("insert into cafeinfo(cafe_id, cafe_name) " +
+                            "values('"+ cafe_id + "','" + cafeName  + "');");
 
                     //Log.e("geocoder",cafeName + cafeAddress + cafePhone + cafeOpen + cafeClose + cafeMax);
 
@@ -286,7 +294,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
                     double maxPerPerson = (person/max*100);
 
-                    personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + maxPerPerson + "% )");
+                    personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + (int)maxPerPerson + "% )");
 
                     if(maxPerPerson > 65){
                         personView.setBackgroundColor(Color.RED);
@@ -318,7 +326,10 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     editor.putString("person", cafeInfos.get(i).getCafePerson());
                     editor.putString("max", cafeInfos.get(i).getCafeMaximum());
                     editor.putString("intro", cafeInfos.get(i).getCafe_intro());
-                    editor.putString("image",cafeInfos.get(i).getCafe_image());
+                    editor.putString("image1",cafeInfos.get(i).getCafe_image1());
+                    editor.putString("image2",cafeInfos.get(i).getCafe_image2());
+                    editor.putString("image3",cafeInfos.get(i).getCafe_image3());
+
                     editor.commit();
                 }
             });

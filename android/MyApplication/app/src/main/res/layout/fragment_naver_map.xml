@@ -4,7 +4,7 @@
     android:id="@+id/fr"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.chun.whefe.NaverMapFragment">
+    tools:context="com.example.chun.whefe.fragments.NaverMapFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <com.nhn.android.maps.NMapView
@@ -84,10 +84,11 @@
         <Button
             android:id="@+id/cafeInfoButton"
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/cafeInfoPhoneView"
+            android:layout_marginEnd="5dp"
             android:layout_marginTop="7dp"
             android:background="@drawable/mybutton"
             android:text="자세히"
@@ -95,17 +96,5 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
-
-    <ImageButton
-        android:id="@+id/map_location"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="40dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="false"
-        android:maxHeight="40dp"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/location_off" />
 
 </FrameLayout>

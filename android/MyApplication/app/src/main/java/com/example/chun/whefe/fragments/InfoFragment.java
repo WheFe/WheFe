@@ -34,30 +34,23 @@ import java.net.URL;
  */
 
 public class InfoFragment extends Fragment{
-
-    //
-
     Bitmap bitmap;
 
-    String imageFilename;
-    //
+    String imageFilename1;
+    String imageFilename2;
+    String imageFilename3;
+
     LinearLayout imageList;
     View view;
 
     ImageView imageView1;
     ImageView imageView2;
+    ImageView imageView3;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.info,container,false);
-
-
-       // URL url = new URL(MainActivity.ip + "/whefe/image/Notebook_SAMSUNG.jpg");
-      //  task = new back();
-      //  task.execute(imgUrl);
-
-
 
         TextView nameView = (TextView)view.findViewById(R.id.cafeNameView);
         TextView addressView = (TextView)view.findViewById(R.id.cafeAddressView);
@@ -94,7 +87,9 @@ public class InfoFragment extends Fragment{
         String cafePerson = preferences.getString("person","NOTFOUND");
         String cafeMax = preferences.getString("max","NOTFOUND");
         String cafeIntro = preferences.getString("intro","");
-        imageFilename = preferences.getString("image","");
+        imageFilename1 = preferences.getString("image1","");
+        imageFilename2 = preferences.getString("image2","");
+        imageFilename3 = preferences.getString("image3","");
 
         // Tool bar 타이틀 설정
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(cafeName);
@@ -117,7 +112,7 @@ public class InfoFragment extends Fragment{
         }else if(maxPerPerson >0){
             personView.setBackgroundColor(Color.GREEN);
         }
-        personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + maxPerPerson + "% )");
+        personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + (int)maxPerPerson + "% )");
 
         introduceView.setText(cafeIntro);
 
@@ -175,35 +170,49 @@ public class InfoFragment extends Fragment{
     public void setImageList() {
         imageList = (LinearLayout)view.findViewById(R.id.info_imageList);
 
-        new LoadImage().execute(MainActivity.ip + "/whefe/resources/images/menuimage/americano.jpg");
+
 
         imageView1 = new ImageView(getContext());
-     //   imageView1.setImageResource(R.drawable.grazie1);
-       /* URL url = new URL(MainActivity.ip + "/whefe/image");
-        Bitmap bitmap = BitmapFactory.decodeStream(url.openStream());*/
-      //  imageView1.setImageBitmap(bitmap);
         imageView1.setAdjustViewBounds(true);
         imageView1.setVisibility(View.VISIBLE);
-
+        if(!imageFilename1.equals(""))
+            new LoadImage(imageView1,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename1);
+        else
+            imageView1.setImageResource(R.drawable.whefe);
 
 
         imageView2 = new ImageView(getContext());
-        imageView2.setImageResource(R.drawable.grazie2);
         imageView2.setAdjustViewBounds(true);
         imageView2.setVisibility(View.VISIBLE);
+        if(!imageFilename2.equals(""))
+            new LoadImage(imageView2,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename2);
+
+        imageView3 = new ImageView(getContext());
+        imageView3.setAdjustViewBounds(true);
+        imageView3.setVisibility(View.VISIBLE);
+        if(!imageFilename3.equals(""))
+            new LoadImage(imageView3,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename3);
 
         imageList.addView(imageView1);
         imageList.addView(imageView2);
-
-
+        imageList.addView(imageView3);
     }
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
+        ImageView imageView;
+        Context context;
+
+        public LoadImage(ImageView imageView, Context context){
+            this.imageView = imageView;
+            this.context = context;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         protected Bitmap doInBackground(String... args) {
+            Bitmap bitmap = null;
             try {
                 bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
             } catch (Exception e) {
@@ -215,7 +224,7 @@ public class InfoFragment extends Fragment{
         protected void onPostExecute(Bitmap image) {
             if(image != null) {
                 bitmap = image;
-                imageView1.setImageBitmap(image);
+                imageView.setImageBitmap(image);
 
             } else {
 

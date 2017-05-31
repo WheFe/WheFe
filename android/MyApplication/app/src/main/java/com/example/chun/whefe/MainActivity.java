@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     CheckLoginTask loginTask;
 
-    public static final String ip = "http://223.194.157.125:8080";
+    public static final String ip = "http://223.194.154.14:8080";
 
 
     @Override
@@ -59,18 +59,6 @@ public class MainActivity extends AppCompatActivity {
         autoLogin = (CheckBox)findViewById(R.id.autoLogin);
         Button button = (Button) findViewById(R.id.LoginButton);
 
-        button.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NavigationActivity.class);
-
-                finish();
-
-                startActivity(intent);
-
-                return false;
-            }
-        });
     }
 
     public void autoLoginCheck() throws ExecutionException, InterruptedException {
@@ -192,54 +180,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   /* public void onLoginButtonClicked(View v) {
-        boolean success = false;
-
-        -------------------------로그인 체크--------------------------
-
-
-
-
-
-
-        ------------------------------------------------------------
-        if(success == false){   //로그인 실패
-            Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
-
-
-
-        }else if(success == true){
-            Intent intent =  new Intent(MainActivity.this,NavigationActivity.class);
-
-            LIDEdit = (EditText) findViewById(R.id.LIDEdit);
-            LPassEdit = (EditText) findViewById(R.id.LPassEdit);
-
-            finish();
-            intent.putExtra("ID_TEXT",LIDEdit.getText().toString());
-            intent.putExtra("Pass_TEXT",LPassEdit.getText().toString());
-
-            startActivity(intent);
-
-        }
-    }*/
-
 
     public void onSignupClicked(View v) {
-        Toast.makeText(getApplicationContext(), "Signup 눌림", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(MainActivity.this, SignupActivity.class);
         startActivity(intent);
 
-    }
-
-
-    public void onStart() {
-        super.onStart();
-        Log.i("CGY", "Login Activity start");
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i("CGY", "Login Activity Destroy");
     }
 }

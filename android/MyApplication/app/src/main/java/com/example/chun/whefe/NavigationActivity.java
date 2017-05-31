@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.chun.whefe.fragments.CafeListFragment;
 import com.example.chun.whefe.fragments.CouponFragment;
@@ -47,19 +49,23 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Whefe");
 
+        SharedPreferences preferences1 = getSharedPreferences("LOGIN_PREFERENCE", Context.MODE_PRIVATE);
+        String my_id = preferences1.getString("id","");
+
+        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View nav_header_view = navigationView.getHeaderView(0);
+
+        TextView idTextView = (TextView)nav_header_view.findViewById(R.id.nav_id_view);
+        idTextView.setText(my_id);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-       //ft = getFragmentManager().beginTransaction();
-
-
-      //  mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(nav_fragment);
         mapFragment = new MapFragment();
         infoFragment = new InfoFragment();
         orderFragment = new OrderFragment();
@@ -124,7 +130,13 @@ public class NavigationActivity extends AppCompatActivity
 
         if (id == R.id.nav_memberinfo) {    // 네비게이션 회원가입
 
-        } else if(id == R.id.nav_cafe_list){
+        } else if(id == R.id.nav_cafe_map){
+            transaction = getSupportFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.container,mapFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }else if(id == R.id.nav_cafe_list){
             transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.container,cafeListFragment);

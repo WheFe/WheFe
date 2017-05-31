@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 public class SuccessActivity extends Activity {
@@ -16,6 +17,10 @@ public class SuccessActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.success);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                |WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                |WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         ImageView phoneView =(ImageView) findViewById(R.id.noti_phoneView);
         ImageView iconView =(ImageView) findViewById(R.id.noti_iconView);

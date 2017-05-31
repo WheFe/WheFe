@@ -1,6 +1,7 @@
 package com.example.chun.whefe.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +32,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chun.whefe.MainActivity;
+import com.example.chun.whefe.MyFirebaseInstanceIDService;
 import com.example.chun.whefe.R;
 import com.example.chun.whefe.ShoppingList;
 import com.example.chun.whefe.dbhelper.MyHistoryHelper;
 import com.example.chun.whefe.dbhelper.MyOpenHelper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -53,8 +66,7 @@ public class PaymentFragment extends Fragment {
 
     Bitmap bitmap;
 
-    ShoppingList shoppingList;
-    // MyShoppingListAdapter myShoppingListAdapter;
+    ArrayList<Coupon> coupons;
 
     ArrayList<OrderList> orderLists;
 
@@ -88,6 +100,9 @@ public class PaymentFragment extends Fragment {
         historyHelper = new MyHistoryHelper(getContext());
         historyDB = historyHelper.getWritableDatabase();
 
+        String couponURL = MainActivity.ip + "/whefe/android/usablecoupon?cafe_id="+cafe_id+"&customer_id="+my_id;
+        new DownloadCouponTask().execute(couponURL);
+
         TextView warningView = (TextView)view.findViewById(R.id.payment_warningVIew);
         warningView.setText(" 음료 수령시간이 늦어져 생기는 품질저하는 책임질 수 없으니, 주의하여 주시기 바랍니다.");
 
@@ -109,28 +124,7 @@ public class PaymentFragment extends Fragment {
         TextView textView = (TextView)view.findViewById(R.id.pay_priceView);
         textView.setText("결제금액 " + totalPrice + " 원");
 
-        ArrayList<String> couponSpinnerList = new ArrayList<String>();
-
-        couponSpinnerList.add("선택해주세요.");
-        couponSpinnerList.add("-500원");
-        couponSpinnerList.add("-700원");
-        couponSpinnerList.add("-1000원");
-
-        ArrayAdapter<String> couponAdapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,couponSpinnerList);
-
         couponSpinner = (Spinner)view.findViewById(R.id.pay_coupon_spinner);
-        couponSpinner.setAdapter(couponAdapter);
-
-        couponSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                calculatePrice();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         Button cancelButton = (Button)view.findViewById(R.id.paymentCancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -147,25 +141,189 @@ public class PaymentFragment extends Fragment {
                 // customer_id, cafe_id, menu_name , hot_ice_none, menu_size, option_name
                 orderLists = new ArrayList<OrderList>();
 
-                Cursor rs = db.rawQuery("select * from shoppinglist;", null);
+                Cursor rs = db.rawQuery("select * from shoppinglist where cafe_id = '" + cafe_id + "';", null);
                 if(rs.getCount()==0){
                     Toast.makeText(getContext(), "장바구니에 물품 없음", Toast.LENGTH_SHORT).show();
                 }else {
-                    while (rs.moveToNext()) {
-                        String db_name = rs.getString(1);
-                        String db_hot = rs.getString(2);
-                        String db_size = rs.getString(3);
-                        String db_option = rs.getString(4);
 
-                        orderLists.add(new OrderList(my_id, cafe_id, db_name, db_hot, db_size, db_option));
-                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("결제 하시겠습니까?");
+                    builder.setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Cursor rs = db.rawQuery("select * from shoppinglist where cafe_id = '" + cafe_id + "';", null);
+                                    while (rs.moveToNext()) {
+                                        String db_name = rs.getString(1);
+                                        String db_hot = rs.getString(2);
+                                        String db_size = rs.getString(3);
+                                        String db_option = rs.getString(4);
+
+                                        orderLists.add(new OrderList(my_id, cafe_id, db_name, db_hot, db_size, db_option));
+                                    }
+
+                                    JSONArray jsonArray = new JSONArray();
+                                    try{
+                                        for(int i = 0 ;i<orderLists.size();i++) {
+                                            JSONObject jsonObject = new JSONObject();
+                                            jsonObject.put("customer_id", orderLists.get(i).getCustomer_id());
+                                            jsonObject.put("cafe_id", orderLists.get(i).getCafe_id());
+                                            jsonObject.put("menu_name", orderLists.get(i).getMenu_name());
+                                            jsonObject.put("hot_ice_none", orderLists.get(i).getHot_ice_none());
+                                            jsonObject.put("menu_size", orderLists.get(i).getMenu_size());
+                                            jsonObject.put("option_name", orderLists.get(i).getOption_name());
+                                            jsonArray.put(jsonObject);
+                                        }
+                                        JSONObject jsonObject = new JSONObject();
+                                        String coupon = couponSpinner.getSelectedItem().toString();
+                                        Log.i("payment",coupon);
+                                        StringTokenizer s = new StringTokenizer(coupon,"(");
+                                        String temp = s.nextToken();
+
+                                        jsonObject.put("coupon",temp.trim());
+                                        jsonArray.put(jsonObject);
+
+                                        String obj = jsonArray.toString();
+                                        String obj2 =URLEncoder.encode(obj,"UTF-8");
+
+                                        MyFirebaseInstanceIDService service = new MyFirebaseInstanceIDService();
+                                        service.onTokenRefresh();
+                                        String paymentURL = MainActivity.ip + "/whefe/android/orderlists?orderlist=" + obj2 +"&token=" + service.getToken();
+                                        new SendTask().execute(paymentURL);
+                                        Toast.makeText(getContext(), "결제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                        db.execSQL("delete from shoppinglist;");
+                                        setShoppingListData();
+                                        sh_adapter.upDateItemList(sh_arrayList,sh_arrayChild);
+                                        calculatePrice();
+                                    }catch(JSONException e){
+                                        e.printStackTrace();
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.setTitle("결제");
+                    dialog.show();
                 }
+
             }
         });
 
         return view;
     }
+    private class DownloadCouponTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
 
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return (String) downloadUrl((String) urls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "다운로드 실패";
+            }
+        }
+
+        protected void onPostExecute(String result) {
+            Log.i("couponspinner", "onPostExecute");
+            Log.i("couponspinner", "result : " + result);
+            try {
+                JSONArray ja = new JSONArray(result);
+                coupons = new ArrayList<Coupon>();
+                ArrayList<String> couponSpinnerList = new ArrayList<String>();
+
+                couponSpinnerList.add("선택해주세요.");
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject order = ja.getJSONObject(i);
+                    String coupon_name = (String) order.get("coupon_name");
+                    String coupon_price = (String) order.get("coupon_price");
+                 //   String coupon_start = (String) order.get("coupon_start");
+                 //   String coupon_end = (String) order.get("coupon_end");
+
+                    coupons.add(new Coupon(coupon_name,coupon_price));
+                    couponSpinnerList.add(coupons.get(i).getCoupon_name() + " (-" + coupons.get(i).getCoupon_price()+"원)");
+                }
+
+                ArrayAdapter<String> couponAdapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,couponSpinnerList);
+
+                couponSpinner.setAdapter(couponAdapter);
+
+                couponSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        calculatePrice();
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private String downloadUrl(String myurl) throws IOException {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(myurl);
+                conn = (HttpURLConnection) url.openConnection();
+                System.out.println("status code : " + conn.getResponseCode() + "!!!!!!!!!!!!!!");
+                Log.e("status code", conn.getResponseMessage());
+
+                BufferedReader bufreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                String line = null;
+                String page = "";
+                while ((line = bufreader.readLine()) != null) {
+                    page += line;
+                }
+                return page;
+            } finally {
+            }
+        }
+    }
+
+    private class SendTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return (String) downloadUrl((String) urls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "다운로드 실패";
+            }
+        }
+
+        protected void onPostExecute(String result) {
+            System.out.println("onPostExecute!");
+        }
+
+        private String downloadUrl(String myurl) throws IOException {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(myurl);
+                conn = (HttpURLConnection) url.openConnection();
+                System.out.println("status code : " + conn.getResponseCode() + "!!!!!!!!!!!!!!");
+                Log.e("status code", conn.getResponseMessage());
+
+                BufferedReader bufreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                String line = null;
+                String page = "";
+                while ((line = bufreader.readLine()) != null) {
+                    page += line;
+                }
+                return page;
+            } finally {
+            }
+        }
+    }
 
     public void calculatePrice(){
         int totalPrice =0;
@@ -178,9 +336,10 @@ public class PaymentFragment extends Fragment {
 
         String coupon = couponSpinner.getSelectedItem().toString();
         try {
+            // 대박할인 (-500원)
             StringTokenizer s = new StringTokenizer(coupon);
-            String temp = s.nextToken("원");
-
+            String temp = s.nextToken("-");
+            temp = s.nextToken("원)");
             Log.i("coupon","temp : " + temp);
 
             totalPrice += Integer.parseInt(temp);
@@ -195,7 +354,8 @@ public class PaymentFragment extends Fragment {
             sh_arrayChild.remove(sh_arrayList.get(i).getName());
             sh_arrayList.remove(i);
         }
-        Cursor rs = db.rawQuery("select * from shoppinglist;", null);
+
+        Cursor rs = db.rawQuery("select * from shoppinglist where cafe_id = '" + cafe_id + "';", null);
         while(rs.moveToNext()){
             Log.i("DB",rs.getInt(0) + rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5) + rs.getInt(6));
 
@@ -288,32 +448,11 @@ public class PaymentFragment extends Fragment {
             String imageFilename = shoppingList.getImageFilename();
             ImageView imageView = (ImageView)v.findViewById(R.id.sh_imageView);
             new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename);
-          //  imageView.setImageResource(shoppingList.getImageResource());
+
             TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
             priceView.setText(price);
-
-            /*imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(getContext());
-
-                    dialog.setContentView(R.layout.image_zoom_dialog);
-                    ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
-                    ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
-
-                    imageView.setImageResource(shoppingList.getImageResource());
-
-                    cancelButton.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                }
-            });*/
 
             return v;
         }
@@ -367,13 +506,9 @@ public class PaymentFragment extends Fragment {
         }
     }
     public static class ShoppingListViewHolder{
-        public ImageView imageView;
-        public TextView nameView;
-        public TextView priceView;
         public TextView hotView;
         public TextView sizeView;
         public TextView optionView;
-
     }
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
         ImageView imageView;
@@ -410,9 +545,7 @@ public class PaymentFragment extends Fragment {
                 BitmapDrawable bd = null;
                 bd = (BitmapDrawable) ContextCompat.getDrawable(getContext(),R.drawable.whefe);
                 bitmap = bd.getBitmap();
-
-
-                //Toast.makeText(getContext(), "이미지가 존재하지 않거나 네트워크 오류 발생", Toast.LENGTH_SHORT).show();
+                imageView.setImageBitmap(bitmap);
             }
         }
     }
@@ -433,29 +566,49 @@ public class PaymentFragment extends Fragment {
             this.option_name = option_name;
         }
 
+        @Override
+        public String toString() {
+            return "OrderList{" +
+                    "customer_id='" + customer_id + '\'' +
+                    ", cafe_id='" + cafe_id + '\'' +
+                    ", menu_name='" + menu_name + '\'' +
+                    ", hot_ice_none='" + hot_ice_none + '\'' +
+                    ", menu_size='" + menu_size + '\'' +
+                    ", option_name='" + option_name + '\'' +
+                    '}';
+        }
+
         public String getCustomer_id() {
             return customer_id;
         }
-
         public String getCafe_id() {
             return cafe_id;
         }
-
         public String getMenu_name() {
             return menu_name;
         }
-
         public String getHot_ice_none() {
             return hot_ice_none;
         }
-
         public String getMenu_size() {
             return menu_size;
         }
-
         public String getOption_name() {
             return option_name;
         }
-
+    }
+    private class Coupon{
+        private String coupon_name;
+        private String coupon_price;
+        public Coupon(String coupon_name, String coupon_price){
+            this.coupon_name = coupon_name;
+            this.coupon_price = coupon_price;
+        }
+        public String getCoupon_name() {
+            return coupon_name;
+        }
+        public String getCoupon_price() {
+            return coupon_price;
+        }
     }
 }

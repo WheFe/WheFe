@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:layout_marginTop="5dp"
     android:background="@drawable/layout_border">
 
     <TextView
@@ -117,9 +118,9 @@
         android:id="@+id/personPerMaxView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@android:color/black"
-        android:layout_below="@+id/cl_maxView"
+        android:layout_alignEnd="@+id/cl_maxView"
         android:layout_alignRight="@+id/cl_maxView"
-        android:layout_alignEnd="@+id/cl_maxView" />
+        android:layout_below="@+id/cl_maxView"
+        android:text="TextView"
+        android:textColor="@android:color/black" />
 </RelativeLayout>

@@ -11,6 +11,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -52,10 +54,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
-
-import static com.example.chun.whefe.R.id.optionSpinner;
-import static com.example.chun.whefe.R.id.sizeSpinner;
 
 /**
  * Created by Chun on 2017-05-08.
@@ -64,16 +64,9 @@ import static com.example.chun.whefe.R.id.sizeSpinner;
 public class OrderFragment extends Fragment {
 
     private CafeMenuAdapter cafeMenuAdapter;
-
     Bitmap bitmap;
-
     private String cafe_id;
-
     Button[] categoryButton = new Button[7];
-
-
-    //private ArrayList<CafeMenu>[] menuArrays = new ArrayList<CafeMenu>[7];
-
     private ArrayList<Menus> menuArrays = new ArrayList<Menus>();
 
     public class Menus{
@@ -91,22 +84,16 @@ public class OrderFragment extends Fragment {
     private ArrayList<CafeMenu> arrayList1 = new ArrayList<CafeMenu>();
     private HashMap<String, ArrayList<String>> arrayChild = new HashMap<String,ArrayList<String>>();
 
-
-
     ExpandableListView listView;
     CoffeeViewHolder holder;
-
     TextView priceView;
-
     LinearLayout categoryLayout;
-
     SQLiteDatabase db;
     SQLiteDatabase categoryDB;
     SQLiteDatabase menuDB;
     MyOpenHelper helper;
     MyCategoryHelper categoryHelper;
     MyMenuHelper menuHelper;
-
 
     private ArrayList<ShoppingList> sh_arrayList = new ArrayList<ShoppingList>();
     private HashMap<String, ArrayList<String>> sh_arrayChild = new HashMap<String, ArrayList<String>>();
@@ -119,18 +106,16 @@ public class OrderFragment extends Fragment {
     View view;
 
     String cafeName;
-
+    ArrayList<Option> options;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.order,container,false);
-
         helper = new MyOpenHelper(getContext());
         db = helper.getWritableDatabase();
         categoryHelper = new MyCategoryHelper(getContext());
@@ -246,7 +231,6 @@ public class OrderFragment extends Fragment {
         priceView.setText("결제금액 " + totalPrice + " 원");
     }
     private void setButtonClick(){
-
         Cursor rs = categoryDB.rawQuery("select count(*) from categorylist;", null);
 
         rs.moveToNext();
@@ -256,7 +240,10 @@ public class OrderFragment extends Fragment {
             categoryButton[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    int groupCount = cafeMenuAdapter.getGroupCount();
+                    for(int group = 0; group<groupCount;group++){
+                        listView.collapseGroup(group);
+                    }
                     Cursor rs = menuDB.rawQuery("select * from menulist;", null);
 
                     ArrayList<CafeMenu> tempArray = new ArrayList<CafeMenu>();
@@ -265,27 +252,56 @@ public class OrderFragment extends Fragment {
 
                     int count = 0;
                     while(rs.moveToNext()) {
-
-                        Log.i("DB", rs.getInt(0) + rs.getString(1) + rs.getString(2));
-
                         String menu_name = rs.getString(0);
                         String menu_price = rs.getString(1);
                         String menu_image = rs.getString(2);
                         String menu_category = rs.getString(3);
+                        String menu_size = rs.getString(4);
+                        String hot_ice_none = rs.getString(5);
 
 
                         if (menu_category.equals(categoryButton[position].getText())) {    // 첫번째 카테고리.
-                            CafeMenu cafeMenu = new CafeMenu(menu_name, menu_price, menu_image);
-                            tempArray.add(cafeMenu);    // == arrayList
 
-                            arrayChild.put(tempArray.get(count).getName(), arrayChicken);
+                            int flag = 0; // 중복값 없으면 0, 있으면 1
+                            for(int j = 0;j<tempArray.size();j++){
+                                if(tempArray.get(j).getName().equals(menu_name)){
+                                    // 이미 존재하는 메뉴
+                                    int size_flag = 0;
+                                    for(int k=0;k<tempArray.get(j).getSize().size();k++){
+                                        if(tempArray.get(j).getSize().get(k).equals(menu_size)){
+                                            size_flag = 1;
+                                            break;
+                                        }
+                                    }
+                                    if(size_flag == 0){
+                                        tempArray.get(j).getSize().add(menu_size);
+                                    }
 
+                                    int hot_flag = 0;
+                                    for(int k=0;k<tempArray.get(j).getHot_ice_none().size();k++){
+                                        if(tempArray.get(j).getHot_ice_none().get(k).equals(hot_ice_none)){
+                                            hot_flag = 1;
+                                            break;
+                                        }
+                                    }
+                                    if(hot_flag == 0){
+                                        tempArray.get(j).getHot_ice_none().add(hot_ice_none);
+                                    }
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                            if(flag == 0){  // 새로운 메뉴
+                                CafeMenu cafeMenu = new CafeMenu(menu_name, menu_price, menu_image, categoryButton[position].getText().toString());
+                                cafeMenu.getSize().add(menu_size);
+                                cafeMenu.getHot_ice_none().add(hot_ice_none);
+                                tempArray.add(cafeMenu);
+                                arrayChild.put(tempArray.get(count).getName(), arrayChicken);
+                                count++;
+                            }
                             menuArrays.get(position).setMenuList(tempArray);
-                            count++;
                         }
                     }
-
-
                     cafeMenuAdapter.upDateItemList(menuArrays.get(position).getMenuList(), arrayChild);
                 }
             });
@@ -296,7 +312,6 @@ public class OrderFragment extends Fragment {
         Log.i("CGY","setCategoryList");
         String categoryUrl = MainActivity.ip + "/whefe/android/category?cafe_id=" + cafe_id;
         new DownloadCategoryTask().execute(categoryUrl);
-        Log.i("categoryTask", "tast Execute");
     }
 
     private class DownloadCategoryTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
@@ -378,19 +393,126 @@ public class OrderFragment extends Fragment {
     }
 
     private void setMenuList(){
-        Log.i("CGY","setMenuList");
-
-
-        String categoryUrl = MainActivity.ip + "/whefe/android/menu?cafe_id=" + cafe_id;
+       String categoryUrl = MainActivity.ip + "/whefe/android/menu?cafe_id=" + cafe_id;
         new DownloadMenuTask().execute(categoryUrl);
     }
+    private class DownloadOptionTask extends AsyncTask<String, Void, String> {                     // Option Connection
 
+        private Spinner optionSpinner;
+        private Context context;
+
+        public DownloadOptionTask(Spinner optionSpinner, Context context) {
+            this.optionSpinner = optionSpinner;
+            this.context = context;
+        }
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                return (String) downloadUrl((String) urls[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "다운로드 실패";
+            }
+        }
+        protected void onPostExecute(String result) {
+            System.out.println("option onPostExecute!");
+
+
+            try {
+                JSONArray ja = new JSONArray(result);
+                options = new ArrayList<Option>();
+                ArrayList<String> optionSpinnerlist = new ArrayList<String>();
+                optionSpinnerlist.add("Option");
+                for (int i = 0; i < ja.length(); i++) {
+                    JSONObject order = ja.getJSONObject(i);
+                    String category_name = (String) order.get("category_name");
+                    String option_name = (String)order.get("option_name");
+                    String option_price = (String)order.get("option_price");
+                    int price =  Integer.parseInt(option_price);
+
+                    options.add(new Option(category_name,option_name,price));
+
+                    optionSpinnerlist.add(option_name + " (+" + option_price + "원)");
+                }
+                OptionAdapter optionadapter = new OptionAdapter(getContext(),R.layout.spinner_item,optionSpinnerlist);
+                Log.i("option","optionSpinnerList : " + optionSpinnerlist);
+                optionadapter.update(optionSpinnerlist);
+                optionSpinner.setAdapter(optionadapter);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        public class OptionAdapter extends ArrayAdapter<String>{
+            private List<String> objects;
+            private Context context;
+            private int resource;
+
+            public OptionAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<String> objects) {
+                super(context,resource,objects);
+                this.context = context;
+                this.resource = resource;
+                this.objects = objects;
+            }
+            public void update(List<String> objects){
+                this.objects = objects;
+                notifyDataSetChanged();
+            }
+
+        }
+        private String downloadUrl(String myurl) throws IOException {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(myurl);
+                conn = (HttpURLConnection) url.openConnection();
+                System.out.println("status code : " + conn.getResponseCode() + "!!!!!!!!!!!!!!");
+                Log.e("status code", conn.getResponseMessage());
+
+                BufferedReader bufreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                String line = null;
+                String page = "";
+                while ((line = bufreader.readLine()) != null) {
+                    page += line;
+                }
+                return page;
+            } finally {
+            }
+        }
+    }
+    private class Option{
+        private String category_name;
+        private String option_name;
+        private int option_price;
+
+        @Override
+        public String toString() {
+            return "Option{" +
+                    "category_name='" + category_name + '\'' +
+                    ", option_name='" + option_name + '\'' +
+                    ", option_price=" + option_price +
+                    '}';
+        }
+        public Option(String category_name, String option_name, int option_price) {
+            this.category_name = category_name;
+            this.option_name = option_name;
+            this.option_price = option_price;
+        }
+        public String getCategory_name() {
+            return category_name;
+        }
+        public String getOption_name() {
+            return option_name;
+        }
+        public int getOption_price() {
+            return option_price;
+        }
+    }
     private class DownloadMenuTask extends AsyncTask<String, Void, String> {                    // 메뉴 출력 Connection
         String menu_name;
+        String menu_size;
+        String hot_ice_none;
         String menu_price;
         String category_name;
-        String menu_image;
-
+        String imageFilename;
 
         @Override
         protected String doInBackground(String... urls) {
@@ -414,7 +536,6 @@ public class OrderFragment extends Fragment {
                 // delete all data
                 menuDB.execSQL("delete from menulist  ;"  );
 
-
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject obj = ja.getJSONObject(i);
                     String cafe_id_temp = obj.get("cafe_id").toString();
@@ -422,20 +543,17 @@ public class OrderFragment extends Fragment {
                         menu_name = obj.get("menu_name").toString();
                         menu_price = obj.get("menu_price").toString();
                         category_name = obj.get("category_name").toString();
-                        menu_image = obj.get("menu_image").toString();
-                        //arrayList3 = new ArrayList[button.length];
-                    //    menu_image = "";
+                        imageFilename = obj.get("imageFilename").toString();
+                        menu_size = obj.get("menu_size").toString();
+                        hot_ice_none = obj.get("hot_ice_none").toString();
+
                         int k = 0;
 
-                        //insert data
-                        menuDB.execSQL("insert into menulist(menu_name, menu_price,menu_image, menu_category ) " +
-                                "values('"+ menu_name + "','" + menu_price +"', '" + menu_image+ "', '" + category_name + "');");
+                        menuDB.execSQL("insert into menulist(menu_name, menu_price,imageFilename, menu_category, menu_size, hot_ice_none ) " +
+                                "values('"+ menu_name + "','" + menu_price +"', '" + imageFilename + "', '" + category_name + "', '" + menu_size+ "', '" + hot_ice_none + "');");
                         Log.i("menuDB", "before : " + menu_name + menu_price + category_name);
                     }
                 }
-
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -459,31 +577,52 @@ public class OrderFragment extends Fragment {
                 String menu_price = rs.getString(1);
                 String menu_image = rs.getString(2);
                 String menu_category = rs.getString(3);
-
+                String menu_size = rs.getString(4);
+                String hot_ice_none = rs.getString(5);
 
                 if (menu_category.equals(categoryButton[0].getText())) {    // 첫번째 카테고리.
+                    int flag = 0; // 중복값 없으면 0, 있으면 1
+                    for(int i = 0;i<arrayList1.size();i++){
+                        if(arrayList1.get(i).getName().equals(menu_name)){
+                            // 이미 존재하는 메뉴
+                            int size_flag = 0;
+                            for(int j=0;j<arrayList1.get(i).getSize().size();j++){
+                                if(arrayList1.get(i).getSize().get(j).equals(menu_size)){
+                                    size_flag = 1;
+                                    break;
+                                }
+                            }
+                            if(size_flag == 0){
+                                arrayList1.get(i).getSize().add(menu_size);
+                            }
 
-                    //arrayList1 = new ArrayList<CafeMenu>();
-
-                    /**
-                     *
-                     * */
-
-                    CafeMenu cafeMenu = new CafeMenu(menu_name, menu_price, menu_image);
-                    arrayList1.add(cafeMenu);    // == arrayList
-
-                    arrayChild.put(arrayList1.get(count).getName(), arrayChicken);
-
-                    Log.i("menuDB", "After : " + menu_name + menu_price + menu_category);
-
+                            int hot_flag = 0;
+                            for(int j=0;j<arrayList1.get(i).getHot_ice_none().size();j++){
+                                if(arrayList1.get(i).getHot_ice_none().get(j).equals(hot_ice_none)){
+                                    hot_flag = 1;
+                                    break;
+                                }
+                            }
+                            if(hot_flag == 0){
+                                arrayList1.get(i).getHot_ice_none().add(hot_ice_none);
+                            }
+                            flag = 1;
+                            break;
+                        }
+                    }
+                    if(flag == 0){  // 새로운 메뉴
+                        CafeMenu cafeMenu = new CafeMenu(menu_name, menu_price, menu_image, categoryButton[0].getText().toString());
+                        cafeMenu.getSize().add(menu_size);
+                        cafeMenu.getHot_ice_none().add(hot_ice_none);
+                        arrayList1.add(cafeMenu);
+                        arrayChild.put(arrayList1.get(count).getName(), arrayChicken);
+                    }
                     menuArrays.get(0).setMenuList(arrayList1);
                     count++;
                 }
             }
             cafeMenuAdapter = new CafeMenuAdapter(getContext(),menuArrays.get(0).getMenuList(),arrayChild);
-//        cafeMenuAdapter = new CafeMenuAdapter(getContext(),arrayList1,arrayChild);
             listView.setAdapter(cafeMenuAdapter);
-
 
             setButtonClick();
         }
@@ -533,6 +672,7 @@ public class OrderFragment extends Fragment {
         }
 
         protected void onPostExecute(Bitmap image) {
+
             if(image != null) {
                 bitmap = image;
                 //imageView1.setImageBitmap(image);
@@ -543,10 +683,8 @@ public class OrderFragment extends Fragment {
                 BitmapDrawable bd = null;
                 bd = (BitmapDrawable) ContextCompat.getDrawable(getContext(),R.drawable.whefe);
                 bitmap = bd.getBitmap();
-
-
-                //Toast.makeText(getContext(), "이미지가 존재하지 않거나 네트워크 오류 발생", Toast.LENGTH_SHORT).show();
-            } Log.i("순서체크","3 setImageBitmap");
+                imageView.setImageBitmap(bitmap);
+            }
         }
     }
 
@@ -556,7 +694,9 @@ public class OrderFragment extends Fragment {
             sh_arrayChild.remove(sh_arrayList.get(i).getName());
             sh_arrayList.remove(i);
         }
-        Cursor rs = db.rawQuery("select * from shoppinglist;", null);
+        Cursor rs = db.rawQuery("select * from shoppinglist where cafe_id = '" + cafe_id + "';", null);
+        // cafe_id = cafe_id
+
         while(rs.moveToNext()){
             Log.i("DB",rs.getInt(0) + rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4) + rs.getString(5) + rs.getString(6));
 
@@ -638,8 +778,8 @@ public class OrderFragment extends Fragment {
 
             String groupName = cafeMenu.getName();
             String price = cafeMenu.getPrice();
-            //String groupName = arrayGroup2.get(groupPosition);
             String imageFilename = cafeMenu.getImageFilename();
+
             View v = convertView;
 
             bitmap =null;
@@ -654,8 +794,6 @@ public class OrderFragment extends Fragment {
             priceView.setText(price);
             menu_imageView = (ImageView) v.findViewById(R.id.sh_imageView);
             new LoadImage(menu_imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename);
-         //   imageView.setImageResource(R.drawable.whefe);
-            //menu_imageView.setImageBitmap(bitmap);
 
             menu_imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -668,8 +806,6 @@ public class OrderFragment extends Fragment {
                     ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
                     ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
                     new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename);
-                //    imageView.setImageResource(R.drawable.whefe);
-               //     imageView.setImageBitmap(bitmap);
 
                     cancelButton.setOnClickListener(new View.OnClickListener(){
                         @Override
@@ -688,41 +824,50 @@ public class OrderFragment extends Fragment {
 
         @Override
         public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
-            String childName = arrayChild.get(arrayGroup.get(groupPosition).getName()).get(childPosition);
-             View v = convertView;
+            final CafeMenu cafeMenu = arrayGroup.get(groupPosition);
+
+            View v = convertView;
 
             if(v==null){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = (RelativeLayout)inflater.inflate(R.layout.menuchild, null);
 
                 holder = new CoffeeViewHolder();
-               // holder.addButton = (Button)v.findViewById(R.id.addButton);
 
-                holder.optionSpinner = (Spinner)v.findViewById(optionSpinner);
-                holder.sizeSpinner = (Spinner)v.findViewById(sizeSpinner);
+                holder.optionSpinner = (Spinner)v.findViewById(R.id.optionSpinner);
+                holder.sizeSpinner = (Spinner)v.findViewById(R.id.sizeSpinner);
                 holder.radioGroup = (RadioGroup)v.findViewById(R.id.radioGroup);
-
             }
             /*-------------------------------스피너 어댑터 설정----------------------------------------------------------*/
-            ArrayList<String> sizeSpinnerlist = new ArrayList<String>();
 
-            sizeSpinnerlist.add("Size");
-            sizeSpinnerlist.add("Small");
-            sizeSpinnerlist.add("Medium");
-            sizeSpinnerlist.add("Large");
-
-            ArrayAdapter<String> sizeadapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,sizeSpinnerlist);
+            ArrayAdapter<String> sizeadapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,arrayGroup.get(groupPosition).getSize());
             holder.sizeSpinner.setAdapter(sizeadapter);
+            sizeadapter.notifyDataSetChanged();
 
-            ArrayList<String> optionSpinnerlist = new ArrayList<String>();
+            String optionURL = MainActivity.ip + "/whefe/android/option?category_name=" + cafeMenu.getCategory_name() + "&cafe_id=" +cafe_id;
+            new DownloadOptionTask(holder.optionSpinner,getContext()).execute(optionURL);
 
-            optionSpinnerlist.add("Option");
-            optionSpinnerlist.add("샷 추가(+500)");
-            optionSpinnerlist.add("휘핑 추가(+500)");
+            ArrayList<String> hots = arrayGroup.get(groupPosition).getHot_ice_none();
+            RadioGroup radioGroup = (RadioGroup)v.findViewById(R.id.radioGroup);
 
-            ArrayAdapter<String>   optionadapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,optionSpinnerlist);
-            holder.optionSpinner.setAdapter(optionadapter);
+            RadioButton hotRadioButton = (RadioButton)v.findViewById(R.id.hotRadioButton);
+            RadioButton iceRadioButton = (RadioButton)v.findViewById(R.id.icedRadioButton);
 
+            radioGroup.setEnabled(true);
+            hotRadioButton.setEnabled(true);
+            iceRadioButton.setEnabled(true);
+
+            if(hots.size() == 1){
+                if(hots.get(0).equals("none")){
+                    radioGroup.setEnabled(false);
+                }else if(hots.get(0).equals("hot")){
+                   hotRadioButton.setChecked(true);
+                   iceRadioButton.setEnabled(false);
+                }else if(hots.get(0).equals("ice")){
+                   hotRadioButton.setEnabled(false);
+                   iceRadioButton.setChecked(true);
+                }
+            }
 
             /*-----------------------------------------------------------------------------------*/
             Button addButton = (Button)v.findViewById(R.id.addButton);
@@ -735,22 +880,46 @@ public class OrderFragment extends Fragment {
                     RadioGroup radioGroup = (RadioGroup)parent.findViewById(R.id.radioGroup);
 
                     String se_size = sizeSpinner.getSelectedItem().toString();
+                    if(se_size.equals("Size")){
+                        Toast.makeText(getContext(), "Size를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     String se_option = optionSpinner.getSelectedItem().toString();
-
+                    if(se_option.equals("Option")){
+                        se_option = "";
+                    }
                     String se_name = arrayGroup.get(groupPosition).getName();
                     String se_price = arrayGroup.get(groupPosition).getPrice();
-
-                //    int se_image = arrayGroup.get(groupPosition).getImageResource();
                     String se_image = arrayGroup.get(groupPosition).getImageFilename();
 
                     int radioId = radioGroup.getCheckedRadioButtonId();
                     RadioButton radioButton = (RadioButton)parent.findViewById(radioId);
-                    String se_hot = radioButton.getText().toString();
 
+                    ArrayList<String> hots = arrayGroup.get(groupPosition).getHot_ice_none();
+
+                    int flag3 = 0;
+                    if(hots.size() == 1){
+                        if(hots.get(0).equals("none")){
+                            radioGroup.setEnabled(false);
+                            flag3 = 1;
+                        }
+                    }
+                    String se_hot= "none";
+                    if(flag3 == 0){
+                        try {
+                            se_hot = radioButton.getText().toString();
+                        }catch (Exception e){
+                            Toast.makeText(getContext(), "Hot,Ice를 선택해주세요", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }else if(flag3 == 1){
+                        se_hot = "none";
+                    }
                     Toast.makeText(context,se_name + se_price+se_hot +se_size+ se_option   ,Toast.LENGTH_SHORT).show();
 
-                    db.execSQL("insert into shoppinglist(name, hot, size, option,  price, image, cafe_name) " +
-                            "values('"+ se_name + "','" + se_hot + "', '" + se_size + "', '" + se_option + "', '" +  se_price + "', '" +  se_image + "', '" +  cafeName + "');");
+                    db.execSQL("insert into shoppinglist(name, hot, size, option,  price, image, cafe_id) " +
+                            "values('"+ se_name + "','" + se_hot + "', '" + se_size + "', '" + se_option + "', '" +  se_price + "', '" +  se_image + "', '" +  cafe_id + "');");
+
 
                 }
             });
@@ -837,27 +1006,6 @@ public class OrderFragment extends Fragment {
             TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
             priceView.setText(price);
 
-            /*imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(getContext());
-
-                    dialog.setContentView(R.layout.image_zoom_dialog);
-                    ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
-                    ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
-
-                    imageView.setImageResource(shoppingList.getImageResource());
-
-                    cancelButton.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                }
-            });*/
-
             return v;
         }
         String hot ;
@@ -930,11 +1078,47 @@ public class OrderFragment extends Fragment {
         private String name;
         private String price;
         private String imageFilename;
+        private ArrayList<String> size;
+        private ArrayList<String> hot_ice_none;
+        private String category_name;
 
-        public CafeMenu(String name, String price, String imageFilename) {
+        public CafeMenu(String name, String price, String imageFilename, String category_name) {
             this.name = name;
             this.price = price;
             this.imageFilename = imageFilename;
+            size = new ArrayList<String>();
+            hot_ice_none = new ArrayList<String>();
+            this.category_name = category_name;
+        }
+
+        @Override
+        public String toString() {
+            return "CafeMenu{" +
+                    "name='" + name + '\'' +
+                    ", price='" + price + '\'' +
+                    ", imageFilename='" + imageFilename + '\'' +
+                    ", size=" + size +
+                    ", hot_ice_none=" + hot_ice_none +
+                    '}';
+        }
+    public String getCategory_name(){
+        return category_name;
+    }
+
+        public ArrayList<String> getSize() {
+            return size;
+        }
+
+        public void setSize(ArrayList<String> size) {
+            this.size = size;
+        }
+
+        public ArrayList<String> getHot_ice_none() {
+            return hot_ice_none;
+        }
+
+        public void setHot_ice_none(ArrayList<String> hot_ice_none) {
+            this.hot_ice_none = hot_ice_none;
         }
 
         public String getName() {
