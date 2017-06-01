@@ -32,7 +32,24 @@ public class OptDao {
 
 				Opt opt = new Opt();
 				opt.setOption_name(rs.getString("option_name"));
-				opt.setOption_price(rs.getInt("option_price"));
+				opt.setOption_price(rs.getString("option_price"));
+				
+				return opt;
+			}
+
+		});
+	}
+	
+	public List<Opt> getOpt(String cafe_id, String category_name) {
+		String sql = "select * from opt where cafe_id = ? and category_name = ?";
+		return jdbcTemplateObject.query(sql, new Object[] {cafe_id,category_name}, new RowMapper<Opt>() {
+			@Override
+			public Opt mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Opt opt = new Opt();
+				opt.setCafe_id(rs.getString("cafe_id"));
+				opt.setCategory_name(rs.getString("category_name"));
+				opt.setOption_name(rs.getString("option_name"));
+				opt.setOption_price(rs.getString("option_price"));
 				
 				return opt;
 			}
@@ -41,25 +58,28 @@ public class OptDao {
 	}
 	
 	public boolean addOption(Opt opt) {
-		String sql = "insert into opt(option_name, option_price, category_name) values (?,?,?)";
-		
+		String sql = "insert into opt(cafe_id, option_name, option_price, category_name) values (?,?,?,?)";
+		String cafe_id = opt.getCafe_id();
 		String option_name = opt.getOption_name();
-		int option_price = opt.getOption_price();
+		String option_price = opt.getOption_price();
 		String category_name = opt.getCategory_name();
-		return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, category_name})==1;
+		return jdbcTemplateObject.update(sql, new Object[] {cafe_id, option_name, option_price, category_name})==1;
 	}
 	
-	public boolean editOption(String original, String option_name, String option_price, String category_name) {
+	public boolean editOption(String cafe_id, String original, String option_name, String option_price, String category_name) {
 		//String sql = "update opt set option_name=?, option_price=? where option_name=?";
 		//String sql = "update opt set option_name='ddddddddddddd' where option_price='500'";
+		String sql2 = "update opt set option_name=?, option_price=? where cafe_id=? and option_name=?";
+		
 		String sql = "update opt "+ "set option_name = " + "'" + option_name+ "', " +" option_price = " + "'"+ option_price + "' where option_name=" + "'"+ original +"'"  ;
 		//return jdbcTemplateObject.update(sql, new Object[] {option_name, option_price, original})==1;
-		return jdbcTemplateObject.update(sql)==1;
+		//return jdbcTemplateObject.update(sql)==1;
+		return jdbcTemplateObject.update(sql2, new Object[] {option_name, option_price, cafe_id, original })==1;
 	}
 	
-	public boolean deleteOption(String original) {
-		String sql = "delete from opt where option_name = ?";
-		return (jdbcTemplateObject.update(sql, (String)original)==1);
+	public boolean deleteOption(String cafe_id, String original) {
+		String sql = "delete from opt where cafe_id = ? and option_name = ?";
+		return (jdbcTemplateObject.update(sql, new Object[] {cafe_id, original})==1);
 	}
 	
 	

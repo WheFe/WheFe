@@ -166,6 +166,11 @@ public class LogController {
 		model.addAttribute("Test", "test");
 		return "web-front-end/03.Menu-Management";
 	}
+	
+	@RequestMapping(value="/")
+	public String zof() {
+		return "redirect:/management";
+	}
 
 	/*
 	 * @RequestMapping("/login/duplicationCheck") public @ResponseBody Object

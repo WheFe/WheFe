@@ -163,15 +163,15 @@ body {
 														type="text" required autofocus />
 												</div>
 												<div class="row">
-													YYYY_MM_DD <input class="form-control"
+													<input class="form-control"
 														style="max-width: 870px; margin-top: 10px"
 														id="coupon_start" name="coupon_start"
-														placeholder="쿠폰 시작기간" type="text">
+														placeholder="쿠폰 시작기간 예)2017-06-01" type="text">
 												</div>
 												<div class="row">
 													<input class="form-control"
 														style="max-width: 870px; margin-top: 10px" id="coupon_end"
-														name="coupon_end" placeholder="쿠폰 종료기간" type="text">
+														name="coupon_end" placeholder="쿠폰 종료기간 예)2017-06-05" type="text">
 												</div>
 												<div class="row">
 													<input class="form-control"

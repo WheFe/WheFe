@@ -43,6 +43,9 @@ public class Cafe_infoService {
 	public List<Cafe_info> getCafe_info() {
 		return cafe_infoDao.getCafe_info();
 	}
+	public Cafe_info getCafe_info(String cafe_id) {
+		return cafe_infoDao.getCafe_info(cafe_id);
+	}
 
 	public Cafe_info selectAdmin(Cafe_info cafe_info) {
 		System.out.println("selectAdmin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

@@ -102,8 +102,8 @@ body {
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="#">메뉴관리</a></li>
-					<li><a href="<c:url value=" /management/coupon"/>">쿠폰관리</a></li>
-					<li><a href="<c:url value=" /management/order"/>">주문확인</a></li>
+					<li><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
+					<li><a href="<c:url value="/management/order"/>">주문확인</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -135,7 +135,7 @@ body {
 				<div class="row">
 					<div class="panel-body">
 						<button type="button"
-							onclick="location.href='<c:url value=" /management"/>'"
+							onclick="location.href='<c:url value="/management"/>'"
 							class="btn btn-default btn-round-lg btn-lg"
 							style="text-align: left; width: 260px; float: right; margin-right: 40px;">
 							<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;카테고리
@@ -240,7 +240,7 @@ body {
 											<!-- Modal content-->
 											<div class="modal-content">
 												<form
-													action="<c:url value=" /management/option/editoption/${opt.option_name}"/>">
+													action="<c:url value="/management/option/editoption/${opt.option_name}"/>">
 													<input type="hidden" name="category_name"
 														value="${category_name}" />
 													<div class="modal-header">
@@ -259,7 +259,7 @@ body {
 															</div>
 															<div class="row">
 																<input class="form-control" style="max-width: 270px"
-																	name="option-price" placeholder="가격"
+																	name="option_price" placeholder="가격"
 																	onkeypress="validate()" onblur="moneyCheck(this)"
 																	type="text" />
 															</div>

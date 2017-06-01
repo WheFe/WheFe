@@ -18,4 +18,5 @@ public class Order {
 	private String hotIceNone;
 	private int menu_quantity;
 	private boolean menu_completed;
+	private String token;
 }

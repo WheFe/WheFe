@@ -59,14 +59,16 @@ public class Cafe_infoDao {
 		String cafe_open = cafe_info.getCafe_open();
 		String cafe_end = cafe_info.getCafe_end();
 		String cafe_intro = cafe_info.getCafe_intro();
-		String cafe_image1 = cafe_info.getImageFilename1();
-		String cafe_image2 = cafe_info.getImageFilename2();
-		String cafe_image3 = cafe_info.getImageFilename3();
+		//String cafe_image1 = cafe_info.getImageFilename1();
+		//String cafe_image2 = cafe_info.getImageFilename2();
+		//String cafe_image3 = cafe_info.getImageFilename3();
 		String sql = "update cafe_info set cafe_pw=?,cafe_name=?,cafe_tel=?,"
 				+ "cafe_address=?,cafe_max=?,cafe_open=?,cafe_end=?,"
-				+ "cafe_intro=?,cafe_image1=?,cafe_image2=?,cafe_image3=? where cafe_id=?";
+				+ "cafe_intro=? where cafe_id=?";
 		jdbcTemplateObject.update(sql, new Object[] { cafe_pw, cafe_name, cafe_tel, cafe_address, cafe_max, cafe_open,
-				cafe_end, cafe_intro, cafe_image1, cafe_image2, cafe_image3, cafe_id });
+				cafe_end, cafe_intro, cafe_id });
+		/*jdbcTemplateObject.update(sql, new Object[] { cafe_pw, cafe_name, cafe_tel, cafe_address, cafe_max, cafe_open,
+				cafe_end, cafe_intro, cafe_image1, cafe_image2, cafe_image3, cafe_id });*/
 		return true;
 	}
 
@@ -89,6 +91,26 @@ public class Cafe_infoDao {
 				cafe_info.setImageFilename1(rs.getString("cafe_image1"));
 				cafe_info.setImageFilename2(rs.getString("cafe_image2"));
 				cafe_info.setImageFilename3(rs.getString("cafe_image3"));
+				return cafe_info;
+			}
+		});
+	}
+	
+	public Cafe_info getCafe_info(String cafe_id) {
+		String sql = "select * from cafe_info where cafe_id=?";
+		return jdbcTemplateObject.queryForObject(sql, new Object[] {cafe_id}, new RowMapper<Cafe_info>() {
+			@Override
+			public Cafe_info mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Cafe_info cafe_info = new Cafe_info();
+				cafe_info.setCafe_id(rs.getString("cafe_id"));
+				cafe_info.setCafe_name(rs.getString("cafe_name"));
+				cafe_info.setCafe_address(rs.getString("cafe_address"));
+				cafe_info.setCafe_tel(rs.getString("cafe_tel"));
+				cafe_info.setCafe_open(rs.getString("cafe_open"));
+				cafe_info.setCafe_end(rs.getString("cafe_end"));
+				cafe_info.setCafe_intro(rs.getString("cafe_intro"));
+				cafe_info.setCafe_max(rs.getString("cafe_max"));
+				
 				return cafe_info;
 			}
 		});

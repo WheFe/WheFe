@@ -122,12 +122,12 @@ body {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Grazie</a>
+				<a class="navbar-brand" href="/management">Grazie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">메뉴관리</a></li>
+					<li class="active"><a href="/management">메뉴관리</a></li>
 					<li><a href="<c:url value="/management/coupon"/>">쿠폰관리</a></li>
 					<li><a href="<c:url value="/management/order"/>">주문확인</a></li>
 				</ul>
@@ -141,7 +141,7 @@ body {
 								${pageContext.request.userPrincipal.name}
 							</a>
 						</div></li>
-					<li><a href="<c:url value=" /logout"/>"> <span
+					<li><a href="<c:url value="/logout"/>"> <span
 							class="glyphicon glyphicon-log-out"></span> 로그아웃
 					</a></li>
 				</ul>
@@ -149,6 +149,7 @@ body {
 
 		</div>
 	</nav>
+	
 
 	<div class="container" style="margin-top: 80px">
 		<div class="panel panel-default">
@@ -406,7 +407,7 @@ body {
 									</div>
 
 									<div class="col-lg-2">
-										<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/menu/editmenu/${cafe_menu.menu_name}"/>'"
+										<button type="button" class="btn btn-default btn-lg" onclick="location.href='<c:url value="/management/menu/editmenu/${cafe_menu.menu_name}/${category_name}"/>'"
 											>가격관리</button>
 									</div>
 									<!--가격 관리 팝업-->

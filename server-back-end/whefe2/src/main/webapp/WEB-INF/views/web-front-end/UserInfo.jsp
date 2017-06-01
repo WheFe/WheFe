@@ -88,21 +88,14 @@ body {
 				class="signupbox col-md-offset-4 col-sm-12 col-sm-offset-4 col-md-offset-4">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-4 well well-sm">
-						<legend>회원가입</legend>
-						<form action="${pageContext.request.contextPath}/login/signup"
+						<legend>회원정보 수정</legend>
+						<form action="${pageContext.request.contextPath}/cafeinfo"
 							method="post" name="form" class="form" role="form"
 							enctype="multipart/form-data">
+							<input type="hidden" name="cafe_id" value="${cafe_info.cafe_id }"/>
 							<input type="hidden" name="${_csrf.parameterName}"
 								value="${_csrf.token}" />
-							<div class="row">
-								<div class="col-md-8">
-									<input class="form-control" name="cafe_id" placeholder="ID"
-										type="text" required autofocus />
-								</div>
-								<div class="col-md-4">
-									<button type="button" class="btn btn-info">ID 중복확인</button>
-								</div>
-							</div>
+							
 							<div class="row">
 								<div class="col-md-6 col-md-6">
 									<input class="form-control" name="cafe_pw" placeholder="비밀번호"
@@ -113,21 +106,21 @@ body {
 										placeholder="비밀번호 확인" type="password" />
 								</div>
 							</div>
-							<input class="form-control" name="cafe_name" placeholder="카페 이름"
+							<input class="form-control" name="cafe_name" placeholder="카페 이름" value="${cafe_info.cafe_name }"
 								type="text" /> <input class="form-control" name="cafe_address"
-								placeholder="카페 주소" type="text" /> <input class="form-control"
-								name="cafe_tel" placeholder="카페 전화번호 (-생략)" onkeypress='validate(event)' type="text"
+								placeholder="카페 주소" value="${cafe_info.cafe_address }" type="text" /> <input class="form-control"
+								name="cafe_tel" placeholder="카페 전화번호 (-생략)" value="${cafe_info.cafe_tel }" onkeypress='validate(event)' type="text"
 								onchange="getNumber(this);" onkeyup="getNumber(this);"
 							 />
 
 							<!--<label for="">영업시간</label>-->
 							<div class="row"></div>
 							<input class="form-control postcodify_postcode5" type="text"
-								name="cafe_open" onkeypress='validate(event)' placeholder="영업 시작시간 (00:00~24:00)"
+								name="cafe_open" onkeypress='validate(event)' placeholder="영업 시작시간 (00:00~24:00)" value="${cafe_info.cafe_open }"
 								data-timepicker /> <input class="form-control" name="cafe_end"
-								placeholder="영업 종료시간 (00:00~24:00)" onkeypress='validate(event)' type="text" data-timepicker />
+								placeholder="영업 종료시간 (00:00~24:00)" value="${cafe_info.cafe_end }" onkeypress='validate(event)' type="text" data-timepicker />
 							<input class="form-control" name="cafe_intro"
-								placeholder="카페 한줄 소개" type="text" />
+								placeholder="카페 한줄 소개" value="${cafe_info.cafe_intro }"type="text" />
 							<div class="input-group image-preview bottom">
 								<input placeholder="" type="text"
 									class="form-control image-preview-filename" disabled="disabled">
@@ -146,15 +139,15 @@ body {
 								</span>
 							</div>
 							<input class="form-control" name="cafe_max"
-								placeholder="카페정원 (숫자만 입력해주세요)" onkeypress='validate(event)' type="text" />
+								placeholder="카페정원 (숫자만 입력해주세요)" value="${cafe_info.cafe_max }"onkeypress='validate(event)' type="text" />
 
 							<div class="row">
 								<div class="col-xs-12 col-md-6">
-									<input type="submit" value="회원가입"
+									<input type="submit" value="정보 수정"
 										class="btn btn-primary btn-block btn-lg" tabindex="7">
 								</div>
 								<div class="col-xs-12 col-md-6">
-									<a href="<c:url value="/login"/>"><div
+									<a href="<c:url value="/management"/>"><div
 											class="btn btn-danger btn-block btn-lg">취소</div></a>
 								</div>
 							</div>

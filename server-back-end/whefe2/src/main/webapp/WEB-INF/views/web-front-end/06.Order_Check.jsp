@@ -10,6 +10,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
 </head>
 <style>
 .btn-round {
@@ -62,10 +63,10 @@
 	width: 120px;
 	height: 60px;
 	margin-left: 20px;
-	background-color: green;
-	color: white;
+	background-color: green; color : white;
 	text-align: center;
 	position: absolute;
+	color: white;
 }
 
 body {
@@ -169,7 +170,7 @@ body {
 														</div>
 														<div class="col-md-4">
 															<a
-																href="<spring:url value="/management/order/${order.orderlist_id}"/>">
+																href="<spring:url value="/management/order/${order.orderlist_id}/${order.token }"/>">
 																<button type="button"
 																	class="btn btn-default btn-lg btn-huge btn-block ready-button">메뉴
 																	완성</button>
@@ -233,17 +234,18 @@ body {
 				</div>
 			</div>
 			<script language="javascript">
+				
 				function autoRefresh_div() {
 					var currentLocation = window.location;
 					$("#panel-body").load(currentLocation + ' #panel-body');
 				}
-				setInterval('autoRefresh_div()', 3000);
+				setInterval('autoRefresh_div()', 5000);
 				
 				function autoRefresh_div2() {
 					var currentLocation = window.location;
 					$("#congestion-box").load(currentLocation + ' #congestion-box');
 				}
-				setInterval('autoRefresh_div2()', 3000);
+				setInterval('autoRefresh_div2()', 5000);
 			</script>
 		</div>
 	</div>

@@ -25,11 +25,11 @@ public class HomeController {
 	@Autowired
 	private Cafe_infoService cafe_infoService;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		
 		return "web-front-end/home";
-	}
+	}*/
 	
 	@RequestMapping(value="/pop")
 	public String test() {

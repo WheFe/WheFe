@@ -71,13 +71,6 @@ body {
 								class="form-control" name="cafe_pw" placeholder="비밀번호">
 						</div>
 
-						<div class="input-group">
-							<div class="checkbox">
-								<label> <input id="login-remember" type="checkbox"
-									name="remember" value="1"> ID 기억하기
-								</label>
-							</div>
-						</div>
 						<input type="hidden" name="${_csrf.parameterName}"
 							value="${_csrf.token}" />
 

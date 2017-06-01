@@ -22,15 +22,19 @@ public class OptService {
 			return optDao.getOpt(category_name);
 		}
 		
+		public List<Opt> getOpt(String cafe_id, String category_name) {
+			return optDao.getOpt(cafe_id, category_name);
+		}
+		
 		public boolean addOption(Opt opt) {
 			return optDao.addOption(opt);
 		}
 		
-		public boolean editOption(String original, String option_name, String option_price, String category_name) {
-			return optDao.editOption(original, option_name, option_price, category_name);
+		public boolean editOption(String cafe_id, String original, String option_name, String option_price, String category_name) {
+			return optDao.editOption(cafe_id, original, option_name, option_price, category_name);
 		}
 		
-		public boolean deleteOption(String original) {
-			return optDao.deleteOption(original);
+		public boolean deleteOption(String cafe_id, String original) {
+			return optDao.deleteOption(cafe_id, original);
 		}
 }

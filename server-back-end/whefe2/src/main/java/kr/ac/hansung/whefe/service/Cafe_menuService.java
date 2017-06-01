@@ -38,6 +38,10 @@ public class Cafe_menuService {
 	public boolean addMenu(ArrayList<String> pkArray, ArrayList<String> menu_nameArray, ArrayList<String> menu_sizeArray, ArrayList<String> hot_ice_noneArray, ArrayList<String> menu_priceArray) {
 		return cafe_menuDao.addMenu(pkArray, menu_nameArray, menu_sizeArray, hot_ice_noneArray, menu_priceArray);
 	}
+	public boolean editMenu(ArrayList<String> pkArray, ArrayList<String> menu_nameArray, ArrayList<String> menu_sizeArray, ArrayList<String> hot_ice_noneArray, ArrayList<String> menu_priceArray) {
+		System.out.println("editMenuService!!!!!!!!!!!!!!!");
+		return cafe_menuDao.editMenu(pkArray, menu_nameArray, menu_sizeArray, hot_ice_noneArray, menu_priceArray);
+	}
 	
 	public List<Cafe_menu> getMenu_price(String cafe_id, String menu_name) {
 		return cafe_menuDao.getMenu_price(cafe_id,menu_name);

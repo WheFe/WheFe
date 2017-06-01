@@ -16,4 +16,5 @@ public class Orderlist {
 	private String menu_size;
 	private String option_name;
 	private String menu_completed;
+	private String token;
 }

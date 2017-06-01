@@ -29,9 +29,10 @@ public class OrderDao {
 	   String menu_size = orderlist.getMenu_size();
 	   String hot_ice_none = orderlist.getHot_ice_none();
 	   String option_name = orderlist.getOption_name();
-	   String sql = "insert into orderlist (cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name,menu_completed)"
-	   		+ "values (?,?,?,?,?,?,0)";
-	   return ((jdbcTemplateObject.update(sql, new Object[] {cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name} ))==1);
+	   String token = orderlist.getToken();
+	   String sql = "insert into orderlist (cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name,token,menu_completed)"
+	   		+ "values (?,?,?,?,?,?,?,0)";
+	   return ((jdbcTemplateObject.update(sql, new Object[] {cafe_id,customer_id,menu_name,menu_size,hot_ice_none,option_name,token} ))==1);
    }
 
    public List<Order> getOrders(String cafe_id) {
@@ -50,6 +51,7 @@ public class OrderDao {
             order.setMenu_size(rs.getString("menu_size"));
             order.setOption_info(rs.getString("option_name"));
             order.setCafe_id(rs.getString("cafe_id"));
+            order.setToken(rs.getString("token"));
 
             return order;
          }
@@ -72,6 +74,7 @@ public class OrderDao {
             completeOrder.setMenu_size(rs.getString("menu_size"));
             completeOrder.setOption_info(rs.getString("option_name"));
             completeOrder.setCafe_id(rs.getString("cafe_id"));
+            completeOrder.setToken(rs.getString("token"));
 
             return completeOrder;
          }
@@ -100,6 +103,7 @@ public class OrderDao {
             completeOrders.setMenu_size(rs.getString("menu_size"));
             completeOrders.setOption_info(rs.getString("option_name"));
             completeOrders.setCafe_id(rs.getString("cafe_id"));
+            completeOrders.setToken(rs.getString("token"));
 
             return completeOrders;
          }

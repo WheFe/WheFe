@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,6 +38,7 @@ import kr.ac.hansung.whefe.model.Cafe_menu;
 import kr.ac.hansung.whefe.model.Category;
 import kr.ac.hansung.whefe.model.Coupon;
 import kr.ac.hansung.whefe.model.Customer_coupon;
+import kr.ac.hansung.whefe.model.Opt;
 import kr.ac.hansung.whefe.model.Orderlist;
 import kr.ac.hansung.whefe.service.Cafe_infoService;
 import kr.ac.hansung.whefe.service.Cafe_menuService;
@@ -44,6 +46,7 @@ import kr.ac.hansung.whefe.service.CategoryService;
 import kr.ac.hansung.whefe.service.CouponService;
 import kr.ac.hansung.whefe.service.Customer_couponService;
 import kr.ac.hansung.whefe.service.Customer_infoService;
+import kr.ac.hansung.whefe.service.OptService;
 import kr.ac.hansung.whefe.service.OrderService;
 
 @RestController
@@ -64,34 +67,36 @@ public class AndroidController {
 	private Customer_couponService customer_couponService;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private OptService optService;
 
 	
 
 	String apiKey = "AIzaSyBrAlcCFvem2Z_Rdq4TLCgiJ5yVB5BEYkE";
 	String result = null;
-	private String url = "https://fcm.googleapis.com/fcm/send";
-	private String message = "\"변전실\"}";// "\"변전실\"}"
-	private String parameters = "{\"data\": {" + "\"message\":" + message + ",\"to\":\"/topics/notice\"}";
+
 	
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/android/fcmtest")
 	public String sendGcm() {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("Authorization", "key=AIzaSyBrAlcCFvem2Z_Rdq4TLCgiJ5yVB5BEYkE");
+		headers.add("Authorization", "key=AAAAE9htXdE:APA91bGlZ_v-QMCrXDg9HAyiTgYrvxUmrmFcxmTnTXw2Ya3EwImD0yoOuJTmSRzR1N-iM8x9GtdTCew3x4wCOATQ3k40XT9J8GgyQ9cCQXFMbGDiEwKxv_Dy6GdMQDulQ-DP4DwWDGDw");
 		String jsonObj = "{\n"
-				+ " \"to\" : \"AAAAE9htXdE:APA91bGlZ_v-QMCrXDg9HAyiTgYrvxUmrmFcxmTnTXw2Ya3EwImD0yoOuJTmSRzR1N-iM8x9GtdTCew3x4wCOATQ3k40XT9J8GgyQ9cCQXFMbGDiEwKxv_Dy6GdMQDulQ-DP4DwWDGDw\",\n"
-				+ " \"data\" : { \"message\" : \"안녕하세요\" \n" + " }\n" + "}";
+				+ " \"to\" : \"d7cslhutwU8:APA91bF0RBnbWtRdUQhohWkqtQgfIO4DFGYf1fn9ryfoEf9mhCahnWe2LqVBE_cR-c2rNhxEoMlmJPrek_MCRgsk9-pcJxzdjP0IfvBKlfLj8wwxwRVsvGuMXG_rXoDaPG1CWLkYx5fM\",\n"
+				+ " \"data\" : { \"message\" : \"음료가 준비 되었습니다\" \n" + " }\n" + "}";
 
 		HttpEntity request;
 		request = new HttpEntity(jsonObj, headers);
 		ResponseEntity<String> result = restTemplate.exchange("https://fcm.googleapis.com/fcm/send", HttpMethod.POST,
 				request, String.class);
 		return result.getBody();
-	}*/
+	}
 
-	@RequestMapping("/android/fcm")
+	
+	
+	/*@RequestMapping("/android/fcm")
 	public String fcmPush() {
 		//String parameters = "{\"data\" : {\"message\" : {\"title\":\"test\",\"content\":\"test content\",\"imgUrl\":\"\",\"link\":\"\"}},\"to\" : \"AIzaSyBrAlcCFvem2Z_Rdq4TLCgiJ5yVB5BEYkE\"}";
 
@@ -103,7 +108,7 @@ public class AndroidController {
 		}
 
 		return result;
-	}
+	}*/
 
 	public String sendPost(String url, String parameters) throws Exception {
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
@@ -177,8 +182,9 @@ public class AndroidController {
 	@RequestMapping("/android/category")
 	public ResponseEntity<List<Category>> test(Model model, HttpServletRequest request) {
 		String cafe_id = request.getParameter("cafe_id");
+		System.out.println("============="+cafe_id + "에 오신 것을 환영합니다=============");
 		Logger logger = Logger.getLogger("xxx");
-		System.out.println("Yeah!");
+		System.out.println("=============앱이 카테고리에 접근하였습니다=============");
 		List<Category> categories = categoryService.getCategories(cafe_id);
 		/*
 		 * JSONObject jsonOBj = new JSONObject(); jsonOBj.put("name","ddd");
@@ -192,9 +198,8 @@ public class AndroidController {
 	@RequestMapping("/android/menu")
 	public ResponseEntity<List<Cafe_menu>> menu(HttpServletRequest request, Model model) {
 		String cafe_id = request.getParameter("cafe_id");
-		System.out.println(cafe_id + "!!!!!!!!!!!!!!!!!!");
 		Logger logger = Logger.getLogger("xxx");
-		System.out.println("Yeah2!");
+		System.out.println("=============앱이 메뉴에 접근하였습니다=============");
 		List<Cafe_menu> cafe_menu = cafe_menuService.getCafe_menu(cafe_id);
 		/*
 		 * JSONObject jsonOBj = new JSONObject(); jsonOBj.put("name","ddd");
@@ -225,9 +230,24 @@ public class AndroidController {
 		return new ResponseEntity<List<Customer_coupon>>(coupons, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/android/downloadCoupon")
+	@RequestMapping("/android/downloadcoupon")
 	public String coupondownload(HttpServletRequest request) {
-		customer_couponService.downloadCoupon();
+		String json = request.getParameter("coupon");
+		//String ex = "[{\"customer_id\":\"jsg\",\"cafe_id\":\"grazie\",\"coupon_name\":\"대박할인\",\"coupon_num\":\"000\"};
+		
+		JSONArray arr = new JSONArray(json);
+		JSONObject obj = arr.getJSONObject(0);
+		Customer_coupon coupon = new Customer_coupon();
+		coupon.setCafe_id(obj.getString("cafe_id"));
+		coupon.setCafe_name(obj.getString("cafe_name"));
+		coupon.setCustomer_id(obj.getString("customer_id"));
+		coupon.setCoupon_name(obj.getString("coupon_name"));
+		coupon.setCoupon_price(obj.getString("coupon_price"));
+		coupon.setCoupon_start(obj.getString("coupon_start"));
+		coupon.setCoupon_end(obj.getString("coupon_end"));
+		
+		customer_couponService.downloadCoupon(coupon);
+		
 		return "";
 	}
 
@@ -239,19 +259,29 @@ public class AndroidController {
 		return new ResponseEntity<List<Customer_coupon>>(coupons, HttpStatus.OK);
 	}
 
+	@RequestMapping("/android/option")
+	public ResponseEntity<List<Opt>> getOption(HttpServletRequest request) {
+		String cafe_id = request.getParameter("cafe_id");
+		String category_name = request.getParameter("category_name");
+		List<Opt> options = optService.getOpt(cafe_id, category_name);
+		return new ResponseEntity<List<Opt>>(options, HttpStatus.OK);
+	}
+	
 	@RequestMapping("/android/orderlists")
 	public String getOrderlist(HttpServletRequest request) {
-		String customer_id;
+		String customer_id=null;
 		String cafe_id = null;
 		String menu_name;
 		String hot_ice_none;
 		String menu_size;
 		String option_name;
 		System.out.println("/android/orderlists");
-		// String json = request.getParameter("orderlist");
-		// System.out.println(json+"!!!!!!!!!!!!!!!!!!!!!!!");
-		String ex = "[{\"customer_id\":\"jsg\",\"cafe_id\":\"grazie\",\"menu_name\":\"딸기 버블티\",\"hot_ice_none\":\"Iced\",\"menu_size\":\"only\",\"option_name\":\"\"},{\"customer_id\":\"jsg\",\"cafe_id\":\"grazie\",\"menu_name\":\"딸기주스\",\"hot_ice_none\":\"Iced\",\"menu_size\":\"only\",\"option_name\":\"\"},{\"coupon\":\"-500원\"}]";
-		JSONArray jsonArray = new JSONArray(ex);
+		String token = request.getParameter("token");
+		System.out.println(token+"!!!!!!!!!!!!!!!");
+		String json = request.getParameter("orderlist");
+		System.out.println(json+"!!!!!!!!!!!!!!!!!!!!!!!");
+		//String ex = "[{\"customer_id\":\"jsg\",\"cafe_id\":\"grazie\",\"menu_name\":\"딸기 버블티\",\"hot_ice_none\":\"Iced\",\"menu_size\":\"only\",\"option_name\":\"\"},{\"customer_id\":\"jsg\",\"cafe_id\":\"grazie\",\"menu_name\":\"딸기주스\",\"hot_ice_none\":\"Iced\",\"menu_size\":\"only\",\"option_name\":\"\"},{\"coupon\":\"-500원\"}]";
+		JSONArray jsonArray = new JSONArray(json);
 		// orderlistJson
 		org.json.JSONObject obj;
 		for (int i = 0; i < jsonArray.length() - 1; i++) {
@@ -274,13 +304,17 @@ public class AndroidController {
 			orderlist.setMenu_size(menu_size);
 			orderlist.setHot_ice_none(hot_ice_none);
 			orderlist.setOption_name(option_name);
+			orderlist.setToken(token);
 			orderService.addOrderlist(orderlist);
 		}
 		// couponJson
 		org.json.JSONObject couponJsonObj = jsonArray.getJSONObject(jsonArray.length() - 1);
-		// String coupon_name = couponJsonObj.getString("coupon_name");
-		customer_couponService.disableCoupon(cafe_id, "500원 할인");
+
 		System.out.println("couponJSonObj: " + couponJsonObj.toString());
+		String coupon_name = couponJsonObj.getString("coupon");
+		if(!coupon_name.equals("선택해주세요.")) {
+			customer_couponService.disableCoupon(customer_id, cafe_id, coupon_name);
+		}
 
 		return "";
 	}
