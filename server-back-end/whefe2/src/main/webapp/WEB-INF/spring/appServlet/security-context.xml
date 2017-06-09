@@ -12,10 +12,13 @@
 				authorities-by-username-query="select cafe_id, authority from cafe_authorities where cafe_id=?" />
 		</security:authentication-provider>
 	</security:authentication-manager>
-
+	<security:http pattern="/login/signup" security="none"></security:http>
+	<security:http pattern="/cafeinfo" security="none"></security:http>
+	<security:http pattern="/management/menu/addmenu" security="none"></security:http>
+	<security:http pattern="/management/menu/editmenus" security="none"></security:http>
 	<security:http auto-config="true" use-expressions="true">
 		<security:intercept-url pattern="/management/**"
-			access="hasRole('ROLE_USER')" />
+			access="hasRole('ROLE_ADMIN')" />
 		<security:form-login login-page="/login"
 			authentication-failure-url="/login?error=1"
 			password-parameter="cafe_pw" username-parameter="cafe_id" />
