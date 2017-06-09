@@ -1,0 +1,195 @@
+#include <SoftwareSerial.h>
+#include <stdlib.h>
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
+#define echoPin1 7 // Echo Pin1
+#define trigPin1 8 // Trigger Pin1
+#define LEDPin 13 // Onboard LED
+
+#define echoPin2 5 // Echo Pin2
+#define trigPin2 10 // Trigger Pin2
+SoftwareSerial ser (3, 2);
+
+String apiKey = "X1AZX5HW5R7KZM4Y";
+int maximumRange = 200; // Maximum range needed
+int minimumRange = 0; // Minimum range needed
+long duration, duration2, distance, distance2; // Duration used to calculate distance
+
+int pppre = 0;
+int ppre = 0;
+int pre = 0;
+int count = 0;
+int chageCounting = 1;
+
+
+
+void setup() {
+
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  ser.begin(9600);
+
+  ser.println("AT+CWJAP=\"Yoonwon\",\"1192026aa\"");
+  //인터넷 여기서 설정
+  ser.println("AT+RST");
+
+
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+  pinMode(LEDPin, OUTPUT); // Use LED indicator (if required)
+
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  /* The following trigPin/echoPin cycle is used to determine the
+    distance of the nearest object by bouncing soundwaves off of it. */
+  digitalWrite(trigPin1, LOW);
+  delayMicroseconds(500000);
+
+  digitalWrite(trigPin1, HIGH);
+  delayMicroseconds(500000);
+
+  digitalWrite(trigPin1, LOW);
+  duration = pulseIn(echoPin1, HIGH, 500000);
+
+  digitalWrite(trigPin2, LOW);
+  delayMicroseconds(500000);
+
+  digitalWrite(trigPin2, HIGH);
+  delayMicroseconds(500000);
+
+  digitalWrite(trigPin2, LOW);
+  duration2 = pulseIn(echoPin2, HIGH, 500000);
+
+  //Calculate the distance (in cm) based on the speed of sound.
+  distance = duration / 58.2;
+  distance2 = duration2 / 58.2;
+
+  Serial.println("---------");
+  Serial.println("Distance");
+  Serial.println(distance);
+  Serial.println("Distance2");
+  Serial.println(distance2);
+  Serial.println("---------");
+
+
+  if (distance <= 70)
+  {
+    delay(100);
+    digitalWrite(trigPin2, LOW);
+    delayMicroseconds(500000);
+
+
+    digitalWrite(trigPin2, HIGH);
+    delayMicroseconds(500000);
+
+
+    digitalWrite(trigPin2, LOW);
+    duration2 = pulseIn(echoPin2, HIGH, 500000);
+    distance2 = duration2 / 58.2;
+    Serial.println("Distance2");
+    Serial.println(distance2);
+    Serial.println("---------");
+
+    if (distance2 <= 70) {
+      count = count + 1;
+      chageCounting++;
+      if (count > 100) {
+        count = 100;
+        chageCounting--;
+      }
+    }
+    Serial.println("count");
+    Serial.println(count);
+  }
+
+  else if (distance2 <= 70)
+  {
+    delay(100);
+    digitalWrite(trigPin1, LOW);
+    delayMicroseconds(500000);
+
+
+    digitalWrite(trigPin1, HIGH);
+    delayMicroseconds(500000);
+
+
+    digitalWrite(trigPin1, LOW);
+    duration = pulseIn(echoPin1, HIGH, 500000);
+    distance = duration / 58.2;
+    Serial.println("Distance");
+    Serial.println(distance);
+    Serial.println("---------");
+
+    if (distance <= 70) {
+      count = count - 1;
+      chageCounting++;
+      if (count < 0) {
+        count = 0;
+        chageCounting--;
+      }
+
+    }
+    Serial.println("count");
+    Serial.println(count);
+  }
+  else {
+    Serial.println("count");
+    Serial.println(count);
+  }
+
+  if (chageCounting % 5 == 0) {
+    // TCP 연결
+    String cmd = "AT+CIPSTART=\"TCP\",\"";
+    //  cmd += "184.106.153.149"; // api.thingspeak.com 접속 IP
+    //  cmd += "\",80";           // api.thingspeak.com 접속 포트, 80
+    cmd += "223.194.132.222";
+    cmd += "\",8080";
+    ser.println(cmd);
+
+    if (ser.find("Error")) {
+      Serial.println("AT+CIPSTART error");
+      return;
+    }
+
+    // GET 방식으로 보내기 위한 String, Data 설정
+    //  String getStr = "GET /update?api_key="; //GET 뒤의 url을 스프링 Controller의 url로 바꿔서 값 전송
+    //  getStr += apiKey;
+    //  getStr += "&field1=";
+    //  getStr += String(count);
+    //  getStr += "&field2=";
+    //  getStr += "Yoonwon";
+    //  getStr += "\r\n\r\n";
+
+    String getStr = "GET /whefe/update?"; //GET 뒤의 url을 스프링 Controller의 url로 바꿔서 값 전송
+    getStr += "count=";
+    getStr += String(count);
+    getStr += "&cafe_name=";
+    getStr += "grazie-research";
+    getStr += "\r\n\r\n";
+
+    // Send Data
+    cmd = "AT+CIPSEND=";
+    cmd += String(getStr.length());
+    ser.println(cmd);
+    Serial.println(cmd);
+
+    if (ser.find(">")) {
+      ser.print(getStr);
+    }
+    else {
+      ser.println("AT+CIPCLOSE");
+      // alert user
+      Serial.println("AT+CIPCLOSE");
+    }
+    chageCounting++;
+  }
+
+  // Thingspeak 최소 업로드 간격 3초를 맞추기 위한 delay
+  delay(10);
+
+}
