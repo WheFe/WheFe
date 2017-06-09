@@ -38,7 +38,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nav_background">
+        android:background="@drawable/nav_background_round">
 
         <ImageView
             android:id="@+id/noti_iconView"

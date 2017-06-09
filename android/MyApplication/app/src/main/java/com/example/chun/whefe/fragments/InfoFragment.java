@@ -109,7 +109,7 @@ public class InfoFragment extends Fragment{
         }else if(maxPerPerson > 40){
             //personView.setTextColor(Color.YELLOW);
             personView.setBackgroundColor(Color.YELLOW);
-        }else if(maxPerPerson >0){
+        }else if(maxPerPerson >=0){
             personView.setBackgroundColor(Color.GREEN);
         }
         personView.setText("혼잡도 : " + (int)person + "/" + (int)max + " ( " + (int)maxPerPerson + "% )");
@@ -127,9 +127,9 @@ public class InfoFragment extends Fragment{
                 dialog.setContentView(R.layout.image_zoom_dialog);
                 ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
                 ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
-
+                new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename1);
                // imageView.setImageResource(R.drawable.grazie1);
-                imageView.setImageBitmap(bitmap);
+                //imageView.setImageBitmap(bitmap);
                 imageView.setAdjustViewBounds(true);
                 cancelButton.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -149,9 +149,9 @@ public class InfoFragment extends Fragment{
                 dialog.setContentView(R.layout.image_zoom_dialog);
                 ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
                 ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
-
-                imageView.setImageResource(R.drawable.grazie2);
-
+                new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename2);
+                //imageView.setImageResource(R.drawable.grazie2);
+                imageView.setAdjustViewBounds(true);
                 cancelButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
@@ -163,6 +163,28 @@ public class InfoFragment extends Fragment{
             }
 
         });
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getContext());
+
+                dialog.setContentView(R.layout.image_zoom_dialog);
+                ImageView imageView = (ImageView)dialog.findViewById(R.id.dialog_imageView);
+                ImageButton cancelButton = (ImageButton)dialog.findViewById(R.id.dialog_closeButton);
+                new LoadImage(imageView,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename3);
+                // imageView.setImageResource(R.drawable.grazie1);
+                //imageView.setImageBitmap(bitmap);
+                imageView.setAdjustViewBounds(true);
+                cancelButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
 
         return view;
     }
@@ -171,12 +193,11 @@ public class InfoFragment extends Fragment{
         imageList = (LinearLayout)view.findViewById(R.id.info_imageList);
 
 
-
         imageView1 = new ImageView(getContext());
         imageView1.setAdjustViewBounds(true);
         imageView1.setVisibility(View.VISIBLE);
         if(!imageFilename1.equals(""))
-            new LoadImage(imageView1,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename1);
+            new LoadImage(imageView1,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename1);
         else
             imageView1.setImageResource(R.drawable.whefe);
 
@@ -185,13 +206,13 @@ public class InfoFragment extends Fragment{
         imageView2.setAdjustViewBounds(true);
         imageView2.setVisibility(View.VISIBLE);
         if(!imageFilename2.equals(""))
-            new LoadImage(imageView2,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename2);
+            new LoadImage(imageView2,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename2);
 
         imageView3 = new ImageView(getContext());
         imageView3.setAdjustViewBounds(true);
         imageView3.setVisibility(View.VISIBLE);
         if(!imageFilename3.equals(""))
-            new LoadImage(imageView3,getContext()).execute(MainActivity.ip + "/whefe/resources/images/menuimage/" + imageFilename3);
+            new LoadImage(imageView3,getContext()).execute(MainActivity.ip + "/whefe/resources/images/" + imageFilename3);
 
         imageList.addView(imageView1);
         imageList.addView(imageView2);

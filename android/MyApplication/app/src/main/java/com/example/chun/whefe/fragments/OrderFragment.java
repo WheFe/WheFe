@@ -66,8 +66,11 @@ public class OrderFragment extends Fragment {
     private CafeMenuAdapter cafeMenuAdapter;
     Bitmap bitmap;
     private String cafe_id;
-    Button[] categoryButton = new Button[7];
+    Button[] categoryButton = new Button[ 10];
     private ArrayList<Menus> menuArrays = new ArrayList<Menus>();
+
+    ArrayList<String> optionSpinnerList;
+    ArrayAdapter<String> optionAdapter;
 
     public class Menus{
         private ArrayList<CafeMenu> menuList = new ArrayList<CafeMenu>();
@@ -145,7 +148,7 @@ public class OrderFragment extends Fragment {
         });
 
         Button orderButton = (Button)view.findViewById(R.id.orderSuccessButton);
-        ImageButton sh_listButton  = (ImageButton)view.findViewById(R.id.shoppingListButton);
+        Button sh_listButton  = (Button)view.findViewById(R.id.shoppingListButton);
 
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,12 +167,12 @@ public class OrderFragment extends Fragment {
                 dialog.setTitle("장바구니");
                 dialog.setContentView(R.layout.shoppinglistdialog);
                 TextView title = (TextView)dialog.findViewById(R.id.sh_titleView);
-                ImageView imageView = (ImageView)dialog.findViewById(R.id.sh_titleImageView);
+                //ImageView imageView = (ImageView)dialog.findViewById(R.id.sh_titleImageView);
                 Button cancel = (Button)dialog.findViewById(R.id.sh_cancelButton);
                 Button payment = (Button)dialog.findViewById(R.id.sh_paymentButton);
                 priceView = (TextView)dialog.findViewById(R.id.sh_totalPriceView);
                 title.setText("장바구니");
-                imageView.setImageResource(R.drawable.shopping_cart);
+        //        imageView.setImageResource(R.drawable.shopping_cart);
 
                 cancel.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -203,12 +206,29 @@ public class OrderFragment extends Fragment {
                     }
                 });
 
+                /*String coupon = couponSpinner.getSelectedItem().toString();
+                try {
+                    // 대박할인 (-500원)
+                    StringTokenizer s = new StringTokenizer(coupon);
+                    String temp = s.nextToken("-");
+                    temp = s.nextToken("원)");
+                    Log.i("coupon","temp : " + temp);
+
+                    totalPrice += Integer.parseInt(temp);
+                }catch (Exception e){
+                    Log.i("coupon","token error");
+                }
+                */
                 int totalPrice =0;
                 for(int i = 0; i<sh_arrayList.size();i++){
                     //   totalPrice += sh_arrayList.get(0).getPrice();
+                    try{
                     StringTokenizer s = new StringTokenizer(sh_arrayList.get(i).getPrice());
                     String temp = s.nextToken("원");
-                    totalPrice += Integer.parseInt(temp);
+                    totalPrice += Integer.parseInt(temp);}
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
                 priceView.setText("결제금액 " + totalPrice + " 원");
@@ -302,7 +322,10 @@ public class OrderFragment extends Fragment {
                             menuArrays.get(position).setMenuList(tempArray);
                         }
                     }
-                    cafeMenuAdapter.upDateItemList(menuArrays.get(position).getMenuList(), arrayChild);
+
+                    final CafeMenuAdapter tempAdapter = new CafeMenuAdapter(getContext(),menuArrays.get(position).getMenuList(),arrayChild);
+
+                    listView.setAdapter(tempAdapter);
                 }
             });
         }
@@ -398,13 +421,18 @@ public class OrderFragment extends Fragment {
     }
     private class DownloadOptionTask extends AsyncTask<String, Void, String> {                     // Option Connection
 
+        private ArrayAdapter<String> optionAdapter;
+        private ArrayList<String> optionSpinnerList;
         private Spinner optionSpinner;
-        private Context context;
+       // private Context context;
 
-        public DownloadOptionTask(Spinner optionSpinner, Context context) {
+
+        public DownloadOptionTask(ArrayAdapter<String> optionAdapter, ArrayList<String> optionSpinnerList, Spinner optionSpinner) {
+            this.optionAdapter = optionAdapter;
+            this.optionSpinnerList = optionSpinnerList;
             this.optionSpinner = optionSpinner;
-            this.context = context;
         }
+
         @Override
         protected String doInBackground(String... urls) {
             try {
@@ -421,8 +449,7 @@ public class OrderFragment extends Fragment {
             try {
                 JSONArray ja = new JSONArray(result);
                 options = new ArrayList<Option>();
-                ArrayList<String> optionSpinnerlist = new ArrayList<String>();
-                optionSpinnerlist.add("Option");
+
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject order = ja.getJSONObject(i);
                     String category_name = (String) order.get("category_name");
@@ -431,13 +458,11 @@ public class OrderFragment extends Fragment {
                     int price =  Integer.parseInt(option_price);
 
                     options.add(new Option(category_name,option_name,price));
-
-                    optionSpinnerlist.add(option_name + " (+" + option_price + "원)");
+                    this.optionSpinnerList.add(option_name + " (+" + option_price + "원)");
+                  //  optionSpinnerlist.add(option_name + " (+" + option_price + "원)");
                 }
-                OptionAdapter optionadapter = new OptionAdapter(getContext(),R.layout.spinner_item,optionSpinnerlist);
-                Log.i("option","optionSpinnerList : " + optionSpinnerlist);
-                optionadapter.update(optionSpinnerlist);
-                optionSpinner.setAdapter(optionadapter);
+                Log.i("option","optionSpinnerList : " + this.optionSpinnerList);
+                this.optionAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -478,6 +503,7 @@ public class OrderFragment extends Fragment {
             }
         }
     }
+
     private class Option{
         private String category_name;
         private String option_name;
@@ -825,7 +851,7 @@ public class OrderFragment extends Fragment {
         @Override
         public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
             final CafeMenu cafeMenu = arrayGroup.get(groupPosition);
-
+            //Spinner optionSpinner;
             View v = convertView;
 
             if(v==null){
@@ -837,6 +863,8 @@ public class OrderFragment extends Fragment {
                 holder.optionSpinner = (Spinner)v.findViewById(R.id.optionSpinner);
                 holder.sizeSpinner = (Spinner)v.findViewById(R.id.sizeSpinner);
                 holder.radioGroup = (RadioGroup)v.findViewById(R.id.radioGroup);
+
+
             }
             /*-------------------------------스피너 어댑터 설정----------------------------------------------------------*/
 
@@ -844,8 +872,13 @@ public class OrderFragment extends Fragment {
             holder.sizeSpinner.setAdapter(sizeadapter);
             sizeadapter.notifyDataSetChanged();
 
+            optionSpinnerList = new ArrayList<String>();
+            optionSpinnerList.add("Option");
+            optionAdapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item,optionSpinnerList);
+            holder.optionSpinner.setAdapter(optionAdapter);
+
             String optionURL = MainActivity.ip + "/whefe/android/option?category_name=" + cafeMenu.getCategory_name() + "&cafe_id=" +cafe_id;
-            new DownloadOptionTask(holder.optionSpinner,getContext()).execute(optionURL);
+            new DownloadOptionTask(optionAdapter,optionSpinnerList,holder.optionSpinner).execute(optionURL);
 
             ArrayList<String> hots = arrayGroup.get(groupPosition).getHot_ice_none();
             RadioGroup radioGroup = (RadioGroup)v.findViewById(R.id.radioGroup);
@@ -897,6 +930,19 @@ public class OrderFragment extends Fragment {
 
                     ArrayList<String> hots = arrayGroup.get(groupPosition).getHot_ice_none();
 
+                    try {
+                        // 대박할인 (-500원)
+                        StringTokenizer s = new StringTokenizer(se_option);
+                        String temp = s.nextToken("+");
+                        temp = s.nextToken("원)");
+                        Log.i("option","temp : " + temp);
+
+                        int price = Integer.parseInt(se_price);
+                        price += Integer.parseInt(temp);
+                        se_price = Integer.toString(price);
+                    }catch (Exception e){
+                        Log.i("option","token error");
+                    }
                     int flag3 = 0;
                     if(hots.size() == 1){
                         if(hots.get(0).equals("none")){
@@ -1004,6 +1050,21 @@ public class OrderFragment extends Fragment {
             TextView textGroup = (TextView) v.findViewById(R.id.sh_nameView);
             textGroup.setText(groupName);
             TextView priceView = (TextView) v.findViewById(R.id.sh_priceView);
+
+
+            String option = shoppingList.getOption();
+            try {
+                // 대박할인 (-500원)
+                StringTokenizer s = new StringTokenizer(option);
+                String temp = s.nextToken("-");
+                temp = s.nextToken("원)");
+                Log.i("option","temp : " + temp);
+
+                price += Integer.parseInt(temp);
+            }catch (Exception e){
+                Log.i("option","token error");
+            }
+
             priceView.setText(price);
 
             return v;

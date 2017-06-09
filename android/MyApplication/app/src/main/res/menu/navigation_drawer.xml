@@ -3,10 +3,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_memberinfo"
-            android:icon="@drawable/member"
-            android:title="회원정보" />
-        <item
             android:id="@+id/nav_cafe_map"
             android:icon="@drawable/map1"
             android:title="주변 카페 지도" />

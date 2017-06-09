@@ -49,6 +49,8 @@ public class ShowCouponFragment extends Fragment {
     private String my_id;
     View view;
 
+    ViewHolder holder;
+
     ExpandableListView expandableListView;
 
     Vector<ParentData> data;
@@ -163,10 +165,11 @@ public class ShowCouponFragment extends Fragment {
 
                 for(int i = 0; i < cafe_count;i++) {    // 카페의 개수
                     data.add(new ParentData(cafes.get(i))); // data = parentData의 벡터
-
+                    Log.i("Show Coupon","cafe id" + data.get(i).getCafeName());
                     for(int j = 0; j < cafeCoupons.size();j++) {
                         if (data.get(i).getCafeName().equals(cafeCoupons.get(j).getCafe_name())) {
                             data.get(i).child.add(cafeCoupons.get(j));
+                            Log.i("Show Coupon","coupon " + cafeCoupons.get(j).getCoupon_name());
                         }
                     }
                 }
@@ -265,30 +268,29 @@ public class ShowCouponFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            TextView nameView = null;
+           /* TextView nameView = null;
             TextView priceView = null;
-            TextView periodView = null;
+            TextView periodView = null;*/
             Button button = null;
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.coup_list, parent, false);
-                nameView = (TextView) convertView.findViewById(R.id.coup_nameView);
-                priceView = (TextView) convertView.findViewById(R.id.coup_priceView);
-                periodView = (TextView) convertView.findViewById(R.id.coup_periodView);
+                holder = new ViewHolder();
+
+
+                holder.nameView = (TextView) convertView.findViewById(R.id.coup_nameView);
+                holder.priceView = (TextView) convertView.findViewById(R.id.coup_priceView);
+                holder.periodView = (TextView) convertView.findViewById(R.id.coup_periodView);
                 button = (Button) convertView.findViewById(R.id.coup_ReceiveButton);
 
                 button.setVisibility(View.INVISIBLE);
-                CustomerCoupon customerCoupon = data.get(groupPosition).child.get(childPosition);
 
-                nameView.setText(customerCoupon.getCoupon_name());
-                priceView.setText(customerCoupon.getCoupon_price()+ " 원");
-                periodView.setText(customerCoupon.getCoupon_start() + " ~ " + customerCoupon.getCoupon_end());
             }
+            Log.i("Show Coupon", "child : " + groupPosition + ", " + childPosition + "  name : " + data.get(groupPosition).child.get(childPosition).getCoupon_name());
 
-
-
-
-
+            holder.nameView.setText(data.get(groupPosition).child.get(childPosition).getCoupon_name());
+            holder.priceView.setText(data.get(groupPosition).child.get(childPosition).getCoupon_price()+ " 원");
+            holder.periodView.setText(data.get(groupPosition).child.get(childPosition).getCoupon_start() + " ~ " + data.get(groupPosition).child.get(childPosition).getCoupon_end());
 
             return convertView;
         }
@@ -348,5 +350,10 @@ public class ShowCouponFragment extends Fragment {
         String getCouponName(){
             return couponName;
         }
+    }
+    public class ViewHolder{
+        public TextView nameView;
+        public TextView priceView;
+        public TextView periodView;
     }
 }

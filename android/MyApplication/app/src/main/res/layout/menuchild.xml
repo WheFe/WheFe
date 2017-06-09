@@ -36,7 +36,8 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/sizeSpinner"
             android:layout_toRightOf="@+id/sizeSpinner"
-            android:layout_weight="0.03" />
+            android:layout_weight="0.03"
+            android:spinnerMode="dropdown" />
 
         <TextView
             android:id="@+id/textView3"
@@ -96,4 +97,5 @@
                 android:textStyle="bold" />
         </RadioGroup>
     </LinearLayout>
+
 </RelativeLayout>

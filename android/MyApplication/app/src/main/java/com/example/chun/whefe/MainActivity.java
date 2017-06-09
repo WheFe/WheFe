@@ -3,6 +3,7 @@ package com.example.chun.whefe;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
     CheckLoginTask loginTask;
 
-    public static final String ip = "http://223.194.154.14:8080";
+    public static final String ip = "http://223.194.132.222:8080";
+    public static final String loginIp = "http://223.194.130.223";
 
 
     @Override
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         try {
             autoLoginCheck();
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("login","nothing happened!!!!!!!!!!!!!!!!!");
             }
         }else if(autoLogin==0){
-            Toast.makeText(this, "자동로그인 꺼짐", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "자동로그인 꺼짐", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -133,7 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class CheckLoginTask extends AsyncTask<String, Void, String> {
-        String urlstr = "http://113.198.84.66/mainLogIn.php";
+        //String urlstr = "http://113.198.84.66/mainLogIn.php";
+        String urlstr = MainActivity.loginIp + "/mainLogIn.php";
+
         URL url;
         Context context;
         String checkInfo;

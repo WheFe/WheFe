@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -48,6 +49,8 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Whefe");
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         SharedPreferences preferences1 = getSharedPreferences("LOGIN_PREFERENCE", Context.MODE_PRIVATE);
         String my_id = preferences1.getString("id","");
@@ -128,9 +131,7 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_memberinfo) {    // 네비게이션 회원가입
-
-        } else if(id == R.id.nav_cafe_map){
+       if(id == R.id.nav_cafe_map){
             transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.container,mapFragment);

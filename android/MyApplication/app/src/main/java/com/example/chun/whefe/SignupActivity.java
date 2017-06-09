@@ -2,6 +2,7 @@ package com.example.chun.whefe;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +44,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
         setContentView(R.layout.signup);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         check_flag = 0;
 
         LIDEdit = (EditText) findViewById(R.id.LIDEdit);
@@ -134,7 +135,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     class CheckIdTask extends AsyncTask<String, Void, String> {
-        String urlstr = "http://113.198.84.66/sameIdCheck.php";
+        String urlstr = MainActivity.loginIp + "/sameIdCheck.php";
         URL url;
         Context context;
         String checkId;

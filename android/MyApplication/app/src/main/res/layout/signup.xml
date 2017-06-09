@@ -43,7 +43,8 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="6~10자"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +74,8 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="비밀번호를 확인하세요"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.29"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -157,7 +160,8 @@
                 android:layout_weight="0.18"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:paddingEnd="10dp" />
+                android:paddingEnd="10dp"
+                android:textColor="@android:color/black" />
 
             <Button
                 android:id="@+id/IdCheckButton"
@@ -197,7 +201,8 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="- 을 빼고 입력해주세요"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout

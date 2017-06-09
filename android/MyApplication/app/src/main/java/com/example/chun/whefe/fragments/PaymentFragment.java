@@ -83,6 +83,7 @@ public class PaymentFragment extends Fragment {
 
     Spinner couponSpinner;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -165,13 +166,22 @@ public class PaymentFragment extends Fragment {
                                     JSONArray jsonArray = new JSONArray();
                                     try{
                                         for(int i = 0 ;i<orderLists.size();i++) {
+                                            String option = orderLists.get(i).getOption_name();
+                                            Log.i("payment",option);
+                                            String temp = "";
+                                            try {
+                                                StringTokenizer s = new StringTokenizer(option, "(");
+                                                temp = s.nextToken();
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
                                             JSONObject jsonObject = new JSONObject();
                                             jsonObject.put("customer_id", orderLists.get(i).getCustomer_id());
                                             jsonObject.put("cafe_id", orderLists.get(i).getCafe_id());
                                             jsonObject.put("menu_name", orderLists.get(i).getMenu_name());
                                             jsonObject.put("hot_ice_none", orderLists.get(i).getHot_ice_none());
                                             jsonObject.put("menu_size", orderLists.get(i).getMenu_size());
-                                            jsonObject.put("option_name", orderLists.get(i).getOption_name());
+                                            jsonObject.put("option_name", temp.trim());
                                             jsonArray.put(jsonObject);
                                         }
                                         JSONObject jsonObject = new JSONObject();

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.chun.whefe.CafeInfo;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 
 public class CafeListFragment extends Fragment {
 
+    ProgressBar progressBar;
+
     View view;
    // String ip = "http://223.194.157.35:8080";
 
@@ -58,8 +61,9 @@ public class CafeListFragment extends Fragment {
         helper = new MyCafeInfoHelper(getContext());
         db = helper.getWritableDatabase();
 
+        progressBar= (ProgressBar)view.findViewById(R.id.cafelistBar);
         String categoryUrl = MainActivity.ip + "/whefe/android/cafeinfo";
-        new DownloadCategoryTask().execute(categoryUrl);
+        new DownloadCategoryTask(progressBar).execute(categoryUrl);
 
         listView = (ListView)view.findViewById(R.id.cl_listView);
 
@@ -77,9 +81,16 @@ public class CafeListFragment extends Fragment {
 
     private class DownloadCategoryTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
 
+        private ProgressBar progressBar;
+
+        public DownloadCategoryTask(ProgressBar progressBar) {
+            this.progressBar = progressBar;
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             try {
+
                 return (String) downloadUrl((String) urls[0]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -118,7 +129,7 @@ public class CafeListFragment extends Fragment {
                 }
                 cafeListAdapter = new CafeListAdapter(getContext(),cafeList,R.layout.list_group);
                 listView.setAdapter(cafeListAdapter);
-
+                progressBar.setVisibility(View.INVISIBLE);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,8 +146,8 @@ public class CafeListFragment extends Fragment {
                         editor.putString("max", cafeList.get(position).getCafeMaximum());
                         editor.putString("intro", cafeList.get(position).getCafe_intro());
                         editor.putString("image1",cafeList.get(position).getCafe_image1());
-                        editor.putString("image2",cafeList.get(position).getCafe_image1());
-                        editor.putString("image3",cafeList.get(position).getCafe_image1());
+                        editor.putString("image2",cafeList.get(position).getCafe_image2());
+                        editor.putString("image3",cafeList.get(position).getCafe_image3());
                         editor.commit();
 
                         NavigationActivity activity = (NavigationActivity)getActivity();
@@ -234,7 +245,7 @@ public class CafeListFragment extends Fragment {
            }else if(maxPerPerson > 40){
                maxView.setBackgroundColor(Color.YELLOW);
                personPerMax.setBackgroundColor(Color.YELLOW);
-           }else if(maxPerPerson >0){
+           }else if(maxPerPerson >=0){
                maxView.setBackgroundColor(Color.GREEN);
                personPerMax.setBackgroundColor(Color.GREEN);
            }

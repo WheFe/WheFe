@@ -115,84 +115,6 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
         mMapViewerResourceProvider = new NMapViewerResourceProvider(getContext());
         mOverlayManager = new NMapOverlayManager(getContext(), nMapView,mMapViewerResourceProvider);
-
-       // startMyLocation();
-
-        int markerId = NMapPOIflagType.PIN;
-
-
-        /**
-         *  카페 정보 넣기
-         */
-        /*poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
-
-        setPOIData(poIdata,markerId);
-
-        NMapPOIdataOverlay poidataOverlay = mOverlayManager.createPOIdataOverlay(poIdata,null);
-
-        poidataOverlay.setOnStateChangeListener(new NMapPOIdataOverlay.OnStateChangeListener() {
-            @Override
-            public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-                if (nMapPOIitem != null) {
-                    Log.i(LOG_TAG, "onFocusChanged: " + nMapPOIitem.toString());
-                } else {
-                    Log.i(LOG_TAG, "onFocusChanged: ");
-                }
-            }
-
-            @Override
-            public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-                RelativeLayout relativeLayout = (RelativeLayout)getView().findViewById(R.id.nmap_info);
-                relativeLayout.setVisibility(View.VISIBLE);
-
-                int i = 0;
-                for(i = 0; i<cafeInfos.size();i++){
-                    if(nMapPOIitem.getTitle().equals(cafeInfos.get(i).getCafeName())){
-                        break;
-                    }
-                }
-
-                TextView nameView = (TextView)getView().findViewById(R.id.cafeInfoNameView);
-                TextView addressView = (TextView)getView().findViewById(R.id.cafeInfoAddressView);
-                TextView phoneView = (TextView)getView().findViewById(R.id.cafeInfoPhoneView);
-                TextView timeView = (TextView)getView().findViewById(R.id.cafeInfoTimeView);
-                TextView personView = (TextView)getView().findViewById(R.id.cafeInfoPersonView);
-                Button button = (Button)getView().findViewById(R.id.cafeInfoButton);
-
-                nameView.setText(cafeInfos.get(i).getCafeName());
-                addressView.setText("주소 : " + cafeInfos.get(i).getCafeAddress());
-                phoneView.setText("전화번호 : " + cafeInfos.get(i).getCafePhone());
-                timeView.setText("영업시간 : " + cafeInfos.get(i).getCafeOpen() + " ~ " + cafeInfos.get(i).getCafeClose());
-                String temp = "13";
-                personView.setText("혼잡도 : " + temp + " / " + cafeInfos.get(i).getCafeMaximum());
-
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        NavigationActivity activity = (NavigationActivity)getActivity();
-                        stopMyLocation();
-                        activity.onFragmentChanged(1);
-                    }
-                });
-
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("INFO_PREFERENCE", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putString("name", cafeInfos.get(i).getCafeName());
-                editor.putString("address", cafeInfos.get(i).getCafeAddress());
-                editor.putString("phone", cafeInfos.get(i).getCafePhone());
-                editor.putString("open", cafeInfos.get(i).getCafeOpen());
-                editor.putString("close",cafeInfos.get(i).getCafeClose());
-                editor.putString("person", cafeInfos.get(i).getCafeMaximum());
-                editor.commit();
-            }
-        });
-        mMapLocationManager = new NMapLocationManager(getContext());
-        mMapLocationManager.setOnLocationChangeListener(onMyLocationChangeListener);
-        mMapLocationManager.enableMyLocation(false);
-        mMapCompassManager = new NMapCompassManager(getActivity());
-        //poIdataOverlay.showAllPOIdata(0);
-        mMyLocationOverlay =  mOverlayManager.createMyLocationOverlay(mMapLocationManager, mMapCompassManager);*/
     }
 
     private class DownloadCategoryTask extends AsyncTask<String, Void, String> {                     // 카테고리 출력 Connection
@@ -209,13 +131,11 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
 
         protected void onPostExecute(String result) {
             try {
-                /*poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
 
-                setPOIData(poIdata,0);*/
 
                 cafeInfos = new ArrayList<CafeInfo>();
 
-               // poIdata.beginPOIdata(2);
+
                 db.execSQL("delete from cafeinfo");
 
                 JSONArray ja = new JSONArray(result);
@@ -238,16 +158,12 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     db.execSQL("insert into cafeinfo(cafe_id, cafe_name) " +
                             "values('"+ cafe_id + "','" + cafeName  + "');");
 
-                    //Log.e("geocoder",cafeName + cafeAddress + cafePhone + cafeOpen + cafeClose + cafeMax);
-
                     cafeInfos.add(cafeInfo);
 
                     String info = cafeInfo.getCafeName();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-            }finally {
-                Toast.makeText(getContext(), "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
             }
             poIdata= new NMapPOIdata(2, mMapViewerResourceProvider);
 
@@ -285,7 +201,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     Button button = (Button)getView().findViewById(R.id.cafeInfoButton);
 
                     nameView.setText(cafeInfos.get(i).getCafeName());
-                    addressView.setText("주소 : " + cafeInfos.get(i).getCafeAddress());
+                    addressView.setText(cafeInfos.get(i).getCafeAddress());
                     phoneView.setText("전화번호 : " + cafeInfos.get(i).getCafePhone());
                     timeView.setText("영업시간 : " + cafeInfos.get(i).getCafeOpen() + " ~ " + cafeInfos.get(i).getCafeClose());
 
@@ -301,7 +217,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                     }else if(maxPerPerson > 40){
                         //personView.setTextColor(Color.YELLOW);
                         personView.setBackgroundColor(Color.YELLOW);
-                    }else if(maxPerPerson >0){
+                    }else if(maxPerPerson >=0){
                         personView.setBackgroundColor(Color.GREEN);
                     }
 
@@ -400,7 +316,7 @@ public class NaverMapFragment extends NMapFragment implements NMapView.OnMapStat
                 poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.RED, 0);
             }else if(maxPerPerson > 40){
                 poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.YELLOW, 0);
-            }else if(maxPerPerson >0){
+            }else if(maxPerPerson >=0){
                 poiData.addPOIitem(longitude, latitude, info, NMapPOIflagType.GREEN, 0);
             }
 
