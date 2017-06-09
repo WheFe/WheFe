@@ -1,0 +1,116 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fr"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.chun.whefe.fragments.NaverMapFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.nhn.android.maps.NMapView
+        android:id="@+id/nv_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/nmap_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="330dp"
+        android:background="@android:color/background_light"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/cafeInfoNameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="7dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/cafeInfoAddressView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cafeInfoNameView"
+            android:layout_marginEnd="10dp"
+            android:layout_toRightOf="@+id/textView"
+            android:padding="5dp"
+            android:paddingEnd="7dp"
+            android:paddingStart="7dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/cafeInfoPhoneView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cafeInfoAddressView"
+            android:padding="5dp"
+            android:paddingStart="7dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/cafeInfoTimeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cafeInfoPhoneView"
+            android:padding="5dp"
+            android:paddingStart="7dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/cafeInfoPersonView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cafeInfoTimeView"
+            android:padding="5dp"
+            android:paddingStart="7dp"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/cafeInfoButton"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/cafeInfoPhoneView"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/mybutton"
+            android:text="자세히"
+            android:textColor="@android:color/background_light"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cafeInfoPhoneView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cafeInfoNameView"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:paddingStart="7dp"
+            android:text="주소 : "
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</FrameLayout>

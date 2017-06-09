@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cafe_map"
+            android:icon="@drawable/map1"
+            android:title="주변 카페 지도" />
+        <item
+            android:id="@+id/nav_cafe_list"
+            android:icon="@drawable/nav_cafe"
+            android:title="주변 카페 목록" />
+        <item
+            android:id="@+id/nav_coupon_list"
+            android:icon="@drawable/nav_coupon"
+            android:title="보유 쿠폰" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logout"
+                android:title="Logout" />
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Exit" />
+        </menu>
+    </item>
+
+</menu>

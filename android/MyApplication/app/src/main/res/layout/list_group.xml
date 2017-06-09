@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/layout_border">
+
+    <TextView
+        android:id="@+id/cl_cafeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="11dp"
+        android:text="카페이름"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/cl_maxView"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cl_cafeName"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="39dp"
+        android:layout_marginRight="39dp"
+        android:gravity="center"
+        android:text="13/20"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cl_maxView"
+        android:layout_alignBottom="@+id/cl_maxView"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/cl_maxView"
+        android:layout_toStartOf="@+id/cl_maxView"
+        android:text="혼잡도"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cl_cafeName"
+        android:layout_alignStart="@+id/cl_cafeName"
+        android:layout_below="@+id/cl_cafeName"
+        android:layout_marginTop="15dp"
+        android:text="주소"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/cl_adressView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView16"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_toRightOf="@+id/textView16"
+        android:text="주소내용"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView16"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textView16"
+        android:layout_marginBottom="12dp"
+        android:text="영업시간"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/cl_timeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView21"
+        android:layout_alignBottom="@+id/textView21"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/textView21"
+        android:layout_toRightOf="@+id/textView21"
+        android:text="08:30 ~ 21:00"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView21"
+        android:layout_alignLeft="@+id/textView21"
+        android:layout_alignStart="@+id/textView21"
+        android:layout_marginBottom="13dp"
+        android:text="전화번호"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/cl_phoneView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView23"
+        android:layout_alignBottom="@+id/textView23"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/textView23"
+        android:layout_toRightOf="@+id/textView23"
+        android:text="010-1111-1111"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/personPerMaxView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/cl_maxView"
+        android:layout_alignRight="@+id/cl_maxView"
+        android:layout_below="@+id/cl_maxView"
+        android:text="TextView"
+        android:textColor="@android:color/black" />
+</RelativeLayout>

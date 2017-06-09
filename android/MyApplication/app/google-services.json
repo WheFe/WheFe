@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "85235424721",
+    "firebase_url": "https://fir-whefe.firebaseio.com",
+    "project_id": "firebase-whefe",
+    "storage_bucket": "firebase-whefe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85235424721:android:79cbd5e2e627c130",
+        "android_client_info": {
+          "package_name": "com.example.chun.whefe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85235424721-nfhfonp32sos0jm2qm18i1vo9h5j0qn1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "85235424721-o2dul9kcgku94f04no3kf3vagon7kban.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0FMoRqBCopqbWc5q3uNe275ULJ7lxKe4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
